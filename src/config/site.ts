@@ -59,5 +59,6 @@ export const siteConfig = {
   footerQuickLinks: [
     { href: "/", label: "হোম", description: "মূল পাতা" },
     ...mainNavItems,
+    { href: "/অ্যাডমিন", label: "অ্যাডমিন", description: "দান/ব্যয় এন্ট্রি ফর্ম" },
   ] satisfies NavItem[],
 };

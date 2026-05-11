@@ -7,7 +7,7 @@ import { expenseCreateBodySchema } from "@/lib/validation/admin";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const authError = requireAdminApi(request);
+  const authError = await requireAdminApi(request);
   if (authError) return authError;
 
   const supabase = createServiceSupabase();
@@ -32,7 +32,9 @@ export async function POST(request: Request) {
 
   const data = parsed.data;
   const spentAt =
-    data.spent_at && data.spent_at.trim() !== "" ? new Date(data.spent_at).toISOString() : undefined;
+    data.spent_at && data.spent_at.trim() !== ""
+      ? new Date(data.spent_at).toISOString()
+      : undefined;
 
   const insertRow = {
     category: data.category,

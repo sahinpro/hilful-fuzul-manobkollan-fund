@@ -9,6 +9,8 @@ const STATIC_MAP: ReadonlyArray<readonly [string, string]> = [
   ["/স্বচ্ছতা", "/transparency"],
   ["/বার্ষিক-প্রতিবেদন", "/annual-report"],
   ["/নোটিশ", "/notices"],
+  ["/অ্যাডমিন", "/admin"],
+  ["/অ্যাডমিন/লগইন", "/admin/login"],
 ];
 
 export function decodePathname(pathname: string): string {

@@ -7,7 +7,7 @@ import { donationCreateBodySchema } from "@/lib/validation/admin";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const authError = requireAdminApi(request);
+  const authError = await requireAdminApi(request);
   if (authError) return authError;
 
   const supabase = createServiceSupabase();

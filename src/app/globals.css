@@ -84,6 +84,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: "Solaiman Lipi", "SolaimanLipi", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Solaiman Lipi", "SolaimanLipi", ui-serif, Georgia, serif;
+  --font-mono: "Solaiman Lipi", "SolaimanLipi", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @layer base {
@@ -92,6 +95,6 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: "Solaiman Lipi", "SolaimanLipi", ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans);
   }
 }

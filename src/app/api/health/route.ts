@@ -9,6 +9,6 @@ export async function GET() {
     ok: true,
     publicSupabase: isSupabaseConfigured(),
     serviceSupabase: isServiceSupabaseConfigured(),
-    adminApi: Boolean(process.env.ADMIN_API_TOKEN?.trim()),
+    adminApiToken: Boolean(process.env.ADMIN_API_TOKEN?.trim()),
   });
 }
