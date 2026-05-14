@@ -3,6 +3,7 @@ import { z } from "zod";
 import { siteConfig } from "@/config/site";
 import { requireAdminApi } from "@/lib/admin/auth";
 import { buildDonationReceiptHtmlDocument } from "@/lib/receipt/donation-receipt-html";
+import { publicAssetPathIfExists } from "@/lib/receipt/receipt-public-asset";
 import { createServiceSupabase } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
@@ -73,6 +74,12 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     orgTagline: `${siteConfig.location} · ${siteConfig.contact.addressLines.join(", ")}`,
     orgNameEn: "Hilful Fuzul Manobkallyan Fund",
     contactPhones: `${siteConfig.contact.phoneLabel}: ${siteConfig.contact.phone}`,
+    chairmanSignatureSrc:
+      siteConfig.receiptSignatures.chairmanPublicPath ??
+      publicAssetPathIfExists("signatures/chairman.png"),
+    receiverSignatureSrc:
+      siteConfig.receiptSignatures.receiverPublicPath ??
+      publicAssetPathIfExists("signatures/receiver.png"),
   });
 
   return new NextResponse(html, {

@@ -12,7 +12,22 @@ export type DonationReceiptHtmlInput = {
   orgTagline: string;
   orgNameEn?: string;
   contactPhones: string;
+  /** Full `https://` URL or path under site origin (e.g. `/signatures/chairman.png`). */
+  chairmanSignatureSrc?: string | null;
+  receiverSignatureSrc?: string | null;
 };
+
+function resolveReceiptAssetUrl(
+  origin: string,
+  src: string | null | undefined,
+): string | null {
+  const raw = src?.trim();
+  if (!raw) return null;
+  if (/^https?:\/\//i.test(raw)) return raw;
+  const base = origin.replace(/\/$/, "");
+  const path = raw.startsWith("/") ? raw : `/${raw}`;
+  return `${base}${path}`;
+}
 
 function escapeHtml(s: string): string {
   return s
@@ -123,8 +138,6 @@ export function buildDonationReceiptHtmlDocument(
 ): string {
   const dash = "—";
   const donorName = input.donorName.trim() || dash;
-  const donorPhone = input.donorPhone?.trim();
-  const addressLine = donorPhone ? `ফোন: ${donorPhone}` : dash;
   const purpose = input.referenceNote?.trim() || `দান (${input.paymentMethod})`;
   const purposeShort =
     purpose.length > 100 ? `${purpose.slice(0, 97)}…` : purpose;
@@ -141,6 +154,22 @@ export function buildDonationReceiptHtmlDocument(
   const logoUrl = `${origin.replace(/\/$/, "")}/logo.png`;
 
   const e = escapeHtml;
+  const chairmanSigUrl = resolveReceiptAssetUrl(
+    origin,
+    input.chairmanSignatureSrc,
+  );
+  const receiverSigUrl = resolveReceiptAssetUrl(
+    origin,
+    input.receiverSignatureSrc,
+  );
+  // Chairman slot uses receiver image when no chairman asset is configured.
+  const chairmanDisplayUrl = chairmanSigUrl ?? receiverSigUrl ?? null;
+  const chairmanSigHtml = chairmanDisplayUrl
+    ? `<div class="sign-img-wrap"><img class="sign-img" src="${e(chairmanDisplayUrl)}" alt="" decoding="async" /></div>`
+    : "";
+  const receiverSigHtml = receiverSigUrl
+    ? `<div class="sign-img-wrap"><img class="sign-img" src="${e(receiverSigUrl)}" alt="" decoding="async" /></div>`
+    : "";
   const orgName = e(input.orgName.trim());
   const orgTagline = e(input.orgTagline.trim());
   const orgNameEn = e(
@@ -225,6 +254,7 @@ export function buildDonationReceiptHtmlDocument(
     .receipt-actions .btn-secondary {
       border-color: #9a1520;
       background: rgb(237, 28, 36);
+      color: #fff;
     }
     .receipt-actions .btn-secondary:focus-visible {
       outline-color: #9a1520;
@@ -305,7 +335,6 @@ export function buildDonationReceiptHtmlDocument(
       font-weight: 600;
     }
     .field-row .lbl {
-    margin-top: 5px;
       flex-shrink: 0;
       white-space: nowrap;
       padding-top: 2px;
@@ -326,11 +355,11 @@ export function buildDonationReceiptHtmlDocument(
       line-height: 1.35;
     }
     .field-dots {
-    margin-top: -10px;
       width: 100%;
       border-bottom: 1px dotted #4a4d52;
       height: 1.05em;
       min-height: 14px;
+      margin-top: -15px;
     }
     .row-line {
       display: flex;
@@ -347,15 +376,16 @@ export function buildDonationReceiptHtmlDocument(
       white-space: nowrap;
     }
     .amt-box {
-      border: 1px solid #222;
-      background: #fff;
-      padding: 3px 12px 4px;
-      min-width: 92px;
-      text-align: center;
-      font-size: 15px;
-      font-weight: 700;
-      color: #111;
-    }
+    border: 1px dotted #2222222e;
+    background: #fff5f5;
+    padding: 3px 12px 4px;
+    min-width: 92px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+}
     .row-line.amt-row .lbl { padding-bottom: 4px; }
     .field-row--spacing-before-sign {
       margin-bottom: 8px;
@@ -364,15 +394,41 @@ export function buildDonationReceiptHtmlDocument(
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
-      margin-top: 40px;
+      margin-top: 10px;
+      padding-top: 8px;
+    }
+    .sign-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 0;
+      
+    }
+    .sign-img-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      margin-bottom: 6px;
+      min-height: 55px;
+    }
+    .sign-img {
+      max-height: 50px;
+     max-width: min(220px, 100%);
+      width: auto;
+      min-height: 50px;
+      height: auto;
+      object-fit: contain;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .sign-line-wrap {
+      width: 100%;
+      border-top: 1px solid #666;
       padding-top: 8px;
       font-size: 12px;
       font-weight: 700;
       color: rgb(0, 120, 70);
-    }
-    .sign > div {
-      border-top: 1px solid #666;
-      padding-top: 8px;
       text-align: center;
     }
     .band-red {
@@ -418,16 +474,10 @@ export function buildDonationReceiptHtmlDocument(
             <div class="field-dots" aria-hidden="true"></div>
           </div>
         </div>
-        <div class="field-row">
-          <span class="lbl">Address / ঠিকানা :</span>
-          <div class="field-val-col">
-            <span class="val">${e(addressLine)}</span>
-            <div class="field-dots" aria-hidden="true"></div>
-          </div>
-        </div>
+        
         <div class="row-line amt-row">
           <span class="lbl">Amount / পরিমাণ :</span>
-          <span class="amt-box">${e(amountDisplay)}</span>
+          <span class="amt-box">${e(amountDisplay)} ৳ </span>
         </div>
         <div class="field-row">
           <span class="lbl">Purpose / বাবদ :</span>
@@ -444,8 +494,14 @@ export function buildDonationReceiptHtmlDocument(
           </div>
         </div>
         <div class="sign">
-          <div>Chairman / সভাপতি</div>
-          <div>Receiver / আদায়কারী</div>
+          <div class="sign-cell ">
+            ${chairmanSigHtml}
+            <div class="sign-line-wrap">Chairman / সভাপতি</div>
+          </div>
+          <div class="sign-cell">
+            ${receiverSigHtml}
+            <div class="sign-line-wrap">Receiver / আদায়কারী</div>
+          </div>
         </div>
       </div>
       <div class="band-red">${contact} · আপনার সহযোগিতার জন্য কৃতজ্ঞতা।</div>

@@ -63,6 +63,15 @@ export const siteConfig = {
     width: 720,
     height: 160,
   },
+  /**
+   * Optional override for receipt signature images. When `null`, the receipt
+   * route auto-loads `public/signatures/chairman.png` and `receiver.png` if present.
+   * Set a full `https://` URL to host elsewhere.
+   */
+  receiptSignatures: {
+    chairmanPublicPath: null as string | null,
+    receiverPublicPath: null as string | null,
+  },
   footerQuickLinks: [
     { href: "/", key: "home", label: "হোম", description: "মূল পাতা" },
     ...mainNavItems,
