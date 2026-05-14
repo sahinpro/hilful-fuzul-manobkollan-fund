@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { MobileNav } from "@/components/mobile-nav";
 import { PublicNav } from "@/components/public-nav";
+import { SiteLanguageSwitcher } from "@/components/site-language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export function SiteHeader() {
@@ -33,7 +36,8 @@ export function SiteHeader() {
 
         <PublicNav />
 
-        <div className="shrink-0">
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 sm:gap-3">
+          <SiteLanguageSwitcher />
           <ThemeToggle />
         </div>
       </div>

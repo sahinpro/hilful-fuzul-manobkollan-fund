@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { mainNavItems } from "@/config/site";
+import { useSiteI18n } from "@/components/site-i18n-provider";
 import { cn } from "@/lib/utils";
 
 export function PublicNav() {
   const pathname = usePathname();
+  const { t } = useSiteI18n();
 
   return (
     <nav className="hidden lg:flex lg:items-center lg:gap-1.5">
@@ -24,7 +26,7 @@ export function PublicNav() {
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",
             )}
           >
-            {item.label}
+            {t(`nav.${item.key}`)}
           </Link>
         );
       })}

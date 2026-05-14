@@ -6,6 +6,38 @@ import { expenseCreateBodySchema } from "@/lib/validation/admin";
 
 export const dynamic = "force-dynamic";
 
+export async function GET(request: Request) {
+  const authError = await requireAdminApi(request);
+  if (authError) return authError;
+
+  const supabase = createServiceSupabase();
+  if (!supabase) {
+    return NextResponse.json(
+      { error: "SUPABASE_SERVICE_ROLE_KEY or URL missing on server." },
+      { status: 503 },
+    );
+  }
+
+  const limit = Math.min(
+    500,
+    Math.max(1, Number(new URL(request.url).searchParams.get("limit")) || 200),
+  );
+
+  const { data: expenses, error } = await supabase
+    .from("expenses")
+    .select(
+      "id, category, amount_bdt, description, beneficiary_note, spent_at, is_published, created_at, updated_at",
+    )
+    .order("spent_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+
+  return NextResponse.json({ expenses: expenses ?? [] });
+}
+
 export async function POST(request: Request) {
   const authError = await requireAdminApi(request);
   if (authError) return authError;
@@ -34,7 +66,7 @@ export async function POST(request: Request) {
   const spentAt =
     data.spent_at && data.spent_at.trim() !== ""
       ? new Date(data.spent_at).toISOString()
-      : undefined;
+      : new Date().toISOString();
 
   const insertRow = {
     category: data.category,
@@ -42,7 +74,7 @@ export async function POST(request: Request) {
     description: data.description,
     beneficiary_note: data.beneficiary_note ?? null,
     is_published: data.is_published,
-    ...(spentAt ? { spent_at: spentAt } : {}),
+    spent_at: spentAt,
   };
 
   const { data: expense, error } = await supabase

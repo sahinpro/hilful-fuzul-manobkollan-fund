@@ -8,7 +8,7 @@ const optionalIsoInstant = z
     message: "Must be a valid ISO date-time string",
   });
 
-const donorCreate = z.object({
+export const donorCreateBodySchema = z.object({
   full_name: z.string().min(1).max(500),
   phone: z.string().max(50).optional().nullable(),
   email: z.string().email().max(320).optional().nullable(),
@@ -18,7 +18,7 @@ const donorCreate = z.object({
 export const donationCreateBodySchema = z
   .object({
     donor_id: z.string().uuid().optional().nullable(),
-    donor: donorCreate.optional(),
+    donor: donorCreateBodySchema.optional(),
     amount_bdt: z.coerce.number().positive().max(1_000_000_000_000),
     payment_method: z.string().min(1).max(64).default("cash"),
     reference_note: z.string().max(2000).optional().nullable(),
@@ -43,3 +43,67 @@ export const expenseCreateBodySchema = z.object({
   spent_at: optionalIsoInstant,
   is_published: z.coerce.boolean().optional().default(true),
 });
+
+const donorIdPatch = z
+  .union([z.string().uuid(), z.null()])
+  .optional()
+  .transform((v) => (v === undefined ? undefined : v));
+
+export const donationUpdateBodySchema = z
+  .object({
+    donor_id: donorIdPatch,
+    amount_bdt: z.coerce.number().positive().max(1_000_000_000_000).optional(),
+    payment_method: z.string().min(1).max(64).optional(),
+    reference_note: z.string().max(2000).nullable().optional(),
+    received_at: optionalIsoInstant,
+    is_published: z.coerce.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    const keys = Object.keys(data).filter((k) => data[k as keyof typeof data] !== undefined);
+    if (keys.length === 0) {
+      ctx.addIssue({
+        code: "custom",
+        message: "At least one field is required.",
+        path: [],
+      });
+    }
+  });
+
+export const donorUpdateBodySchema = z
+  .object({
+    full_name: z.string().min(1).max(500).optional(),
+    phone: z.string().max(50).nullable().optional(),
+    email: z.union([z.string().email().max(320), z.literal("")]).nullable().optional(),
+  })
+  .superRefine((data, ctx) => {
+    const keys = (["full_name", "phone", "email"] as const).filter(
+      (k) => data[k] !== undefined,
+    );
+    if (keys.length === 0) {
+      ctx.addIssue({
+        code: "custom",
+        message: "At least one field is required.",
+        path: [],
+      });
+    }
+  });
+
+export const expenseUpdateBodySchema = z
+  .object({
+    category: z.string().min(1).max(200).optional(),
+    amount_bdt: z.coerce.number().positive().max(1_000_000_000_000).optional(),
+    description: z.string().min(1).max(4000).optional(),
+    beneficiary_note: z.string().max(2000).nullable().optional(),
+    spent_at: optionalIsoInstant,
+    is_published: z.coerce.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    const keys = Object.keys(data).filter((k) => data[k as keyof typeof data] !== undefined);
+    if (keys.length === 0) {
+      ctx.addIssue({
+        code: "custom",
+        message: "At least one field is required.",
+        path: [],
+      });
+    }
+  });

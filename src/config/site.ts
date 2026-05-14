@@ -1,5 +1,7 @@
 export type NavItem = {
   href: string;
+  /** Key under `nav.*` in site locale JSON. */
+  key: string;
   label: string;
   description: string;
 };
@@ -12,26 +14,31 @@ export type NavItem = {
 export const mainNavItems = [
   {
     href: "/আমাদের-সম্পর্কে",
+    key: "about",
     label: "আমাদের সম্পর্কে",
     description: "দৃষ্টিভঙ্গি, লক্ষ্য ও পরিচালনা নীতি",
   },
   {
     href: "/কার্যক্রম",
+    key: "activities",
     label: "কার্যক্রম",
     description: "চলমান সামাজিক ও দ্বীনি কার্যক্রম",
   },
   {
     href: "/স্বচ্ছতা",
+    key: "transparency",
     label: "স্বচ্ছতা",
     description: "দান, ব্যয় ও হিসাবের প্রকাশিত তালিকা",
   },
   {
     href: "/বার্ষিক-প্রতিবেদন",
+    key: "annualReport",
     label: "বার্ষিক প্রতিবেদন",
     description: "বছরভিত্তিক আর্থিক ও কার্যক্রম প্রতিবেদন",
   },
   {
     href: "/নোটিশ",
+    key: "notices",
     label: "নোটিশ",
     description: "গুরুত্বপূর্ণ ঘোষণা ও আপডেট",
   },
@@ -48,7 +55,7 @@ export const siteConfig = {
     emailLabel: "ইমেইল",
     email: "hilful.fuzul@example.com",
     addressLabel: "ঠিকানা",
-    addressLines: ["তালেরতল, পলাশ, বিশম্ভরপুর", "সুনামগঞ্জ সদর, সুনামগঞ্জ"],
+    addressLines: ["তালেরতল, পলাশ, বিশম্ভরপুর"],
   },
   paymentBanner: {
     src: "/Group%201903.png" as const,
@@ -57,8 +64,13 @@ export const siteConfig = {
     height: 160,
   },
   footerQuickLinks: [
-    { href: "/", label: "হোম", description: "মূল পাতা" },
+    { href: "/", key: "home", label: "হোম", description: "মূল পাতা" },
     ...mainNavItems,
-    { href: "/অ্যাডমিন", label: "অ্যাডমিন", description: "দান/ব্যয় এন্ট্রি ফর্ম" },
+    {
+      href: "/অ্যাডমিন",
+      key: "admin",
+      label: "অ্যাডমিন",
+      description: "দান/ব্যয় এন্ট্রি ফর্ম",
+    },
   ] satisfies NavItem[],
 };

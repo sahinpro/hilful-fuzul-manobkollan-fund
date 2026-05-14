@@ -11,7 +11,7 @@ export default function AboutPage() {
       subtitle="এই পেইজে সংগঠনের লক্ষ্য, দৃষ্টিভঙ্গি, পরিচালনা নীতি এবং সমাজ উন্নয়নের মূল অঙ্গীকার উপস্থাপন করা হবে।"
     >
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-        <div className="relative aspect-[4/3] min-h-[200px] overflow-hidden rounded-xl border border-border">
+        <div className="relative aspect-4/3 min-h-[200px] overflow-hidden rounded-xl border border-border">
           <Image
             src={siteImages.bannerNature}
             alt="প্রকৃতি ও সম্প্রদায় কল্যাণ — প্রতীকী চিত্র"

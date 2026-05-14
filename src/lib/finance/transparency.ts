@@ -1,3 +1,4 @@
+import { formatPublicBdt } from "@/lib/i18n/format-digits";
 import { createServerSupabase, isSupabaseConfigured } from "@/lib/supabase/server";
 import type { Database } from "@/types/database";
 
@@ -10,11 +11,7 @@ export type TransparencyTotals = {
 export type LedgerRow = Database["public"]["Views"]["transparency_ledger"]["Row"];
 
 export function formatBdtBn(amount: number): string {
-  const n = new Intl.NumberFormat("bn-BD", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
-  return `৳ ${n}`;
+  return formatPublicBdt(amount, "bn");
 }
 
 function parseMoney(value: string | number | null | undefined): number {

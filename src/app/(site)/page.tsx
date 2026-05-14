@@ -2,6 +2,10 @@ import { HomeHero } from "@/components/home-hero";
 import { StatCard } from "@/components/stat-card";
 import { siteImages } from "@/config/images";
 import {
+  fetchTransparencyTotals,
+} from "@/lib/finance/transparency";
+import { formatPublicBdt } from "@/lib/i18n/format-digits";
+import {
   FileSpreadsheet,
   HandHeart,
   Landmark,
@@ -13,26 +17,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-const stats = [
-  {
-    title: "মোট দান",
-    value: "৳ ০.০০",
-    note: "লাইভ ডাটা সংযুক্ত হলে আপডেট হবে",
-    icon: HandHeart,
-  },
-  {
-    title: "মোট ব্যয়",
-    value: "৳ ০.০০",
-    note: "ক্যাটাগরি অনুযায়ী প্রকাশিত হবে",
-    icon: Scale,
-  },
-  {
-    title: "বর্তমান তহবিল",
-    value: "৳ ০.০০",
-    note: "স্বচ্ছতা পেইজে সম্পূর্ণ লেজার থাকবে",
-    icon: Landmark,
-  },
-];
+export const dynamic = "force-dynamic";
 
 const quickLinks = [
   {
@@ -62,7 +47,39 @@ const quickLinks = [
   },
 ] as const;
 
-export default function HomePage() {
+export default async function HomePage() {
+  const totals = await fetchTransparencyTotals();
+  const donationTotal = totals?.totalDonations ?? 0;
+  const expenseTotal = totals?.totalExpenses ?? 0;
+  const balance = totals?.balance ?? 0;
+
+  const stats = [
+    {
+      title: "মোট দান",
+      value: formatPublicBdt(donationTotal, "bn"),
+      note: totals
+        ? "প্রকাশিত (is_published) দান থেকে গণনা।"
+        : "লাইভ ডাটা সংযুক্ত হলে আপডেট হবে",
+      icon: HandHeart,
+    },
+    {
+      title: "মোট ব্যয়",
+      value: formatPublicBdt(expenseTotal, "bn"),
+      note: totals
+        ? "প্রকাশিত ব্যয় থেকে গণনা।"
+        : "ক্যাটাগরি অনুযায়ী প্রকাশিত হবে",
+      icon: Scale,
+    },
+    {
+      title: "বর্তমান তহবিল",
+      value: formatPublicBdt(balance, "bn"),
+      note: totals
+        ? "দান বিয়োগ ব্যয় (প্রকাশিত এন্ট্রি)।"
+        : "স্বচ্ছতা পেইজে সম্পূর্ণ লেজার থাকবে",
+      icon: Landmark,
+    },
+  ];
+
   return (
     <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-10 md:space-y-14 md:py-14">
       <HomeHero />
@@ -81,7 +98,7 @@ export default function HomePage() {
 
       <section className="overflow-hidden rounded-2xl border border-border bg-card">
         <div className="grid md:grid-cols-2">
-          <div className="relative aspect-[4/3] min-h-[200px] w-full md:min-h-[280px]">
+          <div className="relative aspect-4/3 min-h-[200px] w-full md:min-h-[280px]">
             <Image
               src={siteImages.bannerNature}
               alt="সবুজ প্রকৃতি — টেকসই উন্নয়ন ও কল্যাণের প্রতীক"

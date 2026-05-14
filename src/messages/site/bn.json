@@ -1,0 +1,18 @@
+{
+  "language": {
+    "bn": "বাংলা",
+    "en": "ইংরেজি"
+  },
+  "mobile": {
+    "openMenu": "মেনু খুলুন"
+  },
+  "nav": {
+    "home": "হোম",
+    "about": "আমাদের সম্পর্কে",
+    "activities": "কার্যক্রম",
+    "transparency": "স্বচ্ছতা",
+    "annualReport": "বার্ষিক প্রতিবেদন",
+    "notices": "নোটিশ",
+    "admin": "অ্যাডমিন"
+  }
+}

@@ -52,7 +52,7 @@ export function FundOverviewCharts() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="aspect-[4/3] w-full max-h-[320px] min-h-[220px]">
+          <div className="aspect-4/3 w-full max-h-[320px] min-h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={expenseByCategory} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-muted" />

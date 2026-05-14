@@ -1,9 +1,14 @@
+"use client";
+
 import { siteConfig } from "@/config/site";
+import { useSiteI18n } from "@/components/site-i18n-provider";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export function SiteFooter() {
+  const { t } = useSiteI18n();
+
   return (
     <footer className="border-t border-border bg-card">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
@@ -21,8 +26,12 @@ export function SiteFooter() {
               unoptimized
             />
             <div className="text-left">
-              <h3 className="text-lg font-semibold leading-snug">{siteConfig.name}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{siteConfig.location}</p>
+              <h3 className="text-lg font-semibold leading-snug">
+                {siteConfig.name}
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {siteConfig.location}
+              </p>
             </div>
           </Link>
         </div>
@@ -32,11 +41,11 @@ export function SiteFooter() {
           <div className="grid gap-1">
             {siteConfig.footerQuickLinks.map((item) => (
               <Link
-                key={`${item.href}-${item.label}`}
+                key={item.href}
                 href={item.href}
                 className="text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
-                {item.label}
+                {t(`nav.${item.key}`)}
               </Link>
             ))}
           </div>
@@ -46,26 +55,44 @@ export function SiteFooter() {
           <h4 className="text-sm font-semibold">যোগাযোগ</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex gap-2">
-              <Phone className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+              <Phone
+                className="mt-0.5 size-4 shrink-0 text-primary"
+                aria-hidden
+              />
               <span>
-                <span className="font-medium text-foreground">{siteConfig.contact.phoneLabel}: </span>
+                <span className="font-medium text-foreground">
+                  {siteConfig.contact.phoneLabel}:{" "}
+                </span>
                 {siteConfig.contact.phone}
               </span>
             </li>
             <li className="flex gap-2">
-              <Mail className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+              <Mail
+                className="mt-0.5 size-4 shrink-0 text-primary"
+                aria-hidden
+              />
               <span>
-                <span className="font-medium text-foreground">{siteConfig.contact.emailLabel}: </span>
-                <a href={`mailto:${siteConfig.contact.email}`} className="underline-offset-2 hover:underline">
+                <span className="font-medium text-foreground">
+                  {siteConfig.contact.emailLabel}:{" "}
+                </span>
+                <a
+                  href={`mailto:${siteConfig.contact.email}`}
+                  className="underline-offset-2 hover:underline"
+                >
                   {siteConfig.contact.email}
                 </a>
               </span>
             </li>
             <li className="flex gap-2">
-              <MapPin className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+              <MapPin
+                className="mt-0.5 size-4 shrink-0 text-primary"
+                aria-hidden
+              />
               <span>
-                <span className="font-medium text-foreground">{siteConfig.contact.addressLabel}: </span>
-                {siteConfig.contact.addressLines.join("; ")}
+                <span className="font-medium text-foreground">
+                  {siteConfig.contact.addressLabel}:{" "}
+                </span>
+                {siteConfig.contact.addressLines}
               </span>
             </li>
           </ul>
@@ -89,9 +116,12 @@ export function SiteFooter() {
             </div>
           </div>
           <div className="rounded-lg border border-border bg-muted/40 p-3">
-            <h4 className="text-xs font-semibold text-foreground">সিস্টেম নোট</h4>
+            <h4 className="text-xs font-semibold text-foreground">
+              সিস্টেম নোট
+            </h4>
             <p className="mt-1 text-xs text-muted-foreground">
-              Supabase ভিত্তিক লাইভ হিসাব, রসিদ যাচাই ও অ্যাডমিন API (`/api/admin/*`) ব্যবহারের জন্য env সেট করুন।
+              Supabase ভিত্তিক লাইভ হিসাব, রসিদ যাচাই ও অ্যাডমিন API
+              (`/api/admin/*`) ব্যবহারের জন্য env সেট করুন।
             </p>
           </div>
         </div>

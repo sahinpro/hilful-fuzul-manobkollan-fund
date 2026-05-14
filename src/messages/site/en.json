@@ -1,0 +1,18 @@
+{
+  "language": {
+    "bn": "Bangla",
+    "en": "English"
+  },
+  "mobile": {
+    "openMenu": "Open menu"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About us",
+    "activities": "Activities",
+    "transparency": "Transparency",
+    "annualReport": "Annual report",
+    "notices": "Notices",
+    "admin": "Admin"
+  }
+}

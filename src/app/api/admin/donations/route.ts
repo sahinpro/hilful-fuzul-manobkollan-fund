@@ -6,6 +6,39 @@ import { donationCreateBodySchema } from "@/lib/validation/admin";
 
 export const dynamic = "force-dynamic";
 
+const DONATION_LIST_COLUMNS =
+  "id, donor_id, amount_bdt, payment_method, reference_note, received_at, is_published, created_at, donors (full_name, phone, email)";
+
+export async function GET(request: Request) {
+  const authError = await requireAdminApi(request);
+  if (authError) return authError;
+
+  const supabase = createServiceSupabase();
+  if (!supabase) {
+    return NextResponse.json(
+      { error: "SUPABASE_SERVICE_ROLE_KEY or URL missing on server." },
+      { status: 503 },
+    );
+  }
+
+  const limit = Math.min(
+    500,
+    Math.max(1, Number(new URL(request.url).searchParams.get("limit")) || 200),
+  );
+
+  const { data: donations, error } = await supabase
+    .from("donations")
+    .select(DONATION_LIST_COLUMNS)
+    .order("received_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+
+  return NextResponse.json({ donations: donations ?? [] });
+}
+
 export async function POST(request: Request) {
   const authError = await requireAdminApi(request);
   if (authError) return authError;
@@ -54,7 +87,7 @@ export async function POST(request: Request) {
   const receivedAt =
     data.received_at && data.received_at.trim() !== ""
       ? new Date(data.received_at).toISOString()
-      : undefined;
+      : new Date().toISOString();
 
   const insertRow = {
     donor_id: donorId,
@@ -62,7 +95,7 @@ export async function POST(request: Request) {
     payment_method: data.payment_method,
     reference_note: data.reference_note ?? null,
     is_published: data.is_published,
-    ...(receivedAt ? { received_at: receivedAt } : {}),
+    received_at: receivedAt,
   };
 
   const { data: donation, error } = await supabase
