@@ -109,3 +109,8 @@ export function useSiteI18n() {
   }
   return ctx;
 }
+
+/** Client components shared with admin (e.g. ThemeToggle) — null outside public site shell. */
+export function useOptionalSiteI18n() {
+  return useContext(SiteI18nContext);
+}

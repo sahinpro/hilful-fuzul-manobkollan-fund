@@ -4,6 +4,7 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useState } from "react";
 import { useOptionalAdminI18n } from "@/components/admin/admin-i18n-provider";
+import { useOptionalSiteI18n } from "@/components/site-i18n-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,7 @@ export function ThemeToggle() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const admin = useOptionalAdminI18n();
+  const site = useOptionalSiteI18n();
 
   useEffect(() => {
     queueMicrotask(() => setMounted(true));
@@ -31,6 +33,18 @@ export function ThemeToggle() {
   const L = useMemo(() => {
     if (admin) {
       const { t } = admin;
+      return {
+        chooseAria: () => t("theme.chooseAria"),
+        closeMenu: () => t("theme.closeMenu"),
+        light: () => t("theme.light"),
+        dark: () => t("theme.dark"),
+        system: () => t("theme.system"),
+        systemDark: () => t("theme.systemDark"),
+        systemLight: () => t("theme.systemLight"),
+      };
+    }
+    if (site) {
+      const { t } = site;
       return {
         chooseAria: () => t("theme.chooseAria"),
         closeMenu: () => t("theme.closeMenu"),
@@ -50,7 +64,7 @@ export function ThemeToggle() {
       systemDark: () => SITE_BN.systemDark,
       systemLight: () => SITE_BN.systemLight,
     };
-  }, [admin]);
+  }, [admin, site]);
 
   if (!mounted) {
     return <div className="h-10 w-10 rounded-md border border-border bg-card" aria-hidden />;

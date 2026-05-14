@@ -5,22 +5,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import {
   fetchTransparencyLedger,
   fetchTransparencyTotals,
-  formatBdtBn,
   type LedgerRow,
 } from "@/lib/finance/transparency";
+import { formatPublicBdt, type PublicLocale } from "@/lib/i18n/format-digits";
+import { getSiteTranslator } from "@/lib/i18n/site-server";
 import { isSupabaseConfigured } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
-function kindLabel(kind: string): string {
-  if (kind === "donation") return "দান";
-  if (kind === "expense") return "ব্যয়";
-  return kind;
-}
-
-function formatOccurredAt(iso: string): string {
+function formatOccurredAt(iso: string, locale: PublicLocale): string {
+  const tag = locale === "en" ? "en-GB" : "bn-BD";
   try {
-    return new Date(iso).toLocaleDateString("bn-BD", {
+    return new Date(iso).toLocaleDateString(tag, {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -30,19 +26,32 @@ function formatOccurredAt(iso: string): string {
   }
 }
 
-function ledgerAmount(row: LedgerRow): { text: string; className: string } {
+function kindLabel(kind: string, t: (key: string) => string): string {
+  if (kind === "donation") return t("pages.transparency.kind.donation");
+  if (kind === "expense") return t("pages.transparency.kind.expense");
+  return kind;
+}
+
+function ledgerAmount(row: LedgerRow, locale: PublicLocale): { text: string; className: string } {
   const inn = row.amount_in != null ? Number(row.amount_in) : 0;
   const out = row.amount_out != null ? Number(row.amount_out) : 0;
   if (row.kind === "donation" && inn > 0) {
-    return { text: `+ ${formatBdtBn(inn)}`, className: "text-emerald-600 dark:text-emerald-400" };
+    return {
+      text: `+ ${formatPublicBdt(inn, locale)}`,
+      className: "text-emerald-600 dark:text-emerald-400",
+    };
   }
   if (row.kind === "expense" && out > 0) {
-    return { text: `− ${formatBdtBn(out)}`, className: "text-rose-600 dark:text-rose-400" };
+    return {
+      text: `− ${formatPublicBdt(out, locale)}`,
+      className: "text-rose-600 dark:text-rose-400",
+    };
   }
   return { text: "—", className: "text-muted-foreground" };
 }
 
 export default async function TransparencyPage() {
+  const { locale, t } = await getSiteTranslator();
   const configured = isSupabaseConfigured();
   const [totals, ledger] = await Promise.all([
     fetchTransparencyTotals(),
@@ -55,54 +64,62 @@ export default async function TransparencyPage() {
   const balance = totals?.balance ?? 0;
 
   const statsNote = !configured
-    ? "Supabase সংযোগ (.env.local) যোগ করলে লাইভ মোট দেখাবে।"
+    ? t("pages.transparency.statsNote.noEnv")
     : showLiveTotals
-      ? "শুধু প্রকাশিত (is_published) এন্ট্রি থেকে গণনা।"
-      : "মোট লোড করা যায়নি — টেবিল/আরপিসি মাইগ্রেশন চালু আছে কিনা যাচাই করুন।";
+      ? t("pages.transparency.statsNote.live")
+      : t("pages.transparency.statsNote.error");
 
   const ledgerNote = !configured
-    ? "লাইভ ডাটা সংযুক্ত হলে এন্ট্রি দেখা যাবে।"
+    ? t("pages.transparency.ledgerNote.noEnv")
     : ledger.length === 0
-      ? "এখনও কোনো প্রকাশিত দান বা ব্যয় এন্ট্রি নেই।"
+      ? t("pages.transparency.ledgerNote.empty")
       : null;
 
   return (
     <PageShell
       icon={ScrollText}
-      title="স্বচ্ছতা"
-      subtitle="জনসাধারণের জন্য দান ও ব্যয়ের পূর্ণাঙ্গ হিসাব এই অংশে প্রকাশ করা হবে।"
+      title={t("pages.transparency.title")}
+      subtitle={t("pages.transparency.subtitle")}
     >
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">মোট দান</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              {t("pages.transparency.stats.donationsTitle")}
+            </CardTitle>
             <HandCoins className="h-5 w-5 text-primary" aria-hidden />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{formatBdtBn(donationTotal)}</p>
+            <p className="text-2xl font-bold">{formatPublicBdt(donationTotal, locale)}</p>
             <CardDescription className="mt-1">{statsNote}</CardDescription>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">মোট ব্যয়</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              {t("pages.transparency.stats.expensesTitle")}
+            </CardTitle>
             <ScrollText className="h-5 w-5 text-primary" aria-hidden />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{formatBdtBn(expenseTotal)}</p>
+            <p className="text-2xl font-bold">{formatPublicBdt(expenseTotal, locale)}</p>
             <CardDescription className="mt-1">
-              খাতভিত্তিক বিভাজন চার্টে (নমুনা/পরবর্তীতে লাইভ)।
+              {t("pages.transparency.stats.expensesCardNote")}
             </CardDescription>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">তহবিল অবশিষ্ট</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              {t("pages.transparency.stats.balanceTitle")}
+            </CardTitle>
             <Landmark className="h-5 w-5 text-primary" aria-hidden />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{formatBdtBn(balance)}</p>
-            <CardDescription className="mt-1">লেজার ভিত্তিক ব্যালেন্স (প্রকাশিত এন্ট্রি)।</CardDescription>
+            <p className="text-2xl font-bold">{formatPublicBdt(balance, locale)}</p>
+            <CardDescription className="mt-1">
+              {t("pages.transparency.stats.balanceCardNote")}
+            </CardDescription>
           </CardContent>
         </Card>
       </div>
@@ -113,10 +130,12 @@ export default async function TransparencyPage() {
         <table className="min-w-full text-left text-sm">
           <thead className="bg-muted">
             <tr>
-              <th className="px-4 py-3 font-semibold">তারিখ</th>
-              <th className="px-4 py-3 font-semibold">ধরণ</th>
-              <th className="px-4 py-3 font-semibold">বিবরণ</th>
-              <th className="px-4 py-3 font-semibold">পরিমাণ</th>
+              <th className="px-4 py-3 font-semibold">{t("pages.transparency.table.date")}</th>
+              <th className="px-4 py-3 font-semibold">{t("pages.transparency.table.kind")}</th>
+              <th className="px-4 py-3 font-semibold">
+                {t("pages.transparency.table.description")}
+              </th>
+              <th className="px-4 py-3 font-semibold">{t("pages.transparency.table.amount")}</th>
             </tr>
           </thead>
           <tbody>
@@ -128,13 +147,17 @@ export default async function TransparencyPage() {
               </tr>
             ) : (
               ledger.map((row) => {
-                const amt = ledgerAmount(row);
+                const amt = ledgerAmount(row, locale);
                 return (
                   <tr key={`${row.kind}-${row.id}`} className="border-t border-border">
-                    <td className="px-4 py-3 whitespace-nowrap">{formatOccurredAt(row.occurred_at)}</td>
-                    <td className="px-4 py-3">{kindLabel(row.kind)}</td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {formatOccurredAt(row.occurred_at, locale)}
+                    </td>
+                    <td className="px-4 py-3">{kindLabel(row.kind, t)}</td>
                     <td className="px-4 py-3">{row.description?.trim() || "—"}</td>
-                    <td className={`px-4 py-3 font-medium tabular-nums ${amt.className}`}>{amt.text}</td>
+                    <td className={`px-4 py-3 font-medium tabular-nums ${amt.className}`}>
+                      {amt.text}
+                    </td>
                   </tr>
                 );
               })

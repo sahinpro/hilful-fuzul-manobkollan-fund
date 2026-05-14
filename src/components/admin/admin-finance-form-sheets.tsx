@@ -9,6 +9,7 @@ import {
   AdminDonorSelect,
   AdminExpenseCategorySelect,
   AdminPaymentMethodSelect,
+  linkedDonorOptionFromRow,
 } from "@/components/admin/admin-form-selects";
 import { useAdminI18n } from "@/components/admin/admin-i18n-provider";
 import { AdminDatetimePicker, isoToDatetimeLocal } from "@/components/admin/admin-datetime-picker";
@@ -43,6 +44,28 @@ type DonorOption = {
   phone: string | null;
   email: string | null;
 };
+
+function donorFullNameFromDonationRow(row: DonationListRow): string {
+  const rel = row.donors;
+  if (rel == null) return "";
+  const one = Array.isArray(rel) ? rel[0] : rel;
+  return one?.full_name?.trim() ?? "";
+}
+
+function donorNameForId(
+  donorId: string,
+  row: DonationListRow | null,
+  options: DonorOption[],
+): string {
+  const id = donorId.trim();
+  if (!id) return "";
+  const fromList = options.find((d) => d.id === id);
+  if (fromList) return fromList.full_name;
+  if (row && (row.donor_id ?? "").trim() === id) {
+    return donorFullNameFromDonationRow(row);
+  }
+  return "";
+}
 
 type ApiState = {
   loading: boolean;
@@ -99,6 +122,7 @@ export function AdminDonationFormSheet({
 
   const [editDraft, setEditDraft] = useState({
     donor_id: "",
+    donor_full_name: "",
     amount: "",
     payment_method: "",
     reference_note: "",
@@ -125,6 +149,7 @@ export function AdminDonationFormSheet({
       if (editRow) {
         setEditDraft({
           donor_id: editRow.donor_id ?? "",
+          donor_full_name: donorFullNameFromDonationRow(editRow),
           amount: String(editRow.amount_bdt),
           payment_method: editRow.payment_method,
           reference_note: editRow.reference_note ?? "",
@@ -136,7 +161,16 @@ export function AdminDonationFormSheet({
             const res = await adminFetch<{ donors: DonorOption[] }>(
               "/api/admin/donors?limit=500",
             );
-            setDonorOptions(res.donors ?? []);
+            const list = res.donors ?? [];
+            setDonorOptions(list);
+            setEditDraft((prev) => {
+              if (prev.donor_id.trim() === "" || prev.donor_full_name.trim() !== "") {
+                return prev;
+              }
+              const filled = donorNameForId(prev.donor_id, editRow, list);
+              if (!filled) return prev;
+              return { ...prev, donor_full_name: filled };
+            });
           } catch {
             setDonorOptions([]);
           }
@@ -159,13 +193,24 @@ export function AdminDonationFormSheet({
 
     try {
       if (editRow) {
+        const donorId = editDraft.donor_id.trim();
+        if (donorId && editDraft.donor_full_name.trim() === "") {
+          throw new Error(t("donationForm.donorNameRequiredWhenLinked"));
+        }
+        const directoryName = donorNameForId(donorId, editRow, donorOptions).trim();
+        const desiredName = editDraft.donor_full_name.trim();
+        if (donorId && desiredName !== "" && desiredName !== directoryName) {
+          await adminFetch(`/api/admin/donors/${donorId}`, {
+            method: "PATCH",
+            body: JSON.stringify({ full_name: desiredName }),
+          });
+        }
         const receivedIso =
           editDraft.received_at_local.trim() === ""
             ? undefined
             : new Date(editDraft.received_at_local).toISOString();
         const payload: Record<string, unknown> = {
-          donor_id:
-            editDraft.donor_id.trim() === "" ? null : editDraft.donor_id.trim(),
+          donor_id: donorId === "" ? null : donorId,
           amount_bdt: Number(editDraft.amount),
           payment_method: editDraft.payment_method.trim(),
           reference_note:
@@ -253,11 +298,48 @@ export function AdminDonationFormSheet({
                     id="sheet-donor"
                     value={editDraft.donor_id}
                     onValueChange={(donor_id) =>
-                      setEditDraft((p) => ({ ...p, donor_id }))
+                      setEditDraft((p) => ({
+                        ...p,
+                        donor_id,
+                        donor_full_name: donorNameForId(
+                          donor_id,
+                          editRow,
+                          donorOptions,
+                        ),
+                      }))
                     }
                     donors={donorOptions}
+                    linkedDonor={
+                      editRow
+                        ? linkedDonorOptionFromRow(
+                            editRow,
+                            t("donationsTable.donorNameMissing"),
+                          )
+                        : null
+                    }
                   />
                 </div>
+                {editDraft.donor_id.trim() !== "" ? (
+                  <div className="space-y-2">
+                    <Label htmlFor="sheet-donor-name">
+                      {t("donationForm.donorName")}
+                    </Label>
+                    <Input
+                      id="sheet-donor-name"
+                      value={editDraft.donor_full_name}
+                      onChange={(e) =>
+                        setEditDraft((p) => ({
+                          ...p,
+                          donor_full_name: e.target.value,
+                        }))
+                      }
+                      required
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {t("donationForm.donorNameEditHint")}
+                    </p>
+                  </div>
+                ) : null}
                 <div className="space-y-2">
                   <Label htmlFor="sheet-damt">{t("donationForm.amount")}</Label>
                   <Input

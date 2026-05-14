@@ -1,21 +1,19 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdminApi } from "@/lib/admin/auth";
-import { createServiceSupabase } from "@/lib/supabase/service";
-import { buildDonationReceiptPdf } from "@/lib/pdf/donation-receipt-pdf";
 import { siteConfig } from "@/config/site";
+import { requireAdminApi } from "@/lib/admin/auth";
+import { buildDonationReceiptHtmlDocument } from "@/lib/receipt/donation-receipt-html";
+import { createServiceSupabase } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 const uuidParam = z.string().uuid();
 
-type DonorRel = { full_name: string | null };
+type DonorRel = { full_name: string | null; phone: string | null };
 
-export async function GET(
-  _request: Request,
-  context: { params: Promise<{ id: string }> },
-) {
-  const authError = await requireAdminApi(_request);
+export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
+  const authError = await requireAdminApi(request);
   if (authError) return authError;
 
   const { id } = await context.params;
@@ -36,7 +34,7 @@ export async function GET(
 
   const { data: donation, error: dErr } = await supabase
     .from("donations")
-    .select("id, amount_bdt, payment_method, reference_note, received_at, donors (full_name)")
+    .select("id, amount_bdt, payment_method, reference_note, received_at, donors (full_name, phone)")
     .eq("id", donationId)
     .maybeSingle();
 
@@ -56,28 +54,31 @@ export async function GET(
   const donors = donation.donors as DonorRel | DonorRel[] | null;
   const donorOne = Array.isArray(donors) ? donors[0] : donors;
   const donorName = donorOne?.full_name?.trim() || "—";
+  const donorPhone = donorOne?.phone?.trim() || null;
 
   const receiptNo =
     receipt?.receipt_no?.trim() ||
     `HF-${donationId.replace(/-/g, "").slice(0, 12).toUpperCase()}`;
 
-  const pdfBytes = await buildDonationReceiptPdf({
+  const origin = new URL(request.url).origin;
+  const html = buildDonationReceiptHtmlDocument(origin, {
     receiptNo,
     donorName,
+    donorPhone,
     amountBdt: String(donation.amount_bdt),
     paymentMethod: donation.payment_method,
     referenceNote: donation.reference_note,
     receivedAtIso: donation.received_at,
     orgName: siteConfig.name,
-    orgTagline: siteConfig.location,
+    orgTagline: `${siteConfig.location} · ${siteConfig.contact.addressLines.join(", ")}`,
+    orgNameEn: "Hilful Fuzul Manobkallyan Fund",
+    contactPhones: `${siteConfig.contact.phoneLabel}: ${siteConfig.contact.phone}`,
   });
 
-  const safeFile = receiptNo.replace(/[^\w.-]+/g, "_");
-  return new NextResponse(Buffer.from(pdfBytes), {
+  return new NextResponse(html, {
     status: 200,
     headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="donation-receipt-${safeFile}.pdf"`,
+      "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "no-store",
     },
   });

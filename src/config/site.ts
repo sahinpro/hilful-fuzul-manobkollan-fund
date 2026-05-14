@@ -45,7 +45,7 @@ export const mainNavItems = [
 ] satisfies NavItem[];
 
 export const siteConfig = {
-  name: "হিলফুল ফুজুল মানবকল্যাণ সংগঠন",
+  name: "হিলফুল ফুজুল মানবকল্যাণ ফান্ড",
   shortName: "হিলফুল ফুজুল",
   location: "তালেরতল, পলাশ, বিশম্ভরপুর, সুনামগঞ্জ",
   logoSrc: "/logo.png" as const,

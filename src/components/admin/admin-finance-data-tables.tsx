@@ -1,21 +1,17 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useState, type ReactNode } from "react";
-import { FileDown, MoreVertical } from "lucide-react";
-import { AdminDatetimePicker, isoToDatetimeLocal } from "@/components/admin/admin-datetime-picker";
+import {
+  AdminDatetimePicker,
+  isoToDatetimeLocal,
+} from "@/components/admin/admin-datetime-picker";
 import { useAdminFinanceRefresh } from "@/components/admin/admin-finance-refresh-provider";
-import { useAdminI18n } from "@/components/admin/admin-i18n-provider";
 import {
   AdminDonorSelect,
   AdminExpenseCategorySelect,
   AdminPaymentMethodSelect,
+  linkedDonorOptionFromRow,
 } from "@/components/admin/admin-form-selects";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { useAdminI18n } from "@/components/admin/admin-i18n-provider";
 import {
   AlertDialog,
   AlertDialogBackdrop,
@@ -28,6 +24,15 @@ import {
   AlertDialogTitle,
   AlertDialogViewport,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,9 +40,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { adminFetch } from "@/lib/admin/admin-fetch";
 import { adminDateLocaleTag } from "@/lib/i18n/admin-locale";
 import { formatAdminBdtAmount } from "@/lib/i18n/format-digits";
+import { MoreVertical, Printer } from "lucide-react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 type DonorOption = {
   id: string;
@@ -109,9 +125,10 @@ export function AdminDonationsTable({
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [pendingDelete, setPendingDelete] = useState<DonationListRow | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<DonationListRow | null>(
+    null,
+  );
   const [deleting, setDeleting] = useState(false);
-  const [pdfLoadingId, setPdfLoadingId] = useState<string | null>(null);
   const [draft, setDraft] = useState({
     donor_id: "",
     amount: "",
@@ -127,7 +144,9 @@ export function AdminDonationsTable({
     setError(null);
     try {
       const [dRes, donorsRes] = await Promise.all([
-        adminFetch<{ donations: DonationListRow[] }>("/api/admin/donations?limit=200"),
+        adminFetch<{ donations: DonationListRow[] }>(
+          "/api/admin/donations?limit=200",
+        ),
         adminFetch<{ donors: DonorOption[] }>("/api/admin/donors?limit=500"),
       ]);
       setRows(dRes.donations ?? []);
@@ -171,7 +190,10 @@ export function AdminDonationsTable({
         donor_id: draft.donor_id.trim() === "" ? null : draft.donor_id.trim(),
         amount_bdt: Number(draft.amount),
         payment_method: draft.payment_method.trim(),
-        reference_note: draft.reference_note.trim() === "" ? null : draft.reference_note.trim(),
+        reference_note:
+          draft.reference_note.trim() === ""
+            ? null
+            : draft.reference_note.trim(),
         is_published: draft.is_published,
       };
       if (receivedIso) {
@@ -196,7 +218,9 @@ export function AdminDonationsTable({
     setDeleting(true);
     setError(null);
     try {
-      await adminFetch(`/api/admin/donations/${pendingDelete.id}`, { method: "DELETE" });
+      await adminFetch(`/api/admin/donations/${pendingDelete.id}`, {
+        method: "DELETE",
+      });
       setPendingDelete(null);
       bumpDataRefresh();
       await load();
@@ -207,31 +231,9 @@ export function AdminDonationsTable({
     }
   }
 
-  async function downloadDonationReceiptPdf(row: DonationListRow) {
-    setPdfLoadingId(row.id);
-    setError(null);
-    try {
-      const res = await fetch(`/api/admin/donations/${row.id}/receipt-pdf`, {
-        credentials: "same-origin",
-      });
-      if (!res.ok) {
-        const j = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(typeof j.error === "string" ? j.error : `Request failed (${res.status})`);
-      }
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `donation-receipt-${row.id}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : t("rowActions.pdfFailed"));
-    } finally {
-      setPdfLoadingId(null);
-    }
+  function openDonationReceiptPrint(row: DonationListRow) {
+    const url = `/api/admin/donations/${row.id}/receipt-html`;
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 
   const refreshButton = (
@@ -250,211 +252,267 @@ export function AdminDonationsTable({
   const body = (
     <>
       {embedded && !suppressEmbeddedToolbar ? (
-        <div className="flex flex-wrap items-center justify-end gap-2">{refreshButton}</div>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {refreshButton}
+        </div>
       ) : null}
       {embedded && suppressEmbeddedToolbar && toolbarActions ? (
-        <div className="flex flex-wrap items-center justify-end gap-2">{toolbarActions}</div>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {toolbarActions}
+        </div>
       ) : null}
       {error ? <p className="text-sm text-rose-600">{error}</p> : null}
       <div className="overflow-x-auto rounded-xl border border-border">
         <table className="min-w-[920px] w-full text-left text-sm">
-            <thead className="bg-muted">
+          <thead className="bg-muted">
+            <tr>
+              <th className="px-3 py-2 font-medium">
+                {t("donationsTable.donor")}
+              </th>
+              <th className="px-3 py-2 font-medium">
+                {t("donationsTable.amount")}
+              </th>
+              <th className="px-3 py-2 font-medium">
+                {t("donationsTable.method")}
+              </th>
+              <th className="px-3 py-2 font-medium">
+                {t("donationsTable.note")}
+              </th>
+              <th className="px-3 py-2 font-medium">
+                {t("donationsTable.date")}
+              </th>
+              <th className="px-3 py-2 font-medium">
+                {t("donationsTable.published")}
+              </th>
+              <th className="px-3 py-2 font-medium w-[72px] text-center">
+                {t("donationsTable.actions")}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading && rows.length === 0 ? (
               <tr>
-                <th className="px-3 py-2 font-medium">{t("donationsTable.donor")}</th>
-                <th className="px-3 py-2 font-medium">{t("donationsTable.amount")}</th>
-                <th className="px-3 py-2 font-medium">{t("donationsTable.method")}</th>
-                <th className="px-3 py-2 font-medium">{t("donationsTable.note")}</th>
-                <th className="px-3 py-2 font-medium">{t("donationsTable.date")}</th>
-                <th className="px-3 py-2 font-medium">{t("donationsTable.published")}</th>
-                <th className="px-3 py-2 font-medium w-[72px] text-center">
-                  {t("donationsTable.actions")}
-                </th>
+                <td className="px-3 py-6 text-muted-foreground" colSpan={7}>
+                  {t("donationsTable.loading")}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {loading && rows.length === 0 ? (
-                <tr>
-                  <td className="px-3 py-6 text-muted-foreground" colSpan={7}>
-                    {t("donationsTable.loading")}
-                  </td>
-                </tr>
-              ) : rows.length === 0 ? (
-                <tr>
-                  <td className="px-3 py-6 text-muted-foreground" colSpan={7}>
-                    {t("donationsTable.empty")}
-                  </td>
-                </tr>
-              ) : (
-                rows.map((row) => (
-                  <Fragment key={row.id}>
-                    <tr className="border-t border-border">
-                      <td className="px-3 py-2 align-top">{donorLabel(row)}</td>
-                      <td className="px-3 py-2 align-top tabular-nums">
-                        {formatAdminBdtAmount(row.amount_bdt, locale)}
-                      </td>
-                      <td className="px-3 py-2 align-top">{row.payment_method}</td>
-                      <td className="px-3 py-2 align-top max-w-[200px] truncate" title={row.reference_note ?? ""}>
-                        {row.reference_note?.trim() || "—"}
-                      </td>
-                      <td className="px-3 py-2 align-top whitespace-nowrap" lang={dateLocale}>
-                        {new Date(row.received_at).toLocaleString(dateLocale, {
-                          dateStyle: "medium",
-                          timeStyle: "short",
-                        })}
-                      </td>
-                      <td className="px-3 py-2 align-top">
-                        {row.is_published ? t("donationsTable.yes") : t("donationsTable.no")}
-                      </td>
-                      <td className="px-3 py-2 align-top text-center">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger
-                            type="button"
-                            nativeButton
-                            aria-label={t("rowActions.moreAria")}
-                            disabled={saving || deleting || pdfLoadingId !== null}
-                            className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-background text-foreground transition hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+            ) : rows.length === 0 ? (
+              <tr>
+                <td className="px-3 py-6 text-muted-foreground" colSpan={7}>
+                  {t("donationsTable.empty")}
+                </td>
+              </tr>
+            ) : (
+              rows.map((row) => (
+                <Fragment key={row.id}>
+                  <tr className="border-t border-border">
+                    <td className="px-3 py-2 align-top">{donorLabel(row)}</td>
+                    <td className="px-3 py-2tabular-nums">
+                      {formatAdminBdtAmount(row.amount_bdt, locale)}
+                    </td>
+                    <td className="px-3 py-2 align-top">
+                      {row.payment_method}
+                    </td>
+                    <td
+                      className="px-3 py-2max-w-[200px] truncate"
+                      title={row.reference_note ?? ""}
+                    >
+                      {row.reference_note?.trim() || "—"}
+                    </td>
+                    <td
+                      className="px-3 py-2whitespace-nowrap"
+                      lang={dateLocale}
+                    >
+                      {new Date(row.received_at).toLocaleString(dateLocale, {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </td>
+                    <td className="px-3 py-2 align-top">
+                      {row.is_published
+                        ? t("donationsTable.yes")
+                        : t("donationsTable.no")}
+                    </td>
+                    <td className="px-3 py-2text-center">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
+                          type="button"
+                          nativeButton
+                          aria-label={t("rowActions.moreAria")}
+                          disabled={saving || deleting}
+                          className="inline-flex size-9 items-center justify-center text-foreground transition disabled:pointer-events-none disabled:opacity-50"
+                        >
+                          <MoreVertical className="size-4" aria-hidden />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="min-w-40">
+                          {onViewInSheet ? (
+                            <DropdownMenuItem
+                              onClick={() => {
+                                onViewInSheet(row);
+                              }}
+                            >
+                              {t("rowActions.view")}
+                            </DropdownMenuItem>
+                          ) : null}
+                          <DropdownMenuItem
+                            onClick={() => {
+                              if (onEditInSheet) onEditInSheet(row);
+                              else openEdit(row);
+                            }}
                           >
-                            <MoreVertical className="size-4" aria-hidden />
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="min-w-40">
-                            {onViewInSheet ? (
-                              <DropdownMenuItem
-                                onClick={() => {
-                                  onViewInSheet(row);
-                                }}
-                              >
-                                {t("rowActions.view")}
-                              </DropdownMenuItem>
-                            ) : null}
-                            <DropdownMenuItem
-                              onClick={() => {
-                                if (onEditInSheet) onEditInSheet(row);
-                                else openEdit(row);
-                              }}
+                            {t("rowActions.edit")}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => openDonationReceiptPrint(row)}
+                          >
+                            <span className="flex items-center gap-2">
+                              <Printer
+                                className="size-4 opacity-70"
+                                aria-hidden
+                              />
+                              {t("rowActions.printReceipt")}
+                            </span>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            variant="destructive"
+                            onClick={() => {
+                              setPendingDelete(row);
+                            }}
+                          >
+                            {t("rowActions.delete")}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                  {!onEditInSheet && editingId === row.id ? (
+                    <tr
+                      key={`${row.id}-edit`}
+                      className="border-t border-border bg-muted/40"
+                    >
+                      <td className="px-3 py-4" colSpan={7}>
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                          <div className="space-y-2 md:col-span-2 lg:col-span-3">
+                            <Label htmlFor={`donor-${row.id}`}>
+                              {t("donationsTable.donorSelect")}
+                            </Label>
+                            <AdminDonorSelect
+                              id={`donor-${row.id}`}
+                              value={draft.donor_id}
+                              onValueChange={(donor_id) =>
+                                setDraft((p) => ({ ...p, donor_id }))
+                              }
+                              donors={donorOptions}
+                              linkedDonor={linkedDonorOptionFromRow(
+                                row,
+                                t("donationsTable.donorNameMissing"),
+                              )}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor={`amt-${row.id}`}>
+                              {t("donationForm.amount")}
+                            </Label>
+                            <Input
+                              id={`amt-${row.id}`}
+                              type="number"
+                              min="0.01"
+                              step="0.01"
+                              value={draft.amount}
+                              onChange={(e) =>
+                                setDraft((p) => ({
+                                  ...p,
+                                  amount: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor={`pm-${row.id}`}>
+                              {t("donationForm.method")}
+                            </Label>
+                            <AdminPaymentMethodSelect
+                              id={`pm-${row.id}`}
+                              value={draft.payment_method}
+                              onValueChange={(payment_method) =>
+                                setDraft((p) => ({ ...p, payment_method }))
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2 md:col-span-2 lg:col-span-3">
+                            <AdminDatetimePicker
+                              id={`dt-${row.id}`}
+                              label={t("donationsTable.receivedAt")}
+                              dateLocaleTag={dateLocale}
+                              valueLocal={draft.received_at_local}
+                              onChange={(received_at_local) =>
+                                setDraft((p) => ({ ...p, received_at_local }))
+                              }
+                              disabled={saving}
+                            />
+                          </div>
+                          <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor={`note-${row.id}`}>
+                              {t("donationsTable.referenceNote")}
+                            </Label>
+                            <Textarea
+                              id={`note-${row.id}`}
+                              value={draft.reference_note}
+                              onChange={(e) =>
+                                setDraft((p) => ({
+                                  ...p,
+                                  reference_note: e.target.value,
+                                }))
+                              }
+                              rows={2}
+                            />
+                          </div>
+                          <div className="flex items-center gap-2 md:col-span-2">
+                            <Checkbox
+                              id={`pub-${row.id}`}
+                              checked={draft.is_published}
+                              onCheckedChange={(v) =>
+                                setDraft((p) => ({
+                                  ...p,
+                                  is_published: Boolean(v),
+                                }))
+                              }
+                            />
+                            <Label
+                              htmlFor={`pub-${row.id}`}
+                              className="cursor-pointer text-sm font-normal leading-snug"
                             >
-                              {t("rowActions.edit")}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => void downloadDonationReceiptPdf(row)}
-                              disabled={pdfLoadingId === row.id}
+                              {t("donationsTable.transparencyPublish")}
+                            </Label>
+                          </div>
+                          <div className="flex flex-wrap gap-2 md:col-span-2 lg:col-span-3">
+                            <Button
+                              type="button"
+                              onClick={() => void saveEdit(row.id)}
+                              disabled={saving || !draft.amount.trim()}
                             >
-                              <span className="flex items-center gap-2">
-                                <FileDown className="size-4 opacity-70" aria-hidden />
-                                {t("rowActions.pdfReceipt")}
-                              </span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              variant="destructive"
-                              onClick={() => {
-                                setPendingDelete(row);
-                              }}
+                              {saving
+                                ? t("donationsTable.saving")
+                                : t("donationsTable.save")}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => setEditingId(null)}
+                              disabled={saving}
                             >
-                              {t("rowActions.delete")}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                              {t("donationsTable.cancel")}
+                            </Button>
+                          </div>
+                        </div>
                       </td>
                     </tr>
-                    {!onEditInSheet && editingId === row.id ? (
-                      <tr key={`${row.id}-edit`} className="border-t border-border bg-muted/40">
-                        <td className="px-3 py-4" colSpan={7}>
-                          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                            <div className="space-y-2 md:col-span-2 lg:col-span-3">
-                              <Label htmlFor={`donor-${row.id}`}>{t("donationsTable.donorSelect")}</Label>
-                              <AdminDonorSelect
-                                id={`donor-${row.id}`}
-                                value={draft.donor_id}
-                                onValueChange={(donor_id) => setDraft((p) => ({ ...p, donor_id }))}
-                                donors={donorOptions}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor={`amt-${row.id}`}>{t("donationForm.amount")}</Label>
-                              <Input
-                                id={`amt-${row.id}`}
-                                type="number"
-                                min="0.01"
-                                step="0.01"
-                                value={draft.amount}
-                                onChange={(e) =>
-                                  setDraft((p) => ({ ...p, amount: e.target.value }))
-                                }
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor={`pm-${row.id}`}>{t("donationForm.method")}</Label>
-                              <AdminPaymentMethodSelect
-                                id={`pm-${row.id}`}
-                                value={draft.payment_method}
-                                onValueChange={(payment_method) =>
-                                  setDraft((p) => ({ ...p, payment_method }))
-                                }
-                              />
-                            </div>
-                            <div className="space-y-2 md:col-span-2 lg:col-span-3">
-                              <AdminDatetimePicker
-                                id={`dt-${row.id}`}
-                                label={t("donationsTable.receivedAt")}
-                                dateLocaleTag={dateLocale}
-                                valueLocal={draft.received_at_local}
-                                onChange={(received_at_local) =>
-                                  setDraft((p) => ({ ...p, received_at_local }))
-                                }
-                                disabled={saving}
-                              />
-                            </div>
-                            <div className="space-y-2 md:col-span-2">
-                              <Label htmlFor={`note-${row.id}`}>{t("donationsTable.referenceNote")}</Label>
-                              <Textarea
-                                id={`note-${row.id}`}
-                                value={draft.reference_note}
-                                onChange={(e) =>
-                                  setDraft((p) => ({ ...p, reference_note: e.target.value }))
-                                }
-                                rows={2}
-                              />
-                            </div>
-                            <div className="flex items-center gap-2 md:col-span-2">
-                              <Checkbox
-                                id={`pub-${row.id}`}
-                                checked={draft.is_published}
-                                onCheckedChange={(v) =>
-                                  setDraft((p) => ({ ...p, is_published: Boolean(v) }))
-                                }
-                              />
-                              <Label
-                                htmlFor={`pub-${row.id}`}
-                                className="cursor-pointer text-sm font-normal leading-snug"
-                              >
-                                {t("donationsTable.transparencyPublish")}
-                              </Label>
-                            </div>
-                            <div className="flex flex-wrap gap-2 md:col-span-2 lg:col-span-3">
-                              <Button
-                                type="button"
-                                onClick={() => void saveEdit(row.id)}
-                                disabled={saving || !draft.amount.trim()}
-                              >
-                                {saving ? t("donationsTable.saving") : t("donationsTable.save")}
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => setEditingId(null)}
-                                disabled={saving}
-                              >
-                                {t("donationsTable.cancel")}
-                              </Button>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ) : null}
-                  </Fragment>
-                ))
-              )}
-            </tbody>
+                  ) : null}
+                </Fragment>
+              ))
+            )}
+          </tbody>
         </table>
       </div>
       <AlertDialog
@@ -468,7 +526,9 @@ export function AdminDonationsTable({
           <AlertDialogViewport>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{t("rowActions.deleteDonationTitle")}</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {t("rowActions.deleteDonationTitle")}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
                   {t("rowActions.deleteDonationDescription")}
                 </AlertDialogDescription>
@@ -483,7 +543,9 @@ export function AdminDonationsTable({
                   disabled={deleting}
                   onClick={() => void confirmDeleteDonation()}
                 >
-                  {deleting ? t("rowActions.deleting") : t("rowActions.confirmDelete")}
+                  {deleting
+                    ? t("rowActions.deleting")
+                    : t("rowActions.confirmDelete")}
                 </Button>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -501,8 +563,12 @@ export function AdminDonationsTable({
     <Card>
       <CardHeader className="flex flex-col gap-4 border-b border-border pb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="min-w-0 flex-1 space-y-1.5 text-left">
-          <CardTitle className="text-left">{t("donationsTable.sectionTitle")}</CardTitle>
-          <CardDescription className="text-left">{t("lists.description")}</CardDescription>
+          <CardTitle className="text-left">
+            {t("donationsTable.sectionTitle")}
+          </CardTitle>
+          <CardDescription className="text-left">
+            {t("lists.description")}
+          </CardDescription>
         </div>
         <div className="flex shrink-0 flex-wrap items-center justify-start gap-2 sm:justify-end">
           {listHeaderActions}
@@ -555,7 +621,9 @@ export function AdminExpensesTable({
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [pendingDelete, setPendingDelete] = useState<ExpenseListRow | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<ExpenseListRow | null>(
+    null,
+  );
   const [deleting, setDeleting] = useState(false);
   const [draft, setDraft] = useState({
     category: "",
@@ -571,7 +639,9 @@ export function AdminExpensesTable({
     setLoading(true);
     setError(null);
     try {
-      const res = await adminFetch<{ expenses: ExpenseListRow[] }>("/api/admin/expenses?limit=200");
+      const res = await adminFetch<{ expenses: ExpenseListRow[] }>(
+        "/api/admin/expenses?limit=200",
+      );
       setRows(res.expenses ?? []);
     } catch (e) {
       setError(e instanceof Error ? e.message : t("expensesTable.loadFailed"));
@@ -612,7 +682,10 @@ export function AdminExpensesTable({
         category: draft.category.trim(),
         amount_bdt: Number(draft.amount),
         description: draft.description.trim(),
-        beneficiary_note: draft.beneficiary_note.trim() === "" ? null : draft.beneficiary_note.trim(),
+        beneficiary_note:
+          draft.beneficiary_note.trim() === ""
+            ? null
+            : draft.beneficiary_note.trim(),
         is_published: draft.is_published,
       };
       if (spentIso) {
@@ -637,7 +710,9 @@ export function AdminExpensesTable({
     setDeleting(true);
     setError(null);
     try {
-      await adminFetch(`/api/admin/expenses/${pendingDelete.id}`, { method: "DELETE" });
+      await adminFetch(`/api/admin/expenses/${pendingDelete.id}`, {
+        method: "DELETE",
+      });
       setPendingDelete(null);
       bumpDataRefresh();
       await load();
@@ -664,199 +739,254 @@ export function AdminExpensesTable({
   const body = (
     <>
       {embedded && !suppressEmbeddedToolbar ? (
-        <div className="flex flex-wrap items-center justify-end gap-2">{refreshButton}</div>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {refreshButton}
+        </div>
       ) : null}
       {embedded && suppressEmbeddedToolbar && toolbarActions ? (
-        <div className="flex flex-wrap items-center justify-end gap-2">{toolbarActions}</div>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {toolbarActions}
+        </div>
       ) : null}
       {error ? <p className="text-sm text-rose-600">{error}</p> : null}
       <div className="overflow-x-auto rounded-xl border border-border">
         <table className="min-w-[960px] w-full text-left text-sm">
-            <thead className="bg-muted">
+          <thead className="bg-muted">
+            <tr>
+              <th className="px-3 py-2 font-medium">
+                {t("expensesTable.category")}
+              </th>
+              <th className="px-3 py-2 font-medium">
+                {t("expensesTable.amount")}
+              </th>
+              <th className="px-3 py-2 font-medium">
+                {t("expensesTable.description")}
+              </th>
+              <th className="px-3 py-2 font-medium">
+                {t("expensesTable.beneficiary")}
+              </th>
+              <th className="px-3 py-2 font-medium">
+                {t("expensesTable.date")}
+              </th>
+              <th className="px-3 py-2 font-medium">
+                {t("expensesTable.published")}
+              </th>
+              <th className="px-3 py-2 font-medium w-[72px] text-center">
+                {t("expensesTable.actions")}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading && rows.length === 0 ? (
               <tr>
-                <th className="px-3 py-2 font-medium">{t("expensesTable.category")}</th>
-                <th className="px-3 py-2 font-medium">{t("expensesTable.amount")}</th>
-                <th className="px-3 py-2 font-medium">{t("expensesTable.description")}</th>
-                <th className="px-3 py-2 font-medium">{t("expensesTable.beneficiary")}</th>
-                <th className="px-3 py-2 font-medium">{t("expensesTable.date")}</th>
-                <th className="px-3 py-2 font-medium">{t("expensesTable.published")}</th>
-                <th className="px-3 py-2 font-medium w-[72px] text-center">
-                  {t("expensesTable.actions")}
-                </th>
+                <td className="px-3 py-6 text-muted-foreground" colSpan={7}>
+                  {t("expensesTable.loading")}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {loading && rows.length === 0 ? (
-                <tr>
-                  <td className="px-3 py-6 text-muted-foreground" colSpan={7}>
-                    {t("expensesTable.loading")}
-                  </td>
-                </tr>
-              ) : rows.length === 0 ? (
-                <tr>
-                  <td className="px-3 py-6 text-muted-foreground" colSpan={7}>
-                    {t("expensesTable.empty")}
-                  </td>
-                </tr>
-              ) : (
-                rows.map((row) => (
-                  <Fragment key={row.id}>
-                    <tr className="border-t border-border">
-                      <td className="px-3 py-2 align-top">{row.category}</td>
-                      <td className="px-3 py-2 align-top tabular-nums">
-                        {formatAdminBdtAmount(row.amount_bdt, locale)}
-                      </td>
-                      <td className="px-3 py-2 align-top max-w-[220px]">{row.description}</td>
-                      <td className="px-3 py-2 align-top max-w-[160px] truncate" title={row.beneficiary_note ?? ""}>
-                        {row.beneficiary_note?.trim() || "—"}
-                      </td>
-                      <td className="px-3 py-2 align-top whitespace-nowrap" lang={dateLocale}>
-                        {new Date(row.spent_at).toLocaleString(dateLocale, {
-                          dateStyle: "medium",
-                          timeStyle: "short",
-                        })}
-                      </td>
-                      <td className="px-3 py-2 align-top">
-                        {row.is_published ? t("expensesTable.yes") : t("expensesTable.no")}
-                      </td>
-                      <td className="px-3 py-2 align-top text-center">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger
-                            type="button"
-                            nativeButton
-                            aria-label={t("rowActions.moreAria")}
-                            disabled={saving || deleting}
-                            className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-background text-foreground transition hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+            ) : rows.length === 0 ? (
+              <tr>
+                <td className="px-3 py-6 text-muted-foreground" colSpan={7}>
+                  {t("expensesTable.empty")}
+                </td>
+              </tr>
+            ) : (
+              rows.map((row) => (
+                <Fragment key={row.id}>
+                  <tr className="border-t border-border">
+                    <td className="px-3 py-2 align-top">{row.category}</td>
+                    <td className="px-3 py-2tabular-nums">
+                      {formatAdminBdtAmount(row.amount_bdt, locale)}
+                    </td>
+                    <td className="px-3 py-2max-w-[220px]">
+                      {row.description}
+                    </td>
+                    <td
+                      className="px-3 py-2max-w-[160px] truncate"
+                      title={row.beneficiary_note ?? ""}
+                    >
+                      {row.beneficiary_note?.trim() || "—"}
+                    </td>
+                    <td
+                      className="px-3 py-2whitespace-nowrap"
+                      lang={dateLocale}
+                    >
+                      {new Date(row.spent_at).toLocaleString(dateLocale, {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </td>
+                    <td className="px-3 py-2 align-top">
+                      {row.is_published
+                        ? t("expensesTable.yes")
+                        : t("expensesTable.no")}
+                    </td>
+                    <td className="px-3 py-2text-center">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
+                          type="button"
+                          nativeButton
+                          aria-label={t("rowActions.moreAria")}
+                          disabled={saving || deleting}
+                          className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-background text-foreground transition hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+                        >
+                          <MoreVertical className="size-4" aria-hidden />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="min-w-40">
+                          {onViewInSheet ? (
+                            <DropdownMenuItem
+                              onClick={() => onViewInSheet(row)}
+                            >
+                              {t("rowActions.view")}
+                            </DropdownMenuItem>
+                          ) : null}
+                          <DropdownMenuItem
+                            onClick={() => {
+                              if (onEditInSheet) onEditInSheet(row);
+                              else openEdit(row);
+                            }}
                           >
-                            <MoreVertical className="size-4" aria-hidden />
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="min-w-40">
-                            {onViewInSheet ? (
-                              <DropdownMenuItem onClick={() => onViewInSheet(row)}>
-                                {t("rowActions.view")}
-                              </DropdownMenuItem>
-                            ) : null}
-                            <DropdownMenuItem
-                              onClick={() => {
-                                if (onEditInSheet) onEditInSheet(row);
-                                else openEdit(row);
-                              }}
+                            {t("rowActions.edit")}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            variant="destructive"
+                            onClick={() => setPendingDelete(row)}
+                          >
+                            {t("rowActions.delete")}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                  {!onEditInSheet && editingId === row.id ? (
+                    <tr
+                      key={`${row.id}-edit`}
+                      className="border-t border-border bg-muted/40"
+                    >
+                      <td className="px-3 py-4" colSpan={7}>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label htmlFor={`ecat-${row.id}`}>
+                              {t("expenseForm.category")}
+                            </Label>
+                            <AdminExpenseCategorySelect
+                              id={`ecat-${row.id}`}
+                              value={draft.category}
+                              onValueChange={(category) =>
+                                setDraft((p) => ({ ...p, category }))
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor={`eamt-${row.id}`}>
+                              {t("expenseForm.amount")}
+                            </Label>
+                            <Input
+                              id={`eamt-${row.id}`}
+                              type="number"
+                              min="0.01"
+                              step="0.01"
+                              value={draft.amount}
+                              onChange={(e) =>
+                                setDraft((p) => ({
+                                  ...p,
+                                  amount: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor={`edesc-${row.id}`}>
+                              {t("expenseForm.descriptionLabel")}
+                            </Label>
+                            <Textarea
+                              id={`edesc-${row.id}`}
+                              value={draft.description}
+                              onChange={(e) =>
+                                setDraft((p) => ({
+                                  ...p,
+                                  description: e.target.value,
+                                }))
+                              }
+                              rows={3}
+                            />
+                          </div>
+                          <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor={`eben-${row.id}`}>
+                              {t("expenseForm.beneficiary")}
+                            </Label>
+                            <Input
+                              id={`eben-${row.id}`}
+                              value={draft.beneficiary_note}
+                              onChange={(e) =>
+                                setDraft((p) => ({
+                                  ...p,
+                                  beneficiary_note: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2 md:col-span-2">
+                            <AdminDatetimePicker
+                              id={`esp-${row.id}`}
+                              label={t("expensesTable.spentAt")}
+                              dateLocaleTag={dateLocale}
+                              valueLocal={draft.spent_at_local}
+                              onChange={(spent_at_local) =>
+                                setDraft((p) => ({ ...p, spent_at_local }))
+                              }
+                              disabled={saving}
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Checkbox
+                              id={`epub-${row.id}`}
+                              checked={draft.is_published}
+                              onCheckedChange={(v) =>
+                                setDraft((p) => ({
+                                  ...p,
+                                  is_published: Boolean(v),
+                                }))
+                              }
+                            />
+                            <Label
+                              htmlFor={`epub-${row.id}`}
+                              className="cursor-pointer text-sm font-normal leading-snug"
                             >
-                              {t("rowActions.edit")}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              variant="destructive"
-                              onClick={() => setPendingDelete(row)}
+                              {t("expensesTable.transparencyPublish")}
+                            </Label>
+                          </div>
+                          <div className="flex flex-wrap gap-2 md:col-span-2">
+                            <Button
+                              type="button"
+                              onClick={() => void saveEdit(row.id)}
+                              disabled={
+                                saving ||
+                                !draft.amount.trim() ||
+                                !draft.category.trim() ||
+                                !draft.description.trim()
+                              }
                             >
-                              {t("rowActions.delete")}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                              {saving
+                                ? t("expensesTable.saving")
+                                : t("expensesTable.save")}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => setEditingId(null)}
+                              disabled={saving}
+                            >
+                              {t("expensesTable.cancel")}
+                            </Button>
+                          </div>
+                        </div>
                       </td>
                     </tr>
-                    {!onEditInSheet && editingId === row.id ? (
-                      <tr key={`${row.id}-edit`} className="border-t border-border bg-muted/40">
-                        <td className="px-3 py-4" colSpan={7}>
-                          <div className="grid gap-4 md:grid-cols-2">
-                            <div className="space-y-2">
-                              <Label htmlFor={`ecat-${row.id}`}>{t("expenseForm.category")}</Label>
-                              <AdminExpenseCategorySelect
-                                id={`ecat-${row.id}`}
-                                value={draft.category}
-                                onValueChange={(category) => setDraft((p) => ({ ...p, category }))}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor={`eamt-${row.id}`}>{t("expenseForm.amount")}</Label>
-                              <Input
-                                id={`eamt-${row.id}`}
-                                type="number"
-                                min="0.01"
-                                step="0.01"
-                                value={draft.amount}
-                                onChange={(e) =>
-                                  setDraft((p) => ({ ...p, amount: e.target.value }))
-                                }
-                              />
-                            </div>
-                            <div className="space-y-2 md:col-span-2">
-                              <Label htmlFor={`edesc-${row.id}`}>{t("expenseForm.descriptionLabel")}</Label>
-                              <Textarea
-                                id={`edesc-${row.id}`}
-                                value={draft.description}
-                                onChange={(e) =>
-                                  setDraft((p) => ({ ...p, description: e.target.value }))
-                                }
-                                rows={3}
-                              />
-                            </div>
-                            <div className="space-y-2 md:col-span-2">
-                              <Label htmlFor={`eben-${row.id}`}>{t("expenseForm.beneficiary")}</Label>
-                              <Input
-                                id={`eben-${row.id}`}
-                                value={draft.beneficiary_note}
-                                onChange={(e) =>
-                                  setDraft((p) => ({ ...p, beneficiary_note: e.target.value }))
-                                }
-                              />
-                            </div>
-                            <div className="space-y-2 md:col-span-2">
-                              <AdminDatetimePicker
-                                id={`esp-${row.id}`}
-                                label={t("expensesTable.spentAt")}
-                                dateLocaleTag={dateLocale}
-                                valueLocal={draft.spent_at_local}
-                                onChange={(spent_at_local) =>
-                                  setDraft((p) => ({ ...p, spent_at_local }))
-                                }
-                                disabled={saving}
-                              />
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Checkbox
-                                id={`epub-${row.id}`}
-                                checked={draft.is_published}
-                                onCheckedChange={(v) =>
-                                  setDraft((p) => ({ ...p, is_published: Boolean(v) }))
-                                }
-                              />
-                              <Label
-                                htmlFor={`epub-${row.id}`}
-                                className="cursor-pointer text-sm font-normal leading-snug"
-                              >
-                                {t("expensesTable.transparencyPublish")}
-                              </Label>
-                            </div>
-                            <div className="flex flex-wrap gap-2 md:col-span-2">
-                              <Button
-                                type="button"
-                                onClick={() => void saveEdit(row.id)}
-                                disabled={
-                                  saving ||
-                                  !draft.amount.trim() ||
-                                  !draft.category.trim() ||
-                                  !draft.description.trim()
-                                }
-                              >
-                                {saving ? t("expensesTable.saving") : t("expensesTable.save")}
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => setEditingId(null)}
-                                disabled={saving}
-                              >
-                                {t("expensesTable.cancel")}
-                              </Button>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ) : null}
-                  </Fragment>
-                ))
-              )}
-            </tbody>
+                  ) : null}
+                </Fragment>
+              ))
+            )}
+          </tbody>
         </table>
       </div>
       <AlertDialog
@@ -870,7 +1000,9 @@ export function AdminExpensesTable({
           <AlertDialogViewport>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{t("rowActions.deleteExpenseTitle")}</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {t("rowActions.deleteExpenseTitle")}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
                   {t("rowActions.deleteExpenseDescription")}
                 </AlertDialogDescription>
@@ -885,7 +1017,9 @@ export function AdminExpensesTable({
                   disabled={deleting}
                   onClick={() => void confirmDeleteExpense()}
                 >
-                  {deleting ? t("rowActions.deleting") : t("rowActions.confirmDelete")}
+                  {deleting
+                    ? t("rowActions.deleting")
+                    : t("rowActions.confirmDelete")}
                 </Button>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -903,8 +1037,12 @@ export function AdminExpensesTable({
     <Card>
       <CardHeader className="flex flex-col gap-4 border-b border-border pb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="min-w-0 flex-1 space-y-1.5 text-left">
-          <CardTitle className="text-left">{t("expensesTable.sectionTitle")}</CardTitle>
-          <CardDescription className="text-left">{t("lists.description")}</CardDescription>
+          <CardTitle className="text-left">
+            {t("expensesTable.sectionTitle")}
+          </CardTitle>
+          <CardDescription className="text-left">
+            {t("lists.description")}
+          </CardDescription>
         </div>
         <div className="flex shrink-0 flex-wrap items-center justify-start gap-2 sm:justify-end">
           {listHeaderActions}

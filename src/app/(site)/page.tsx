@@ -1,10 +1,10 @@
 import { HomeHero } from "@/components/home-hero";
 import { StatCard } from "@/components/stat-card";
 import { siteImages } from "@/config/images";
-import {
-  fetchTransparencyTotals,
-} from "@/lib/finance/transparency";
+import { mainNavItems } from "@/config/site";
+import { fetchTransparencyTotals } from "@/lib/finance/transparency";
 import { formatPublicBdt } from "@/lib/i18n/format-digits";
+import { getSiteTranslator } from "@/lib/i18n/site-server";
 import {
   FileSpreadsheet,
   HandHeart,
@@ -19,35 +19,21 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-const quickLinks = [
-  {
-    href: "/স্বচ্ছতা",
-    title: "স্বচ্ছতা",
-    description: "সকল দান, ব্যয় এবং লেজার এন্ট্রি জনসাধারণের জন্য উন্মুক্ত থাকবে।",
-    Icon: ScrollText,
-  },
-  {
-    href: "/কার্যক্রম",
-    title: "কার্যক্রম",
-    description:
-      "চলমান সহায়তা, শিক্ষা, চিকিৎসা ও সমাজ উন্নয়ন কার্যক্রম দেখা যাবে।",
-    Icon: LayoutList,
-  },
-  {
-    href: "/বার্ষিক-প্রতিবেদন",
-    title: "বার্ষিক প্রতিবেদন",
-    description: "বছরভিত্তিক আয়-ব্যয় সারাংশ ও ডকুমেন্ট ডাউনলোড।",
-    Icon: FileSpreadsheet,
-  },
-  {
-    href: "/নোটিশ",
-    title: "নোটিশ",
-    description: "সভা, কার্যক্রম ও গুরুত্বপূর্ণ ঘোষণা এখানে প্রকাশিত হবে।",
-    Icon: Megaphone,
-  },
+const quickLinkDefs = [
+  { navKey: "transparency" as const, messageKey: "transparency" as const, Icon: ScrollText },
+  { navKey: "activities" as const, messageKey: "activities" as const, Icon: LayoutList },
+  { navKey: "annualReport" as const, messageKey: "annualReport" as const, Icon: FileSpreadsheet },
+  { navKey: "notices" as const, messageKey: "notices" as const, Icon: Megaphone },
 ] as const;
 
+function hrefForNavKey(key: (typeof quickLinkDefs)[number]["navKey"]): string {
+  const item = mainNavItems.find((i) => i.key === key);
+  if (!item) throw new Error(`Missing nav item: ${key}`);
+  return item.href;
+}
+
 export default async function HomePage() {
+  const { locale, t } = await getSiteTranslator();
   const totals = await fetchTransparencyTotals();
   const donationTotal = totals?.totalDonations ?? 0;
   const expenseTotal = totals?.totalExpenses ?? 0;
@@ -55,34 +41,33 @@ export default async function HomePage() {
 
   const stats = [
     {
-      title: "মোট দান",
-      value: formatPublicBdt(donationTotal, "bn"),
-      note: totals
-        ? "প্রকাশিত (is_published) দান থেকে গণনা।"
-        : "লাইভ ডাটা সংযুক্ত হলে আপডেট হবে",
+      title: t("home.stats.donationsTitle"),
+      value: formatPublicBdt(donationTotal, locale),
+      note: totals ? t("home.stats.donationsNoteLive") : t("home.stats.donationsNotePending"),
       icon: HandHeart,
     },
     {
-      title: "মোট ব্যয়",
-      value: formatPublicBdt(expenseTotal, "bn"),
-      note: totals
-        ? "প্রকাশিত ব্যয় থেকে গণনা।"
-        : "ক্যাটাগরি অনুযায়ী প্রকাশিত হবে",
+      title: t("home.stats.expensesTitle"),
+      value: formatPublicBdt(expenseTotal, locale),
+      note: totals ? t("home.stats.expensesNoteLive") : t("home.stats.expensesNotePending"),
       icon: Scale,
     },
     {
-      title: "বর্তমান তহবিল",
-      value: formatPublicBdt(balance, "bn"),
-      note: totals
-        ? "দান বিয়োগ ব্যয় (প্রকাশিত এন্ট্রি)।"
-        : "স্বচ্ছতা পেইজে সম্পূর্ণ লেজার থাকবে",
+      title: t("home.stats.balanceTitle"),
+      value: formatPublicBdt(balance, locale),
+      note: totals ? t("home.stats.balanceNoteLive") : t("home.stats.balanceNotePending"),
       icon: Landmark,
     },
   ];
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-10 md:space-y-14 md:py-14">
-      <HomeHero />
+      <HomeHero
+        badge={t("home.hero.badge")}
+        title={t("home.hero.title")}
+        tagline={t("home.hero.tagline")}
+        imageAlt={t("home.hero.imageAlt")}
+      />
 
       <section className="grid gap-4 md:grid-cols-3">
         {stats.map((item) => (
@@ -101,34 +86,35 @@ export default async function HomePage() {
           <div className="relative aspect-4/3 min-h-[200px] w-full md:min-h-[280px]">
             <Image
               src={siteImages.bannerNature}
-              alt="সবুজ প্রকৃতি — টেকসই উন্নয়ন ও কল্যাণের প্রতীক"
+              alt={t("home.bannerAlt")}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
           <div className="flex flex-col justify-center p-6 md:p-10">
-            <h2 className="text-xl font-bold md:text-2xl">আমাদের অঙ্গীকার</h2>
+            <h2 className="text-xl font-bold md:text-2xl">{t("home.commitmentTitle")}</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
-              দান ও ব্যয়ের প্রতিটি ধাপ ডিজিটালভাবে নথিভুক্ত থাকবে; জনসাধারণের জন্য স্বচ্ছতা
-              পেইজে সম্পূর্ণ হিসাব প্রকাশ থাকবে; ম্যানুয়াল দানের জন্য ডিজিটাল রসিদ পাওয়া যাবে।
+              {t("home.commitmentBody")}
             </p>
           </div>
         </div>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {quickLinks.map(({ href, title, description, Icon }) => (
+        {quickLinkDefs.map(({ navKey, messageKey, Icon }) => (
           <Link
-            key={href}
-            href={href}
+            key={navKey}
+            href={hrefForNavKey(navKey)}
             className="flex flex-col rounded-xl border border-border bg-card p-5 transition hover:border-primary"
           >
             <span className="mb-3 inline-flex w-fit rounded-lg bg-primary/10 p-2.5 text-primary">
               <Icon className="size-5 shrink-0" aria-hidden />
             </span>
-            <h2 className="text-lg font-semibold">{title}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{description}</p>
+            <h2 className="text-lg font-semibold">{t(`home.quick.${messageKey}.title`)}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t(`home.quick.${messageKey}.description`)}
+            </p>
           </Link>
         ))}
       </section>

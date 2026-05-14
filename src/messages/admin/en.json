@@ -114,8 +114,7 @@
     "deleteExpenseDescription": "This permanently removes the row from Supabase. This cannot be undone.",
     "deleteDonorTitle": "Delete this donor?",
     "deleteDonorDescription": "This permanently removes the donor profile. If linked donations still reference this donor, the database may reject the delete.",
-    "pdfReceipt": "Download PDF receipt",
-    "pdfFailed": "Could not generate PDF receipt."
+    "printReceipt": "Print receipt (browser)"
   },
   "donorForm": {
     "title": "Add donor",
@@ -145,6 +144,8 @@
     "editDescription": "Update this donation row in Supabase.",
     "openSheet": "New donation",
     "donorName": "Donor name",
+    "donorNameEditHint": "Saves to the donor directory (this donor’s other donations will show the updated name).",
+    "donorNameRequiredWhenLinked": "Enter a donor name, or clear the donor link.",
     "donorOptional": "(optional)",
     "amount": "Amount (BDT)",
     "amountHelp": "Enter the donation amount in Bangladeshi Taka (BDT). Use a decimal if needed (for example 500.50).",
@@ -211,6 +212,7 @@
     "loading": "Loading…",
     "empty": "No donations yet.",
     "noDonorLink": "(no donor link)",
+    "donorNameMissing": "(Linked donor — add to directory or pick another)",
     "donorSelect": "Donor",
     "receivedAt": "Received at",
     "referenceNote": "Reference note",

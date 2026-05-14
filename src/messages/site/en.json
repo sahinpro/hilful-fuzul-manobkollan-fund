@@ -1,5 +1,6 @@
 {
   "language": {
+    "label": "Language",
     "bn": "Bangla",
     "en": "English"
   },
@@ -14,5 +15,154 @@
     "annualReport": "Annual report",
     "notices": "Notices",
     "admin": "Admin"
+  },
+  "site": {
+    "shortName": "Hilful Fuzul",
+    "fullName": "Hilful Fuzul Manobkallyan Fund",
+    "logoAlt": "Hilful Fuzul logo",
+    "homeAria": "Home — Hilful Fuzul"
+  },
+  "theme": {
+    "chooseAria": "Choose theme",
+    "closeMenu": "Close menu",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "systemDark": "System (dark)",
+    "systemLight": "System (light)"
+  },
+  "footer": {
+    "quickLinksTitle": "Quick links",
+    "contactTitle": "Contact",
+    "paymentTitle": "Payment methods",
+    "paymentNote": "You can send donations via the channels below (numbers will be updated soon).",
+    "systemNoteTitle": "System note",
+    "systemNoteBody": "Set environment variables to enable Supabase-backed live accounts, receipt verification, and admin APIs (`/api/admin/*`).",
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "addressLabel": "Address"
+  },
+  "home": {
+    "hero": {
+      "badge": "Welcome",
+      "title": "Hilful Fuzul Manobkallyan Fund",
+      "tagline": "Donations, transparency, and social welfare — in one place.",
+      "imageAlt": "Mosque and community — symbol of Hilful Fuzul’s work"
+    },
+    "stats": {
+      "donationsTitle": "Total donations",
+      "donationsNoteLive": "Calculated from published (is_published) donations.",
+      "donationsNotePending": "Updates when live data is connected.",
+      "expensesTitle": "Total expenses",
+      "expensesNoteLive": "Calculated from published expenses.",
+      "expensesNotePending": "Will be published by category.",
+      "balanceTitle": "Current fund",
+      "balanceNoteLive": "Donations minus expenses (published entries).",
+      "balanceNotePending": "Full ledger will be on the transparency page."
+    },
+    "bannerAlt": "Green nature — symbol of sustainable development and welfare",
+    "commitmentTitle": "Our commitment",
+    "commitmentBody": "Every step of donations and expenses will be recorded digitally; the full accounts will be published on the transparency page; digital receipts will be available for manual donations.",
+    "quick": {
+      "transparency": {
+        "title": "Transparency",
+        "description": "All donations, expenses, and ledger entries will remain open to the public."
+      },
+      "activities": {
+        "title": "Activities",
+        "description": "Ongoing aid, education, healthcare, and community development programmes will appear here."
+      },
+      "annualReport": {
+        "title": "Annual report",
+        "description": "Yearly income–expense summary and document downloads."
+      },
+      "notices": {
+        "title": "Notices",
+        "description": "Meetings, programmes, and important announcements will be published here."
+      }
+    }
+  },
+  "pages": {
+    "about": {
+      "title": "About us",
+      "subtitle": "This page will present the organisation’s goals, vision, governance principles, and core commitments to community development.",
+      "imageAlt": "Nature and community welfare — illustrative image",
+      "sectionTitle": "Message",
+      "body": "The content structure is ready. Next, verified institutional information, governance structure, advisory committee, and organisational history will be added here."
+    },
+    "activities": {
+      "title": "Activities",
+      "subtitle": "Ongoing and planned programmes of the organisation will be published in this section.",
+      "bucketNote": "Under each category, specific programmes, budget allocations, and progress will be added.",
+      "bucket": {
+        "religiousEducation": "Religious education",
+        "financialAid": "Financial assistance",
+        "healthcare": "Healthcare support",
+        "community": "Community development"
+      }
+    },
+    "transparency": {
+      "title": "Transparency",
+      "subtitle": "A complete public account of donations and expenses will be published here.",
+      "stats": {
+        "donationsTitle": "Total donations",
+        "expensesTitle": "Total expenses",
+        "balanceTitle": "Fund balance",
+        "expensesCardNote": "Category split in the chart (sample / live later).",
+        "balanceCardNote": "Ledger-based balance (published entries)."
+      },
+      "statsNote": {
+        "noEnv": "Add the Supabase connection (.env.local) to show live totals.",
+        "live": "Calculated only from published (is_published) entries.",
+        "error": "Could not load totals — check that tables/RPC migrations are applied."
+      },
+      "ledgerNote": {
+        "noEnv": "Entries will appear when live data is connected.",
+        "empty": "There are no published donation or expense entries yet."
+      },
+      "table": {
+        "date": "Date",
+        "kind": "Type",
+        "description": "Description",
+        "amount": "Amount"
+      },
+      "kind": {
+        "donation": "Donation",
+        "expense": "Expense"
+      }
+    },
+    "notices": {
+      "title": "Notices",
+      "subtitle": "Meetings, programmes, and important administrative updates will be published here.",
+      "empty": "No notices have been published yet."
+    },
+    "annualReport": {
+      "title": "Annual report",
+      "subtitle": "Yearly income–expense, programme outcomes, and document downloads will be available here.",
+      "cardTitle": "2026 report",
+      "cardBody": "After publication, a summary, download links, and visual analysis will appear here."
+    },
+    "receipt": {
+      "title": "Receipt verification",
+      "subtitle": "On this page, donation information can be verified by receipt number.",
+      "receiptNoLabel": "Receipt number",
+      "pendingBody": "After connecting to live Supabase, donor name, date, amount, and PDF receipt links will be shown."
+    }
+  },
+  "charts": {
+    "expenseByCategoryTitle": "Expense targets by category (%)",
+    "expenseByCategoryNote": "Sample chart — real figures will appear when live accounting is connected.",
+    "committeeTitle": "Committee layout",
+    "committeeNote": "Advisory vs executive (sample)",
+    "expense": {
+      "service": "Service",
+      "education": "Education",
+      "health": "Healthcare",
+      "community": "Mosque / society"
+    },
+    "committee": {
+      "advisor": "Advisory",
+      "executive": "Executive"
+    }
   }
 }

@@ -1,21 +1,22 @@
-import { FileSpreadsheet } from "lucide-react";
 import { PageShell } from "@/components/page-shell";
+import { getSiteTranslator } from "@/lib/i18n/site-server";
+import { FileSpreadsheet } from "lucide-react";
 
-export default function AnnualReportPage() {
+export default async function AnnualReportPage() {
+  const { t } = await getSiteTranslator();
+
   return (
     <PageShell
       icon={FileSpreadsheet}
-      title="বার্ষিক প্রতিবেদন"
-      subtitle="বছরভিত্তিক আয়-ব্যয়, কার্যক্রম ফলাফল এবং নথিপত্র ডাউনলোড এখানে পাওয়া যাবে।"
+      title={t("pages.annualReport.title")}
+      subtitle={t("pages.annualReport.subtitle")}
     >
       <div className="rounded-xl border border-border bg-card p-6">
         <div className="flex items-center gap-2">
           <FileSpreadsheet className="h-6 w-6 text-primary" aria-hidden />
-          <h2 className="text-lg font-semibold">২০২৬ প্রতিবেদন</h2>
+          <h2 className="text-lg font-semibold">{t("pages.annualReport.cardTitle")}</h2>
         </div>
-        <p className="mt-3 text-sm text-muted-foreground">
-          প্রতিবেদন প্রকাশের পর এখানে সারাংশ, ডাউনলোড লিংক এবং ভিজ্যুয়াল বিশ্লেষণ যুক্ত হবে।
-        </p>
+        <p className="mt-3 text-sm text-muted-foreground">{t("pages.annualReport.cardBody")}</p>
       </div>
     </PageShell>
   );

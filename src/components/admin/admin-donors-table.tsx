@@ -1,11 +1,7 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useState, type ReactNode } from "react";
-import { MoreVertical } from "lucide-react";
 import { useAdminFinanceRefresh } from "@/components/admin/admin-finance-refresh-provider";
 import { useAdminI18n } from "@/components/admin/admin-i18n-provider";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   AlertDialog,
   AlertDialogBackdrop,
@@ -18,6 +14,14 @@ import {
   AlertDialogTitle,
   AlertDialogViewport,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +31,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { adminFetch } from "@/lib/admin/admin-fetch";
+import { MoreVertical } from "lucide-react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 export type DonorRow = {
   id: string;
@@ -72,7 +84,9 @@ export function AdminDonorsTable({
     setLoading(true);
     setError(null);
     try {
-      const res = await adminFetch<{ donors: DonorRow[] }>("/api/admin/donors?limit=500");
+      const res = await adminFetch<{ donors: DonorRow[] }>(
+        "/api/admin/donors?limit=500",
+      );
       setRows(res.donors ?? []);
     } catch (e) {
       setError(e instanceof Error ? e.message : t("donorsTable.loadFailed"));
@@ -123,7 +137,9 @@ export function AdminDonorsTable({
     setDeleting(true);
     setError(null);
     try {
-      await adminFetch(`/api/admin/donors/${pendingDelete.id}`, { method: "DELETE" });
+      await adminFetch(`/api/admin/donors/${pendingDelete.id}`, {
+        method: "DELETE",
+      });
       setPendingDelete(null);
       bumpDataRefresh();
       await load();
@@ -153,7 +169,9 @@ export function AdminDonorsTable({
         </div>
       ) : null}
       {embedded && suppressEmbeddedToolbar && toolbarActions ? (
-        <div className="flex flex-wrap items-center justify-end gap-2">{toolbarActions}</div>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {toolbarActions}
+        </div>
       ) : null}
       {error ? <p className="text-sm text-rose-600">{error}</p> : null}
       <div className="overflow-x-auto rounded-xl border border-border">
@@ -161,9 +179,15 @@ export function AdminDonorsTable({
           <thead className="bg-muted">
             <tr>
               <th className="px-3 py-2 font-medium">{t("donorsTable.name")}</th>
-              <th className="px-3 py-2 font-medium">{t("donorsTable.phone")}</th>
-              <th className="px-3 py-2 font-medium">{t("donorsTable.email")}</th>
-              <th className="px-3 py-2 font-medium w-[72px] text-center">{t("donorsTable.actions")}</th>
+              <th className="px-3 py-2 font-medium">
+                {t("donorsTable.phone")}
+              </th>
+              <th className="px-3 py-2 font-medium">
+                {t("donorsTable.email")}
+              </th>
+              <th className="px-3 py-2 font-medium w-[72px] text-center">
+                {t("donorsTable.actions")}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -183,10 +207,14 @@ export function AdminDonorsTable({
               rows.map((row) => (
                 <Fragment key={row.id}>
                   <tr className="border-t border-border">
-                    <td className="px-3 py-2 align-top font-medium">{row.full_name}</td>
-                    <td className="px-3 py-2 align-top">{row.phone?.trim() || "—"}</td>
-                    <td className="px-3 py-2 align-top">{row.email?.trim() || "—"}</td>
-                    <td className="px-3 py-2 align-top text-center">
+                    <td className="px-3 py-2font-medium">{row.full_name}</td>
+                    <td className="px-3 py-2 align-top">
+                      {row.phone?.trim() || "—"}
+                    </td>
+                    <td className="px-3 py-2 align-top">
+                      {row.email?.trim() || "—"}
+                    </td>
+                    <td className="px-3 py-2text-center">
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           type="button"
@@ -199,7 +227,9 @@ export function AdminDonorsTable({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-40">
                           {onViewInSheet ? (
-                            <DropdownMenuItem onClick={() => onViewInSheet(row)}>
+                            <DropdownMenuItem
+                              onClick={() => onViewInSheet(row)}
+                            >
                               {t("rowActions.view")}
                             </DropdownMenuItem>
                           ) : null}
@@ -226,33 +256,48 @@ export function AdminDonorsTable({
                       <td className="px-3 py-4" colSpan={4}>
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                           <div className="space-y-2 md:col-span-2 lg:col-span-3">
-                            <Label htmlFor={`dn-${row.id}`}>{t("donorsTable.name")}</Label>
+                            <Label htmlFor={`dn-${row.id}`}>
+                              {t("donorsTable.name")}
+                            </Label>
                             <Input
                               id={`dn-${row.id}`}
                               value={draft.full_name}
                               onChange={(e) =>
-                                setDraft((p) => ({ ...p, full_name: e.target.value }))
+                                setDraft((p) => ({
+                                  ...p,
+                                  full_name: e.target.value,
+                                }))
                               }
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor={`dp-${row.id}`}>{t("donorsTable.phone")}</Label>
+                            <Label htmlFor={`dp-${row.id}`}>
+                              {t("donorsTable.phone")}
+                            </Label>
                             <Input
                               id={`dp-${row.id}`}
                               value={draft.phone}
                               onChange={(e) =>
-                                setDraft((p) => ({ ...p, phone: e.target.value }))
+                                setDraft((p) => ({
+                                  ...p,
+                                  phone: e.target.value,
+                                }))
                               }
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor={`de-${row.id}`}>{t("donorsTable.email")}</Label>
+                            <Label htmlFor={`de-${row.id}`}>
+                              {t("donorsTable.email")}
+                            </Label>
                             <Input
                               id={`de-${row.id}`}
                               type="email"
                               value={draft.email}
                               onChange={(e) =>
-                                setDraft((p) => ({ ...p, email: e.target.value }))
+                                setDraft((p) => ({
+                                  ...p,
+                                  email: e.target.value,
+                                }))
                               }
                             />
                           </div>
@@ -262,7 +307,9 @@ export function AdminDonorsTable({
                               onClick={() => void saveEdit(row.id)}
                               disabled={saving || !draft.full_name.trim()}
                             >
-                              {saving ? t("donorsTable.saving") : t("donorsTable.save")}
+                              {saving
+                                ? t("donorsTable.saving")
+                                : t("donorsTable.save")}
                             </Button>
                             <Button
                               type="button"
@@ -294,7 +341,9 @@ export function AdminDonorsTable({
           <AlertDialogViewport>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{t("rowActions.deleteDonorTitle")}</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {t("rowActions.deleteDonorTitle")}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
                   {t("rowActions.deleteDonorDescription")}
                 </AlertDialogDescription>
@@ -309,7 +358,9 @@ export function AdminDonorsTable({
                   disabled={deleting}
                   onClick={() => void confirmDeleteDonor()}
                 >
-                  {deleting ? t("rowActions.deleting") : t("rowActions.confirmDelete")}
+                  {deleting
+                    ? t("rowActions.deleting")
+                    : t("rowActions.confirmDelete")}
                 </Button>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -328,7 +379,9 @@ export function AdminDonorsTable({
       <Card>
         <CardHeader>
           <CardTitle>{t("donorsTable.sectionTitle")}</CardTitle>
-          <CardDescription>{t("donorsTable.sectionDescription")}</CardDescription>
+          <CardDescription>
+            {t("donorsTable.sectionDescription")}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">{body}</CardContent>
       </Card>
