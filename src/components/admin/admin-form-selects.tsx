@@ -21,6 +21,7 @@ export type DonorOption = {
   id: string;
   full_name: string;
   phone: string | null;
+  fathers_name?: string | null;
 };
 
 const NO_DONOR_VALUE = "__none__";
@@ -30,8 +31,16 @@ export function linkedDonorOptionFromRow(
   row: {
     donor_id: string | null;
     donors:
-      | { full_name: string | null; phone: string | null }
-      | Array<{ full_name: string | null; phone: string | null }>
+      | {
+          full_name: string | null;
+          phone: string | null;
+          fathers_name?: string | null;
+        }
+      | Array<{
+          full_name: string | null;
+          phone: string | null;
+          fathers_name?: string | null;
+        }>
       | null;
   },
   nameIfMissing: string,

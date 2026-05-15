@@ -50,7 +50,7 @@ export function SiteI18nProvider({
   cookieLocale: SiteLocale | null;
 }) {
   const router = useRouter();
-  const [locale, setLocaleState] = useState<SiteLocale>(() => cookieLocale ?? "bn");
+  const [locale, setLocaleState] = useState<SiteLocale>(() => cookieLocale ?? "en");
 
   useLayoutEffect(() => {
     void Promise.resolve().then(() => {

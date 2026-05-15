@@ -3,6 +3,8 @@ export type DonationReceiptHtmlInput = {
   /** Kept for API compatibility; not shown on the receipt. */
   bookNo?: string;
   donorName: string;
+  /** Shown when set (from donor profile). */
+  donorFathersName?: string | null;
   donorPhone: string | null;
   amountBdt: string;
   paymentMethod: string;
@@ -138,6 +140,10 @@ export function buildDonationReceiptHtmlDocument(
 ): string {
   const dash = "—";
   const donorName = input.donorName.trim() || dash;
+  const donorFathers =
+    input.donorFathersName?.trim() && input.donorFathersName.trim().length > 0
+      ? input.donorFathersName.trim()
+      : null;
   const purpose = input.referenceNote?.trim() || `দান (${input.paymentMethod})`;
   const purposeShort =
     purpose.length > 100 ? `${purpose.slice(0, 97)}…` : purpose;
@@ -474,6 +480,17 @@ export function buildDonationReceiptHtmlDocument(
             <div class="field-dots" aria-hidden="true"></div>
           </div>
         </div>
+        ${
+          donorFathers
+            ? `<div class="field-row">
+          <span class="lbl">Father's name / পিতার নাম :</span>
+          <div class="field-val-col">
+            <span class="val">${e(donorFathers)}</span>
+            <div class="field-dots" aria-hidden="true"></div>
+          </div>
+        </div>`
+            : ""
+        }
         
         <div class="row-line amt-row">
           <span class="lbl">Amount / পরিমাণ :</span>

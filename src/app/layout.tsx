@@ -3,12 +3,60 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { siteConfig } from "@/config/site";
+import { siteConfig, siteSeo } from "@/config/site";
 import { THEME_BOOT_SCRIPT } from "@/lib/theme/theme-boot-script";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+
 export const metadata: Metadata = {
-  title: siteConfig.name,
-  description: "হিলফুল ফুজুল মানবকল্যাণ ফান্ডের অফিসিয়াল ওয়েব প্ল্যাটফর্ম",
+  metadataBase: siteUrl ? new URL(siteUrl) : undefined,
+  title: {
+    default: siteSeo.title,
+    template: siteSeo.titleTemplate,
+  },
+  description: siteSeo.description,
+  keywords: [...siteSeo.keywords],
+  applicationName: siteConfig.shortName,
+  authors: [{ name: siteConfig.name }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: siteConfig.name,
+    title: siteSeo.title,
+    description: siteSeo.description,
+    images: [
+      {
+        url: siteConfig.logoSrc,
+        width: 512,
+        height: 512,
+        alt: `${siteConfig.shortName} logo`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: siteSeo.title,
+    description: siteSeo.description,
+    images: [siteConfig.logoSrc],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   icons: {
     icon: [{ url: "/logo.png", type: "image/png" }],
     shortcut: "/logo.png",
@@ -22,7 +70,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="bn" suppressHydrationWarning className="h-full antialiased">
+    <html lang="en" suppressHydrationWarning className="h-full antialiased">
       <head>
         <link rel="icon" href="/logo.png" type="image/png" sizes="any" />
         <link rel="apple-touch-icon" href="/logo.png" />

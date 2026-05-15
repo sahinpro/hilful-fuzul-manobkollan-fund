@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           id: string;
           full_name: string;
+          fathers_name: string | null;
           phone: string | null;
           email: string | null;
           notes: string | null;
@@ -21,6 +22,7 @@ export type Database = {
         Insert: {
           id?: string;
           full_name: string;
+          fathers_name?: string | null;
           phone?: string | null;
           email?: string | null;
           notes?: string | null;
@@ -29,6 +31,7 @@ export type Database = {
         Update: {
           id?: string;
           full_name?: string;
+          fathers_name?: string | null;
           phone?: string | null;
           email?: string | null;
           notes?: string | null;
@@ -174,6 +177,36 @@ export type Database = {
           resource_type?: string;
           resource_id?: string | null;
           diff?: Json | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      leadership_members: {
+        Row: {
+          id: string;
+          category: string;
+          full_name: string;
+          fathers_name: string | null;
+          designation: string | null;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          category: string;
+          full_name: string;
+          fathers_name?: string | null;
+          designation?: string | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          category?: string;
+          full_name?: string;
+          fathers_name?: string | null;
+          designation?: string | null;
+          sort_order?: number;
           created_at?: string;
         };
         Relationships: [];

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdminApi } from "@/lib/admin/auth";
 import { writeAuditLog } from "@/lib/admin/audit";
+import { invalidatePublicFinanceCache } from "@/lib/cache/invalidate-public";
 import { createServiceSupabase } from "@/lib/supabase/service";
 import { donationUpdateBodySchema } from "@/lib/validation/admin";
 import type { Database, Json } from "@/types/database";
@@ -13,7 +14,7 @@ export const dynamic = "force-dynamic";
 const uuidParam = z.string().uuid();
 
 const DONATION_SELECT =
-  "id, donor_id, amount_bdt, payment_method, reference_note, received_at, is_published, created_at, donors (full_name, phone, email)";
+  "id, donor_id, amount_bdt, payment_method, reference_note, received_at, is_published, created_at, donors (full_name, fathers_name, phone, email)";
 
 export async function PATCH(
   request: Request,
@@ -91,6 +92,8 @@ export async function PATCH(
     diff: patch as unknown as Json,
   });
 
+  invalidatePublicFinanceCache();
+
   return NextResponse.json({ donation });
 }
 
@@ -146,6 +149,8 @@ export async function DELETE(
     resource_id: donationId,
     diff: null,
   });
+
+  invalidatePublicFinanceCache();
 
   return NextResponse.json({ ok: true });
 }

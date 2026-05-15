@@ -94,10 +94,6 @@ export function SiteFooter() {
               />
             </div>
           </div>
-          <div className="rounded-lg border border-border bg-muted/40 p-3">
-            <h4 className="text-xs font-semibold text-foreground">{t("footer.systemNoteTitle")}</h4>
-            <p className="mt-1 text-xs text-muted-foreground">{t("footer.systemNoteBody")}</p>
-          </div>
         </div>
       </div>
     </footer>

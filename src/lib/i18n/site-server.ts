@@ -8,6 +8,6 @@ export async function getSiteTranslator(): Promise<{
   t: ReturnType<typeof createSiteTranslator>;
 }> {
   const cookieStore = await cookies();
-  const locale = parseSiteLocaleCookie(cookieStore.get(SITE_LOCALE_COOKIE)?.value) ?? "bn";
+  const locale = parseSiteLocaleCookie(cookieStore.get(SITE_LOCALE_COOKIE)?.value) ?? "en";
   return { locale, t: createSiteTranslator(locale) };
 }

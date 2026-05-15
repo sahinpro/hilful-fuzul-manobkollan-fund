@@ -41,6 +41,7 @@ import { useCallback, useEffect, useState } from "react";
 type DonorOption = {
   id: string;
   full_name: string;
+  fathers_name?: string | null;
   phone: string | null;
   email: string | null;
 };
@@ -50,6 +51,13 @@ function donorFullNameFromDonationRow(row: DonationListRow): string {
   if (rel == null) return "";
   const one = Array.isArray(rel) ? rel[0] : rel;
   return one?.full_name?.trim() ?? "";
+}
+
+function donorFathersNameFromDonationRow(row: DonationListRow): string {
+  const rel = row.donors;
+  if (rel == null) return "";
+  const one = Array.isArray(rel) ? rel[0] : rel;
+  return one?.fathers_name?.trim() ?? "";
 }
 
 function donorNameForId(
@@ -63,6 +71,29 @@ function donorNameForId(
   if (fromList) return fromList.full_name;
   if (row && (row.donor_id ?? "").trim() === id) {
     return donorFullNameFromDonationRow(row);
+  }
+  return "";
+}
+
+function donorFathersNameForId(
+  donorId: string,
+  row: DonationListRow | null,
+  options: DonorOption[],
+): string {
+  const id = donorId.trim();
+  if (!id) return "";
+  const fromList = options.find((d) => d.id === id);
+  if (fromList) {
+    if ("fathers_name" in fromList) {
+      return (fromList.fathers_name ?? "").trim();
+    }
+    if (row && (row.donor_id ?? "").trim() === id) {
+      return donorFathersNameFromDonationRow(row);
+    }
+    return "";
+  }
+  if (row && (row.donor_id ?? "").trim() === id) {
+    return donorFathersNameFromDonationRow(row);
   }
   return "";
 }
@@ -114,6 +145,7 @@ export function AdminDonationFormSheet({
 
   const [create, setCreate] = useState({
     donorName: "",
+    fathersName: "",
     amount: "",
     method: "cash",
     note: "",
@@ -123,6 +155,7 @@ export function AdminDonationFormSheet({
   const [editDraft, setEditDraft] = useState({
     donor_id: "",
     donor_full_name: "",
+    donor_fathers_name: "",
     amount: "",
     payment_method: "",
     reference_note: "",
@@ -135,6 +168,7 @@ export function AdminDonationFormSheet({
   const resetCreate = useCallback(() => {
     setCreate({
       donorName: "",
+      fathersName: "",
       amount: "",
       method: "cash",
       note: "",
@@ -150,6 +184,7 @@ export function AdminDonationFormSheet({
         setEditDraft({
           donor_id: editRow.donor_id ?? "",
           donor_full_name: donorFullNameFromDonationRow(editRow),
+          donor_fathers_name: donorFathersNameFromDonationRow(editRow),
           amount: String(editRow.amount_bdt),
           payment_method: editRow.payment_method,
           reference_note: editRow.reference_note ?? "",
@@ -164,12 +199,17 @@ export function AdminDonationFormSheet({
             const list = res.donors ?? [];
             setDonorOptions(list);
             setEditDraft((prev) => {
-              if (prev.donor_id.trim() === "" || prev.donor_full_name.trim() !== "") {
-                return prev;
+              if (prev.donor_id.trim() === "") return prev;
+              let next = prev;
+              if (prev.donor_full_name.trim() === "") {
+                const filled = donorNameForId(prev.donor_id, editRow, list);
+                if (filled) next = { ...next, donor_full_name: filled };
               }
-              const filled = donorNameForId(prev.donor_id, editRow, list);
-              if (!filled) return prev;
-              return { ...prev, donor_full_name: filled };
+              if (prev.donor_fathers_name.trim() === "") {
+                const ff = donorFathersNameForId(prev.donor_id, editRow, list);
+                if (ff) next = { ...next, donor_fathers_name: ff };
+              }
+              return next;
             });
           } catch {
             setDonorOptions([]);
@@ -199,10 +239,23 @@ export function AdminDonationFormSheet({
         }
         const directoryName = donorNameForId(donorId, editRow, donorOptions).trim();
         const desiredName = editDraft.donor_full_name.trim();
+        const directoryFathers = donorFathersNameForId(
+          donorId,
+          editRow,
+          donorOptions,
+        ).trim();
+        const desiredFathers = editDraft.donor_fathers_name.trim();
+        const donorPatch: Record<string, unknown> = {};
         if (donorId && desiredName !== "" && desiredName !== directoryName) {
+          donorPatch.full_name = desiredName;
+        }
+        if (donorId && desiredFathers !== directoryFathers) {
+          donorPatch.fathers_name = desiredFathers === "" ? null : desiredFathers;
+        }
+        if (donorId && Object.keys(donorPatch).length > 0) {
           await adminFetch(`/api/admin/donors/${donorId}`, {
             method: "PATCH",
-            body: JSON.stringify({ full_name: desiredName }),
+            body: JSON.stringify(donorPatch),
           });
         }
         const receivedIso =
@@ -238,7 +291,10 @@ export function AdminDonationFormSheet({
           is_published: create.published,
         };
         if (create.donorName.trim()) {
-          payload.donor = { full_name: create.donorName.trim() };
+          payload.donor = {
+            full_name: create.donorName.trim(),
+            fathers_name: create.fathersName.trim() || null,
+          };
         }
         const res = await postJson("/api/admin/donations", payload);
         const id = res?.donation?.id ?? "created";
@@ -247,7 +303,7 @@ export function AdminDonationFormSheet({
           ok: true,
           message: t("donationForm.success", { id: String(id) }),
         });
-        setCreate((prev) => ({ ...prev, amount: "", note: "" }));
+        setCreate((prev) => ({ ...prev, amount: "", note: "", fathersName: "" }));
       }
       bumpDataRefresh();
     } catch (err) {
@@ -306,6 +362,11 @@ export function AdminDonationFormSheet({
                           editRow,
                           donorOptions,
                         ),
+                        donor_fathers_name: donorFathersNameForId(
+                          donor_id,
+                          editRow,
+                          donorOptions,
+                        ),
                       }))
                     }
                     donors={donorOptions}
@@ -337,6 +398,29 @@ export function AdminDonationFormSheet({
                     />
                     <p className="text-xs text-muted-foreground">
                       {t("donationForm.donorNameEditHint")}
+                    </p>
+                  </div>
+                ) : null}
+                {editDraft.donor_id.trim() !== "" ? (
+                  <div className="space-y-2">
+                    <Label htmlFor="sheet-donor-father">
+                      {t("donationForm.donorFathersName")}{" "}
+                      <span className="font-normal text-muted-foreground">
+                        ({t("donorForm.fathersNameOptional")})
+                      </span>
+                    </Label>
+                    <Input
+                      id="sheet-donor-father"
+                      value={editDraft.donor_fathers_name}
+                      onChange={(e) =>
+                        setEditDraft((p) => ({
+                          ...p,
+                          donor_fathers_name: e.target.value,
+                        }))
+                      }
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {t("donationForm.donorFathersNameEditHint")}
                     </p>
                   </div>
                 ) : null}
@@ -419,6 +503,21 @@ export function AdminDonationFormSheet({
                     value={create.donorName}
                     onChange={(e) =>
                       setCreate((p) => ({ ...p, donorName: e.target.value }))
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="sheet-cfather">
+                    {t("donationForm.donorFathersName")}{" "}
+                    <span className="font-normal text-muted-foreground">
+                      {t("donorForm.fathersNameOptional")}
+                    </span>
+                  </Label>
+                  <Input
+                    id="sheet-cfather"
+                    value={create.fathersName}
+                    onChange={(e) =>
+                      setCreate((p) => ({ ...p, fathersName: e.target.value }))
                     }
                   />
                 </div>
@@ -839,9 +938,10 @@ export function AdminDonorFormSheet({
   const { t } = useAdminI18n();
   const { bumpDataRefresh } = useAdminFinanceRefresh();
   const [formState, setFormState] = useState<ApiState>(initState);
-  const [create, setCreate] = useState({ full_name: "", phone: "", email: "" });
+  const [create, setCreate] = useState({ full_name: "", fathers_name: "", phone: "", email: "" });
   const [editDraft, setEditDraft] = useState({
     full_name: "",
+    fathers_name: "",
     phone: "",
     email: "",
   });
@@ -849,16 +949,18 @@ export function AdminDonorFormSheet({
 
   useEffect(() => {
     if (!open) return;
+    const row = editRow;
     const tid = window.setTimeout(() => {
       setFormState(initState);
-      if (editRow) {
+      if (row) {
         setEditDraft({
-          full_name: editRow.full_name,
-          phone: editRow.phone ?? "",
-          email: editRow.email ?? "",
+          full_name: row.full_name,
+          fathers_name: row.fathers_name ?? "",
+          phone: row.phone ?? "",
+          email: row.email ?? "",
         });
       } else {
-        setCreate({ full_name: "", phone: "", email: "" });
+        setCreate({ full_name: "", fathers_name: "", phone: "", email: "" });
       }
     }, 0);
     return () => window.clearTimeout(tid);
@@ -879,6 +981,10 @@ export function AdminDonorFormSheet({
           method: "PATCH",
           body: JSON.stringify({
             full_name: editDraft.full_name.trim(),
+            fathers_name:
+              editDraft.fathers_name.trim() === ""
+                ? null
+                : editDraft.fathers_name.trim(),
             phone: editDraft.phone.trim() === "" ? null : editDraft.phone.trim(),
             email: editDraft.email.trim(),
           }),
@@ -891,6 +997,7 @@ export function AdminDonorFormSheet({
       } else {
         const payload: Record<string, unknown> = {
           full_name: create.full_name.trim(),
+          fathers_name: create.fathers_name.trim() === "" ? null : create.fathers_name.trim(),
           phone: create.phone.trim() === "" ? null : create.phone.trim(),
         };
         const em = create.email.trim();
@@ -902,7 +1009,7 @@ export function AdminDonorFormSheet({
           ok: true,
           message: t("donorForm.success", { id: String(id) }),
         });
-        setCreate({ full_name: "", phone: "", email: "" });
+        setCreate({ full_name: "", fathers_name: "", phone: "", email: "" });
       }
       bumpDataRefresh();
     } catch (err) {
@@ -957,6 +1064,29 @@ export function AdminDonorFormSheet({
                     isEdit
                       ? setEditDraft((p) => ({ ...p, full_name: e.target.value }))
                       : setCreate((p) => ({ ...p, full_name: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="sheet-donor-father-fn">
+                  {t("donorForm.fathersName")}{" "}
+                  <span className="font-normal text-muted-foreground">
+                    {t("donorForm.fathersNameOptional")}
+                  </span>
+                </Label>
+                <Input
+                  id="sheet-donor-father-fn"
+                  value={isEdit ? editDraft.fathers_name : create.fathers_name}
+                  onChange={(e) =>
+                    isEdit
+                      ? setEditDraft((p) => ({
+                          ...p,
+                          fathers_name: e.target.value,
+                        }))
+                      : setCreate((p) => ({
+                          ...p,
+                          fathers_name: e.target.value,
+                        }))
                   }
                 />
               </div>

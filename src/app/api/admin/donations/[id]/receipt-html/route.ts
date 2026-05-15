@@ -11,7 +11,11 @@ export const runtime = "nodejs";
 
 const uuidParam = z.string().uuid();
 
-type DonorRel = { full_name: string | null; phone: string | null };
+type DonorRel = {
+  full_name: string | null;
+  fathers_name: string | null;
+  phone: string | null;
+};
 
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   const authError = await requireAdminApi(request);
@@ -35,7 +39,9 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
 
   const { data: donation, error: dErr } = await supabase
     .from("donations")
-    .select("id, amount_bdt, payment_method, reference_note, received_at, donors (full_name, phone)")
+    .select(
+      "id, amount_bdt, payment_method, reference_note, received_at, donors (full_name, fathers_name, phone)",
+    )
     .eq("id", donationId)
     .maybeSingle();
 
@@ -55,6 +61,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
   const donors = donation.donors as DonorRel | DonorRel[] | null;
   const donorOne = Array.isArray(donors) ? donors[0] : donors;
   const donorName = donorOne?.full_name?.trim() || "—";
+  const donorFathersName = donorOne?.fathers_name?.trim() || null;
   const donorPhone = donorOne?.phone?.trim() || null;
 
   const receiptNo =
@@ -65,6 +72,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
   const html = buildDonationReceiptHtmlDocument(origin, {
     receiptNo,
     donorName,
+    donorFathersName,
     donorPhone,
     amountBdt: String(donation.amount_bdt),
     paymentMethod: donation.payment_method,

@@ -9,9 +9,7 @@ import {
 } from "@/lib/finance/transparency";
 import { formatPublicBdt, type PublicLocale } from "@/lib/i18n/format-digits";
 import { getSiteTranslator } from "@/lib/i18n/site-server";
-import { isSupabaseConfigured } from "@/lib/supabase/server";
-
-export const dynamic = "force-dynamic";
+import { isSupabaseConfigured } from "@/lib/finance/transparency";
 
 function formatOccurredAt(iso: string, locale: PublicLocale): string {
   const tag = locale === "en" ? "en-GB" : "bn-BD";

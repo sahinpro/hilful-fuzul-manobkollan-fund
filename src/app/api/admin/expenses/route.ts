@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin/auth";
 import { writeAuditLog } from "@/lib/admin/audit";
+import { invalidatePublicFinanceCache } from "@/lib/cache/invalidate-public";
 import { createServiceSupabase } from "@/lib/supabase/service";
 import { expenseCreateBodySchema } from "@/lib/validation/admin";
 
@@ -96,6 +97,8 @@ export async function POST(request: Request) {
       category: expense.category,
     },
   });
+
+  invalidatePublicFinanceCache();
 
   return NextResponse.json({ expense }, { status: 201 });
 }

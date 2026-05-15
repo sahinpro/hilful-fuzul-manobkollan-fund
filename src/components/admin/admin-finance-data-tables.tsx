@@ -58,12 +58,14 @@ import {
 type DonorOption = {
   id: string;
   full_name: string;
+  fathers_name?: string | null;
   phone: string | null;
   email: string | null;
 };
 
 type DonorEmbed = {
   full_name: string;
+  fathers_name?: string | null;
   phone: string | null;
   email: string | null;
 };
@@ -86,6 +88,14 @@ function donorLabel(row: DonationListRow): string {
   const one = Array.isArray(rel) ? rel[0] : rel;
   if (!one?.full_name) return "—";
   return one.full_name;
+}
+
+function donorFathersLabel(row: DonationListRow): string {
+  const rel = row.donors;
+  if (rel == null) return "—";
+  const one = Array.isArray(rel) ? rel[0] : rel;
+  const n = one?.fathers_name?.trim();
+  return n && n.length > 0 ? n : "—";
 }
 
 type DonationsTableProps = {
@@ -270,13 +280,13 @@ export function AdminDonationsTable({
                 {t("donationsTable.donor")}
               </th>
               <th className="px-3 py-2 font-medium">
+                {t("donationsTable.fathersName")}
+              </th>
+              <th className="px-3 py-2 font-medium">
                 {t("donationsTable.amount")}
               </th>
               <th className="px-3 py-2 font-medium">
                 {t("donationsTable.method")}
-              </th>
-              <th className="px-3 py-2 font-medium">
-                {t("donationsTable.note")}
               </th>
               <th className="px-3 py-2 font-medium">
                 {t("donationsTable.date")}
@@ -306,21 +316,14 @@ export function AdminDonationsTable({
               rows.map((row) => (
                 <Fragment key={row.id}>
                   <tr className="border-t border-border">
-                    <td className="px-3 py-2 align-top">{donorLabel(row)}</td>
-                    <td className="px-3 py-2tabular-nums">
+                    <td className="px-3 py-2">{donorLabel(row)}</td>
+                    <td className="px-3 py-2">{donorFathersLabel(row)}</td>
+                    <td className="px-3 py-2 tabular-nums">
                       {formatAdminBdtAmount(row.amount_bdt, locale)}
                     </td>
-                    <td className="px-3 py-2 align-top">
-                      {row.payment_method}
-                    </td>
+                    <td className="px-3 py-2">{row.payment_method}</td>
                     <td
-                      className="px-3 py-2max-w-[200px] truncate"
-                      title={row.reference_note ?? ""}
-                    >
-                      {row.reference_note?.trim() || "—"}
-                    </td>
-                    <td
-                      className="px-3 py-2whitespace-nowrap"
+                      className="px-3 py-2 whitespace-nowrap"
                       lang={dateLocale}
                     >
                       {new Date(row.received_at).toLocaleString(dateLocale, {
@@ -328,12 +331,12 @@ export function AdminDonationsTable({
                         timeStyle: "short",
                       })}
                     </td>
-                    <td className="px-3 py-2 align-top">
+                    <td className="px-3 py-2">
                       {row.is_published
                         ? t("donationsTable.yes")
                         : t("donationsTable.no")}
                     </td>
-                    <td className="px-3 py-2text-center">
+                    <td className="px-3 py-2 text-center">
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           type="button"
@@ -793,7 +796,7 @@ export function AdminExpensesTable({
               rows.map((row) => (
                 <Fragment key={row.id}>
                   <tr className="border-t border-border">
-                    <td className="px-3 py-2 align-top">{row.category}</td>
+                    <td className="px-3 py-2">{row.category}</td>
                     <td className="px-3 py-2tabular-nums">
                       {formatAdminBdtAmount(row.amount_bdt, locale)}
                     </td>
@@ -815,7 +818,7 @@ export function AdminExpensesTable({
                         timeStyle: "short",
                       })}
                     </td>
-                    <td className="px-3 py-2 align-top">
+                    <td className="px-3 py-2">
                       {row.is_published
                         ? t("expensesTable.yes")
                         : t("expensesTable.no")}

@@ -1,8 +1,6 @@
 import { PageShell } from "@/components/page-shell";
 import { getSiteTranslator } from "@/lib/i18n/site-server";
 
-export const dynamic = "force-dynamic";
-
 type ReceiptPageProps = {
   params: Promise<{ receiptNo: string }>;
 };

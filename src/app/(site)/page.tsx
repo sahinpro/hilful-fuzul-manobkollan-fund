@@ -17,8 +17,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
-
 const quickLinkDefs = [
   { navKey: "transparency" as const, messageKey: "transparency" as const, Icon: ScrollText },
   { navKey: "activities" as const, messageKey: "activities" as const, Icon: LayoutList },

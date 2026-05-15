@@ -2,64 +2,50 @@ export type NavItem = {
   href: string;
   /** Key under `nav.*` in site locale JSON. */
   key: string;
-  label: string;
-  description: string;
 };
 
-/**
- * Top bar: five pages only. Home is linked from logo + footer, not here.
- * Bangla `href` values must stay in sync with `src/lib/routes/bangla-paths.ts`
- * (middleware rewrites those URLs to ASCII `app/` routes).
- */
+/** Top bar: five pages only. Home is linked from logo + footer, not here. */
 export const mainNavItems = [
-  {
-    href: "/আমাদের-সম্পর্কে",
-    key: "about",
-    label: "আমাদের সম্পর্কে",
-    description: "দৃষ্টিভঙ্গি, লক্ষ্য ও পরিচালনা নীতি",
-  },
-  {
-    href: "/কার্যক্রম",
-    key: "activities",
-    label: "কার্যক্রম",
-    description: "চলমান সামাজিক ও দ্বীনি কার্যক্রম",
-  },
-  {
-    href: "/স্বচ্ছতা",
-    key: "transparency",
-    label: "স্বচ্ছতা",
-    description: "দান, ব্যয় ও হিসাবের প্রকাশিত তালিকা",
-  },
-  {
-    href: "/বার্ষিক-প্রতিবেদন",
-    key: "annualReport",
-    label: "বার্ষিক প্রতিবেদন",
-    description: "বছরভিত্তিক আর্থিক ও কার্যক্রম প্রতিবেদন",
-  },
-  {
-    href: "/নোটিশ",
-    key: "notices",
-    label: "নোটিশ",
-    description: "গুরুত্বপূর্ণ ঘোষণা ও আপডেট",
-  },
+  { href: "/about", key: "about" },
+  { href: "/activities", key: "activities" },
+  { href: "/transparency", key: "transparency" },
+  { href: "/annual-report", key: "annualReport" },
+  { href: "/notices", key: "notices" },
 ] satisfies NavItem[];
 
+export const siteSeo = {
+  title: "Hilful Fuzul Manobkallyan Fund",
+  titleTemplate: "%s | Hilful Fuzul Manobkallyan Fund",
+  description:
+    "Official website of Hilful Fuzul Manobkallyan Fund — transparent donations, expenses, and community welfare programmes in Sunamganj, Bangladesh.",
+  keywords: [
+    "Hilful Fuzul",
+    "Manobkallyan Fund",
+    "charity",
+    "donation",
+    "transparency",
+    "Sunamganj",
+    "Bangladesh",
+    "welfare",
+  ],
+} as const;
+
 export const siteConfig = {
-  name: "হিলফুল ফুজুল মানবকল্যাণ ফান্ড",
-  shortName: "হিলফুল ফুজুল",
-  location: "তালেরতল, পলাশ, বিশম্ভরপুর, সুনামগঞ্জ",
+  name: "Hilful Fuzul Manobkallyan Fund",
+  shortName: "Hilful Fuzul",
+  location: "Taleratal, Palash, Bishwambarpur, Sunamganj",
   logoSrc: "/logo.png" as const,
   contact: {
-    phoneLabel: "ফোন",
-    phone: "০১৭XX-XXXXXXX",
-    emailLabel: "ইমেইল",
+    phoneLabel: "Phone",
+    phone: "017XX-XXXXXXX",
+    emailLabel: "Email",
     email: "hilful.fuzul@example.com",
-    addressLabel: "ঠিকানা",
-    addressLines: ["তালেরতল, পলাশ, বিশম্ভরপুর"],
+    addressLabel: "Address",
+    addressLines: ["Taleratal, Palash, Bishwambarpur"],
   },
   paymentBanner: {
     src: "/Group%201903.png" as const,
-    alt: "bKash, NexusPay, Nagad, Rocket — গ্রহণযোগ্য পেমেন্ট মাধ্যম",
+    alt: "bKash, NexusPay, Nagad, Rocket — accepted payment methods",
     width: 720,
     height: 160,
   },
@@ -73,13 +59,8 @@ export const siteConfig = {
     receiverPublicPath: null as string | null,
   },
   footerQuickLinks: [
-    { href: "/", key: "home", label: "হোম", description: "মূল পাতা" },
+    { href: "/", key: "home" },
     ...mainNavItems,
-    {
-      href: "/অ্যাডমিন",
-      key: "admin",
-      label: "অ্যাডমিন",
-      description: "দান/ব্যয় এন্ট্রি ফর্ম",
-    },
+    { href: "/admin", key: "admin" },
   ] satisfies NavItem[],
 };

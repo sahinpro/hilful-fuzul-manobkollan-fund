@@ -8,15 +8,15 @@ import { useOptionalSiteI18n } from "@/components/site-i18n-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-/** Public header fallback (Bangla-first site chrome). */
-const SITE_BN = {
-  chooseAria: "থিম বেছে নিন",
-  closeMenu: "মেনু বন্ধ করুন",
-  light: "লাইট",
-  dark: "ডার্ক",
-  system: "সিস্টেম",
-  systemDark: "সিস্টেম (ডার্ক)",
-  systemLight: "সিস্টেম (লাইট)",
+/** Public header fallback when site i18n is unavailable. */
+const SITE_EN = {
+  chooseAria: "Choose theme",
+  closeMenu: "Close menu",
+  light: "Light",
+  dark: "Dark",
+  system: "System",
+  systemDark: "System (dark)",
+  systemLight: "System (light)",
 } as const;
 
 export function ThemeToggle() {
@@ -56,13 +56,13 @@ export function ThemeToggle() {
       };
     }
     return {
-      chooseAria: () => SITE_BN.chooseAria,
-      closeMenu: () => SITE_BN.closeMenu,
-      light: () => SITE_BN.light,
-      dark: () => SITE_BN.dark,
-      system: () => SITE_BN.system,
-      systemDark: () => SITE_BN.systemDark,
-      systemLight: () => SITE_BN.systemLight,
+      chooseAria: () => SITE_EN.chooseAria,
+      closeMenu: () => SITE_EN.closeMenu,
+      light: () => SITE_EN.light,
+      dark: () => SITE_EN.dark,
+      system: () => SITE_EN.system,
+      systemDark: () => SITE_EN.systemDark,
+      systemLight: () => SITE_EN.systemLight,
     };
   }, [admin, site]);
 

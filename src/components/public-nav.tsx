@@ -13,8 +13,7 @@ export function PublicNav() {
   return (
     <nav className="hidden lg:flex lg:items-center lg:gap-1.5">
       {mainNavItems.map((item) => {
-        const isActive =
-          pathname === item.href || pathname === decodeURIComponent(item.href);
+        const isActive = pathname === item.href;
         return (
           <Link
             key={item.href}

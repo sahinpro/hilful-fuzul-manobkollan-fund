@@ -26,7 +26,7 @@ function interpolate(template: string, vars?: Record<string, string | number>): 
 }
 
 export function createSiteTranslator(locale: SiteLocale) {
-  const dict = dictionaries[locale] ?? dictionaries.bn;
+  const dict = dictionaries[locale] ?? dictionaries.en;
 
   function t(key: string, vars?: Record<string, string | number>): string {
     const raw = getNested(dict, key);

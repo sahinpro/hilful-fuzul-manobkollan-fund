@@ -2,30 +2,15 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import type { Database } from "@/types/database";
 
-type UpdateSessionOptions = {
-  rewriteTo?: URL;
-};
-
-function createBaseResponse(request: NextRequest, rewriteTo?: URL) {
-  if (rewriteTo) {
-    return NextResponse.rewrite(rewriteTo, { request });
-  }
-  return NextResponse.next({ request });
-}
-
-export async function updateSession(request: NextRequest, options?: UpdateSessionOptions) {
+export async function updateSession(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const rewriteTo = options?.rewriteTo;
 
   if (!url?.trim() || !anonKey?.trim()) {
-    if (rewriteTo) {
-      return NextResponse.rewrite(rewriteTo, { request });
-    }
     return NextResponse.next({ request });
   }
 
-  let supabaseResponse = createBaseResponse(request, rewriteTo);
+  let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient<Database>(url, anonKey, {
     cookies: {
@@ -34,7 +19,7 @@ export async function updateSession(request: NextRequest, options?: UpdateSessio
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        supabaseResponse = createBaseResponse(request, rewriteTo);
+        supabaseResponse = NextResponse.next({ request });
         cookiesToSet.forEach(({ name, value, options: cookieOpts }) =>
           supabaseResponse.cookies.set(name, value, cookieOpts),
         );

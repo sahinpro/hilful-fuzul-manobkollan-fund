@@ -21,6 +21,8 @@
     "donations": "দান",
     "expenses": "ব্যয়",
     "records": "রেকর্ড",
+    "advisors": "উপদেষ্টা",
+    "executiveMembers": "কার্যনির্বাহী সদস্য",
     "session": "সেশন",
     "openMenu": "মেনু খুলুন",
     "closeMenu": "মেনু বন্ধ করুন",
@@ -114,7 +116,40 @@
     "deleteExpenseDescription": "এটি Supabase থেকে স্থায়ীভাবে সরিয়ে দেবে। পূর্বাবস্থায় ফেরা যাবে না।",
     "deleteDonorTitle": "এই দাতা মুছবেন?",
     "deleteDonorDescription": "দাতা প্রোফাইল স্থায়ীভাবে সরানো হবে। সংযুক্ত দান থাকলে ডাটাবেজ মুছতে অস্বীকৃতি দিতে পারে।",
-    "printReceipt": "রসিদ প্রিন্ট (ব্রাউজার)"
+    "printReceipt": "রসিদ প্রিন্ট",
+    "deleteLeadershipTitle": "এই নাম মুছবেন?",
+    "deleteLeadershipDescription": "জনসাধারণের ‘আমাদের সম্পর্কে’ পাতার তালিকা থেকে সরে যাবে। পরে আবার যোগ করতে পারবেন।"
+  },
+  "leadership": {
+    "advisorsPageTitle": "উপদেষ্টা কমিটি",
+    "executivesPageTitle": "কার্যনির্বাহী সদস্য",
+    "pageDescription": "এই নামগুলো সাইটের ‘আমাদের সম্পর্কে’ পাতায় দেখায়। ছোট ক্রম সংখ্যা আগে আসে।",
+    "openSheet": "সদস্য যোগ করুন"
+  },
+  "leadershipTable": {
+    "sl": "ক্রম",
+    "name": "নাম",
+    "fathersName": "পিতার নাম",
+    "designation": "পদবি / দায়িত্ব",
+    "sortOrder": "সাজানো",
+    "actions": "কার্যক্রম",
+    "loading": "লোড হচ্ছে…",
+    "empty": "এখনও কোনো এন্ট্রি নেই। ‘সদস্য যোগ করুন’ দিয়ে তৈরি করুন।"
+  },
+  "leadershipForm": {
+    "createTitle": "সদস্য যোগ করুন",
+    "editTitle": "সদস্য সম্পাদনা",
+    "description": "জনসাধারণের সাইটে ব্যবহৃত নেতৃত্বের তালিকায় সংরক্ষণ হয়।",
+    "designationOptional": "(ঐচ্ছিক)",
+    "fathersNameOptional": "(ঐচ্ছিক)",
+    "sortOrderHint": "০, ১, ২… দিয়ে এই তালিকার ভিতরে প্রদর্শন ক্রম নিয়ন্ত্রণ করুন।",
+    "submitting": "সংরক্ষণ হচ্ছে…",
+    "saveCreate": "তৈরি করুন",
+    "saveUpdate": "সংরক্ষণ",
+    "close": "বন্ধ",
+    "createSuccess": "সদস্য তৈরি হয়েছে।",
+    "updateSuccess": "আপডেট: {{id}}",
+    "genericError": "অনুরোধ ব্যর্থ"
   },
   "donorForm": {
     "title": "দাতা যোগ করুন",
@@ -123,6 +158,8 @@
     "description": "এই ফর্ম `/api/admin/donors` এ POST করে।",
     "editDescription": "এই দাতাকে Supabase এ আপডেট করুন।",
     "viewDescription": "শুধু পড়ার মতো প্রোফাইল।",
+    "fathersName": "পিতার নাম",
+    "fathersNameOptional": "(ঐচ্ছিক)",
     "openSheet": "নতুন দাতা",
     "submit": "দাতা তৈরি",
     "updateSubmit": "দাতা আপডেট",
@@ -133,6 +170,24 @@
   },
   "dashboard": {
     "subtitle": "অ্যাডমিন রোল দিয়ে লগইন করে দান ও ব্যয় এন্ট্রি দিন।"
+  },
+  "export": {
+    "title": "শীট এক্সপোর্ট",
+    "description": "লোগো, ব্র্যান্ডিং ও ওয়াটারমার্কসহ মুদ্রণযোগ্য দান বা ব্যয়ের রিপোর্ট খুলুন। প্রিন্ট ডায়ালগ থেকে PDF হিসেবে সংরক্ষণ করুন।",
+    "donations": "দান শীট এক্সপোর্ট",
+    "expenses": "ব্যয় শীট এক্সপোর্ট",
+    "opening": "খোলা হচ্ছে…",
+    "hint": "নতুন ট্যাবে প্রিন্ট → PDF হিসেবে সংরক্ষণ করুন।",
+    "print": "প্রিন্ট / PDF সংরক্ষণ",
+    "close": "বন্ধ",
+    "total": "মোট",
+    "sheetSubtitle": "আর্থিক প্রতিবেদন — হিলফুল ফুজুল মানবকল্যাণ ফান্ড",
+    "donationsSheetTitle": "Donation Report ",
+    "expensesSheetTitle": "ব্যয় রেজিস্টার",
+    "recordCount": "{{count}} টি রেকর্ড",
+    "orgLocation": "তালেরতল, পলাশ, বিশম্ভরপুর, সুনামগঞ্জ",
+    "generatedLabel": "প্রস্তুতির সময়",
+    "documentFooter": "এই নথিটি হিলফুল ফুজুল মানবকল্যাণ ফান্ডের অফিসিয়াল আর্থিক রেকর্ড।"
   },
   "session": {
     "title": "লগইন সেশন",
@@ -147,7 +202,9 @@
     "editDescription": "এই দান সারিটি Supabase এ আপডেট করুন।",
     "openSheet": "নতুন দান",
     "donorName": "দাতার নাম",
+    "donorFathersName": "পিতার নাম",
     "donorNameEditHint": "দাতা ডিরেক্টরিতে সংরক্ষিত হবে (এই দাতার অন্য দানেও আপডেট নাম দেখাবে)।",
+    "donorFathersNameEditHint": "দাতা প্রোফাইলে সংরক্ষিত হবে (রসিদ ও দানের তালিকায় দেখাবে)।",
     "donorNameRequiredWhenLinked": "দাতার নাম লিখুন, অথবা দাতা লিঙ্ক সরিয়ে দিন।",
     "donorOptional": "(ঐচ্ছিক)",
     "amount": "পরিমাণ (BDT)",
@@ -202,6 +259,7 @@
   "donationsTable": {
     "sectionTitle": "দানের তালিকা",
     "donor": "দাতা",
+    "fathersName": "পিতার নাম",
     "amount": "পরিমাণ",
     "method": "মাধ্যম",
     "note": "নোট",
@@ -253,6 +311,7 @@
     "sectionTitle": "দাতাদের তালিকা",
     "sectionDescription": "দাতা ডিরেক্টরি। যোগাযোগের তথ্য আপডেট করতে সম্পাদনা ব্যবহার করুন।",
     "name": "নাম",
+    "fathersName": "পিতার নাম",
     "phone": "ফোন",
     "email": "ইমেইল",
     "actions": "কার্যক্রম",

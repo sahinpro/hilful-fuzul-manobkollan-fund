@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin/auth";
 import { writeAuditLog } from "@/lib/admin/audit";
+import { invalidatePublicFinanceCache } from "@/lib/cache/invalidate-public";
 import { createServiceSupabase } from "@/lib/supabase/service";
 import { donationCreateBodySchema } from "@/lib/validation/admin";
 
 export const dynamic = "force-dynamic";
 
 const DONATION_LIST_COLUMNS =
-  "id, donor_id, amount_bdt, payment_method, reference_note, received_at, is_published, created_at, donors (full_name, phone, email)";
+  "id, donor_id, amount_bdt, payment_method, reference_note, received_at, is_published, created_at, donors (full_name, fathers_name, phone, email)";
 
 export async function GET(request: Request) {
   const authError = await requireAdminApi(request);
@@ -71,6 +72,9 @@ export async function POST(request: Request) {
       .from("donors")
       .insert({
         full_name: data.donor.full_name,
+        fathers_name: data.donor.fathers_name?.trim()
+          ? data.donor.fathers_name.trim()
+          : null,
         phone: data.donor.phone ?? null,
         email: data.donor.email ?? null,
         notes: data.donor.notes ?? null,
@@ -117,6 +121,8 @@ export async function POST(request: Request) {
       payment_method: donation.payment_method,
     },
   });
+
+  invalidatePublicFinanceCache();
 
   return NextResponse.json({ donation }, { status: 201 });
 }

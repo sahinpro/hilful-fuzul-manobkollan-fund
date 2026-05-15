@@ -51,6 +51,9 @@ export async function PATCH(
   if (data.full_name !== undefined) {
     patch.full_name = data.full_name;
   }
+  if (data.fathers_name !== undefined) {
+    patch.fathers_name = data.fathers_name === "" ? null : data.fathers_name;
+  }
   if (data.phone !== undefined) {
     patch.phone = data.phone;
   }
@@ -62,7 +65,7 @@ export async function PATCH(
     .from("donors")
     .update(patch)
     .eq("id", idParsed.data)
-    .select("id, full_name, phone, email, created_at")
+    .select("id, full_name, fathers_name, phone, email, created_at")
     .maybeSingle();
 
   if (error) {

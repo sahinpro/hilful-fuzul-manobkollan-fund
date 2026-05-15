@@ -19,6 +19,8 @@ import {
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import {
+  Award,
+  Briefcase,
   CircleDollarSign,
   LayoutDashboard,
   Receipt,
@@ -35,6 +37,8 @@ const NAV_LINKS = [
   { href: "/admin/donations", key: "nav.donations", Icon: CircleDollarSign },
   { href: "/admin/expenses", key: "nav.expenses", Icon: Receipt },
   { href: "/admin/records", key: "nav.records", Icon: Table2 },
+  { href: "/admin/advisors", key: "nav.advisors", Icon: Award },
+  { href: "/admin/executive-members", key: "nav.executiveMembers", Icon: Briefcase },
 ] as const;
 
 const navButtonClassName =

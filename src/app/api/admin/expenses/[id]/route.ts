@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdminApi } from "@/lib/admin/auth";
 import { writeAuditLog } from "@/lib/admin/audit";
+import { invalidatePublicFinanceCache } from "@/lib/cache/invalidate-public";
 import { createServiceSupabase } from "@/lib/supabase/service";
 import { expenseUpdateBodySchema } from "@/lib/validation/admin";
 import type { Database, Json } from "@/types/database";
@@ -91,6 +92,8 @@ export async function PATCH(
     diff: patch as unknown as Json,
   });
 
+  invalidatePublicFinanceCache();
+
   return NextResponse.json({ expense });
 }
 
@@ -135,6 +138,8 @@ export async function DELETE(
     resource_id: idParsed.data,
     diff: null,
   });
+
+  invalidatePublicFinanceCache();
 
   return NextResponse.json({ ok: true });
 }

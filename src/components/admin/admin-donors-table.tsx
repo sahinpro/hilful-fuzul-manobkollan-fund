@@ -43,6 +43,7 @@ import {
 export type DonorRow = {
   id: string;
   full_name: string;
+  fathers_name: string | null;
   phone: string | null;
   email: string | null;
 };
@@ -75,7 +76,12 @@ export function AdminDonorsTable({
   const [saving, setSaving] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<DonorRow | null>(null);
   const [deleting, setDeleting] = useState(false);
-  const [draft, setDraft] = useState({ full_name: "", phone: "", email: "" });
+  const [draft, setDraft] = useState({
+    full_name: "",
+    fathers_name: "",
+    phone: "",
+    email: "",
+  });
 
   const useInlineEdit = !onEditInSheet;
 
@@ -106,6 +112,7 @@ export function AdminDonorsTable({
     setEditingId(row.id);
     setDraft({
       full_name: row.full_name,
+      fathers_name: row.fathers_name ?? "",
       phone: row.phone ?? "",
       email: row.email ?? "",
     });
@@ -119,6 +126,8 @@ export function AdminDonorsTable({
         method: "PATCH",
         body: JSON.stringify({
           full_name: draft.full_name.trim(),
+          fathers_name:
+            draft.fathers_name.trim() === "" ? null : draft.fathers_name.trim(),
           phone: draft.phone.trim() === "" ? null : draft.phone.trim(),
           email: draft.email.trim(),
         }),
@@ -175,10 +184,13 @@ export function AdminDonorsTable({
       ) : null}
       {error ? <p className="text-sm text-rose-600">{error}</p> : null}
       <div className="overflow-x-auto rounded-xl border border-border">
-        <table className="min-w-[720px] w-full text-left text-sm">
+        <table className="min-w-[880px] w-full text-left text-sm">
           <thead className="bg-muted">
             <tr>
               <th className="px-3 py-2 font-medium">{t("donorsTable.name")}</th>
+              <th className="px-3 py-2 font-medium">
+                {t("donorsTable.fathersName")}
+              </th>
               <th className="px-3 py-2 font-medium">
                 {t("donorsTable.phone")}
               </th>
@@ -193,13 +205,13 @@ export function AdminDonorsTable({
           <tbody>
             {loading && rows.length === 0 ? (
               <tr>
-                <td className="px-3 py-6 text-muted-foreground" colSpan={4}>
+                <td className="px-3 py-6 text-muted-foreground" colSpan={5}>
                   {t("donorsTable.loading")}
                 </td>
               </tr>
             ) : rows.length === 0 ? (
               <tr>
-                <td className="px-3 py-6 text-muted-foreground" colSpan={4}>
+                <td className="px-3 py-6 text-muted-foreground" colSpan={5}>
                   {t("donorsTable.empty")}
                 </td>
               </tr>
@@ -207,14 +219,13 @@ export function AdminDonorsTable({
               rows.map((row) => (
                 <Fragment key={row.id}>
                   <tr className="border-t border-border">
-                    <td className="px-3 py-2font-medium">{row.full_name}</td>
-                    <td className="px-3 py-2 align-top">
-                      {row.phone?.trim() || "—"}
+                    <td className="px-3 py-2 font-medium">{row.full_name}</td>
+                    <td className="px-3 py-2">
+                      {row.fathers_name?.trim() || "—"}
                     </td>
-                    <td className="px-3 py-2 align-top">
-                      {row.email?.trim() || "—"}
-                    </td>
-                    <td className="px-3 py-2text-center">
+                    <td className="px-3 py-2">{row.phone?.trim() || "—"}</td>
+                    <td className="px-3 py-2">{row.email?.trim() || "—"}</td>
+                    <td className="px-3 py-2 text-center">
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           type="button"
@@ -253,7 +264,7 @@ export function AdminDonorsTable({
                   </tr>
                   {useInlineEdit && editingId === row.id ? (
                     <tr className="border-t border-border bg-muted/40">
-                      <td className="px-3 py-4" colSpan={4}>
+                      <td className="px-3 py-4" colSpan={5}>
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                           <div className="space-y-2 md:col-span-2 lg:col-span-3">
                             <Label htmlFor={`dn-${row.id}`}>
@@ -266,6 +277,21 @@ export function AdminDonorsTable({
                                 setDraft((p) => ({
                                   ...p,
                                   full_name: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2 md:col-span-2 lg:col-span-3">
+                            <Label htmlFor={`df-${row.id}`}>
+                              {t("donorsTable.fathersName")}
+                            </Label>
+                            <Input
+                              id={`df-${row.id}`}
+                              value={draft.fathers_name}
+                              onChange={(e) =>
+                                setDraft((p) => ({
+                                  ...p,
+                                  fathers_name: e.target.value,
                                 }))
                               }
                             />

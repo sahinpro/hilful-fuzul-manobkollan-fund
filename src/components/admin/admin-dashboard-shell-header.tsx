@@ -20,6 +20,8 @@ function breadcrumbNavKey(pathname: string | null): string | null {
   if (pathname === "/admin/donations") return "nav.donations";
   if (pathname === "/admin/expenses") return "nav.expenses";
   if (pathname === "/admin/records") return "nav.records";
+  if (pathname === "/admin/advisors") return "nav.advisors";
+  if (pathname === "/admin/executive-members") return "nav.executiveMembers";
   return null;
 }
 

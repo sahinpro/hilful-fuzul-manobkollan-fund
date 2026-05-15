@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 
   const { data: donors, error } = await supabase
     .from("donors")
-    .select("id, full_name, phone, email")
+    .select("id, full_name, fathers_name, phone, email")
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -67,11 +67,12 @@ export async function POST(request: Request) {
     .from("donors")
     .insert({
       full_name: data.full_name,
+      fathers_name: data.fathers_name?.trim() ? data.fathers_name.trim() : null,
       phone: data.phone ?? null,
       email: data.email ?? null,
       notes: data.notes ?? null,
     })
-    .select("id, full_name, phone, email, created_at")
+    .select("id, full_name, fathers_name, phone, email, created_at")
     .single();
 
   if (error) {

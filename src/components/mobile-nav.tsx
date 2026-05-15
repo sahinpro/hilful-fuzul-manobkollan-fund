@@ -50,7 +50,7 @@ export function MobileNav() {
                 onClick={() => setIsOpen(false)}
                 className={cn(
                   "rounded-md px-3 py-2 text-sm font-medium",
-                  pathname === item.href || pathname === decodeURIComponent(item.href)
+                  pathname === item.href
                     ? "bg-primary text-primary-foreground"
                     : "hover:bg-muted hover:text-foreground",
                 )}

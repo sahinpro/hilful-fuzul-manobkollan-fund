@@ -36,8 +36,6 @@
     "contactTitle": "Contact",
     "paymentTitle": "Payment methods",
     "paymentNote": "You can send donations via the channels below (numbers will be updated soon).",
-    "systemNoteTitle": "System note",
-    "systemNoteBody": "Set environment variables to enable Supabase-backed live accounts, receipt verification, and admin APIs (`/api/admin/*`).",
     "phoneLabel": "Phone",
     "emailLabel": "Email",
     "addressLabel": "Address"
@@ -51,18 +49,18 @@
     },
     "stats": {
       "donationsTitle": "Total donations",
-      "donationsNoteLive": "Calculated from published (is_published) donations.",
-      "donationsNotePending": "Updates when live data is connected.",
+      "donationsNoteLive": "Calculated from published donations.",
+      "donationsNotePending": "Published totals will appear here when available.",
       "expensesTitle": "Total expenses",
       "expensesNoteLive": "Calculated from published expenses.",
-      "expensesNotePending": "Will be published by category.",
+      "expensesNotePending": "Published totals will appear here when available.",
       "balanceTitle": "Current fund",
-      "balanceNoteLive": "Donations minus expenses (published entries).",
-      "balanceNotePending": "Full ledger will be on the transparency page."
+      "balanceNoteLive": "Donations minus published expenses.",
+      "balanceNotePending": "Published totals will appear here when available."
     },
     "bannerAlt": "Green nature — symbol of sustainable development and welfare",
     "commitmentTitle": "Our commitment",
-    "commitmentBody": "Every step of donations and expenses will be recorded digitally; the full accounts will be published on the transparency page; digital receipts will be available for manual donations.",
+    "commitmentBody": "Hilful Fuzul Manobkallyan Organisation stands with the poor and needy of Taleratal. Donations and expenses are published on the transparency page; digital receipts are available for manual donations.",
     "quick": {
       "transparency": {
         "title": "Transparency",
@@ -85,10 +83,42 @@
   "pages": {
     "about": {
       "title": "About us",
-      "subtitle": "This page will present the organisation’s goals, vision, governance principles, and core commitments to community development.",
+      "subtitle": "Hilful Fuzul Manobkallyan Organisation — a non-political, welfare body serving vulnerable people in Taleratal village.",
       "imageAlt": "Nature and community welfare — illustrative image",
-      "sectionTitle": "Message",
-      "body": "The content structure is ready. Next, verified institutional information, governance structure, advisory committee, and organisational history will be added here."
+      "sectionTitle": "Formation",
+      "body": "On Friday, 24 April 2026, an emergency meeting at Taleratal Jame Mosque unanimously established “Hilful Fuzul Manobkallyan Organisation” to stand beside the poor and needy of the village. An executive committee and advisory council were formed to carry out social welfare work.",
+      "formation": {
+        "dateLabel": "Date",
+        "date": "Date: Friday, 24 April 2026",
+        "venueLabel": "Venue",
+        "venue": "Venue: Taleratal Jame Mosque",
+        "chairLabel": "Chair",
+        "chair": "Chair: Mawlana Md. A. Kadir (Imam & Khatib, Taleratal Jame Mosque)"
+      },
+      "objectivesTitle": "Goals, aims & characteristics",
+      "objectives": {
+        "religious": "Religious reform & model society: Quran study circles and religious programmes to draw people to the mosque and build an exemplary community in Taleratal.",
+        "poverty": "Poverty alleviation: sustainable plans to remove poverty and harmful superstitions and support social uplift.",
+        "justice": "Social justice: resist injustice, oppression and immoral conduct with community solidarity.",
+        "humanity": "Humanitarian service: support needy families, marriage assistance, and medical aid from the fund.",
+        "education": "Education: arrange religious and Quranic education for elderly villagers.",
+        "transparency": "Financial transparency: keep separate registers for all donations and expenses, presented at monthly meetings."
+      },
+      "policiesTitle": "Special policies",
+      "policies": {
+        "nonRefundable": "All grants are non-refundable and spent only for public welfare.",
+        "membership": "Residents of Taleratal and donor members are general members of the organisation."
+      },
+      "leadership": {
+        "sectionTitle": "Advisory committee & executive members",
+        "advisorsTitle": "Advisory committee",
+        "executivesTitle": "Executive members",
+        "tableSl": "Sl.",
+        "tableName": "Name",
+        "tableFathersName": "Father's name",
+        "tableDesignation": "Designation / role",
+        "emptyList": "No names are listed yet."
+      }
     },
     "activities": {
       "title": "Activities",
@@ -112,12 +142,12 @@
         "balanceCardNote": "Ledger-based balance (published entries)."
       },
       "statsNote": {
-        "noEnv": "Add the Supabase connection (.env.local) to show live totals.",
-        "live": "Calculated only from published (is_published) entries.",
-        "error": "Could not load totals — check that tables/RPC migrations are applied."
+        "noEnv": "Live totals are not available in this view yet.",
+        "live": "Calculated only from published entries.",
+        "error": "Could not load totals right now. Please try again later."
       },
       "ledgerNote": {
-        "noEnv": "Entries will appear when live data is connected.",
+        "noEnv": "No ledger entries to show yet.",
         "empty": "There are no published donation or expense entries yet."
       },
       "table": {
@@ -146,7 +176,7 @@
       "title": "Receipt verification",
       "subtitle": "On this page, donation information can be verified by receipt number.",
       "receiptNoLabel": "Receipt number",
-      "pendingBody": "After connecting to live Supabase, donor name, date, amount, and PDF receipt links will be shown."
+      "pendingBody": "When online verification is available, donor name, date, amount, and receipt links will appear here."
     }
   },
   "charts": {

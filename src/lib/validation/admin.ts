@@ -10,6 +10,7 @@ const optionalIsoInstant = z
 
 export const donorCreateBodySchema = z.object({
   full_name: z.string().min(1).max(500),
+  fathers_name: z.string().max(500).optional().nullable(),
   phone: z.string().max(50).optional().nullable(),
   email: z.string().email().max(320).optional().nullable(),
   notes: z.string().max(2000).optional().nullable(),
@@ -72,11 +73,42 @@ export const donationUpdateBodySchema = z
 export const donorUpdateBodySchema = z
   .object({
     full_name: z.string().min(1).max(500).optional(),
+    fathers_name: z.union([z.string().max(500), z.literal("")]).nullable().optional(),
     phone: z.string().max(50).nullable().optional(),
     email: z.union([z.string().email().max(320), z.literal("")]).nullable().optional(),
   })
   .superRefine((data, ctx) => {
-    const keys = (["full_name", "phone", "email"] as const).filter(
+    const keys = (["full_name", "fathers_name", "phone", "email"] as const).filter(
+      (k) => data[k] !== undefined,
+    );
+    if (keys.length === 0) {
+      ctx.addIssue({
+        code: "custom",
+        message: "At least one field is required.",
+        path: [],
+      });
+    }
+  });
+
+export const leadershipCategorySchema = z.enum(["advisor", "executive"]);
+
+export const leadershipMemberCreateBodySchema = z.object({
+  category: leadershipCategorySchema,
+  full_name: z.string().min(1).max(500),
+  fathers_name: z.string().max(500).optional().nullable(),
+  designation: z.string().max(500).optional().nullable(),
+  sort_order: z.coerce.number().int().min(0).max(1_000_000).optional().default(0),
+});
+
+export const leadershipMemberUpdateBodySchema = z
+  .object({
+    full_name: z.string().min(1).max(500).optional(),
+    fathers_name: z.union([z.string().max(500), z.literal("")]).nullable().optional(),
+    designation: z.union([z.string().max(500), z.literal("")]).nullable().optional(),
+    sort_order: z.coerce.number().int().min(0).max(1_000_000).optional(),
+  })
+  .superRefine((data, ctx) => {
+    const keys = (["full_name", "fathers_name", "designation", "sort_order"] as const).filter(
       (k) => data[k] !== undefined,
     );
     if (keys.length === 0) {
