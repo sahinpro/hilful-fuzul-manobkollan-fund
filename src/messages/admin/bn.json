@@ -181,13 +181,13 @@
     "print": "প্রিন্ট / PDF সংরক্ষণ",
     "close": "বন্ধ",
     "total": "মোট",
-    "sheetSubtitle": "আর্থিক প্রতিবেদন — হিলফুল ফুজুল মানবকল্যাণ ফান্ড",
+    "sheetSubtitle": "আর্থিক প্রতিবেদন — হিলফুল ফুজুল মানবকল্যাণ তহবিল",
     "donationsSheetTitle": "Donation Report ",
     "expensesSheetTitle": "ব্যয় রেজিস্টার",
     "recordCount": "{{count}} টি রেকর্ড",
     "orgLocation": "তালেরতল, পলাশ, বিশম্ভরপুর, সুনামগঞ্জ",
     "generatedLabel": "প্রস্তুতির সময়",
-    "documentFooter": "এই নথিটি হিলফুল ফুজুল মানবকল্যাণ ফান্ডের অফিসিয়াল আর্থিক রেকর্ড।"
+    "documentFooter": "এই নথিটি হিলফুল ফুজুল মানবকল্যাণ তহবিলের অফিসিয়াল আর্থিক রেকর্ড।"
   },
   "session": {
     "title": "লগইন সেশন",
