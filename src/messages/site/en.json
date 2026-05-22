@@ -19,6 +19,7 @@
   "site": {
     "shortName": "Hilful Fuzul",
     "fullName": "Hilful Fuzul Manobkallyan Fund",
+    "location": "Taleratal, Palash, Bishwambarpur, Sunamganj",
     "logoAlt": "Hilful Fuzul logo",
     "homeAria": "Home — Hilful Fuzul"
   },
@@ -108,6 +109,14 @@
       "policies": {
         "nonRefundable": "All grants are non-refundable and spent only for public welfare.",
         "membership": "Residents of Taleratal and donor members are general members of the organisation."
+      },
+      "resolutionPrint": {
+        "button": "Print resolution / PDF",
+        "documentTitle": "Final resolution",
+        "print": "Print / Save PDF",
+        "close": "Close",
+        "hint": "Press Ctrl+P (⌘+P on Mac), or use the button below. Choose Save as PDF as the print destination to download.",
+        "footer": "Taleratal Jame Mosque — 24 April 2026: meeting minutes and final resolution (Hilful Fuzul Manobkallyan Fund)."
       },
       "leadership": {
         "sectionTitle": "Advisory committee & executive members",

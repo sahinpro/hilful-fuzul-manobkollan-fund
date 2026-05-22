@@ -1,5 +1,6 @@
 import { AboutLeadershipTables } from "@/components/about-leadership-tables";
 import { AboutResolutionContent } from "@/components/about-resolution-content";
+import { AboutResolutionPrintLink } from "@/components/about-resolution-print-link";
 import { PageShell } from "@/components/page-shell";
 import { siteImages } from "@/config/images";
 import { fetchLeadershipMembers } from "@/lib/site/leadership";
@@ -8,7 +9,7 @@ import { Users } from "lucide-react";
 import Image from "next/image";
 
 export default async function AboutPage() {
-  const { t } = await getSiteTranslator();
+  const { locale, t } = await getSiteTranslator();
   const leadershipMembers = await fetchLeadershipMembers();
 
   return (
@@ -28,7 +29,15 @@ export default async function AboutPage() {
               sizes="(max-width: 1024px) 100vw, 42vw"
             />
           </div>
-          <AboutResolutionContent t={t} />
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <AboutResolutionPrintLink
+                locale={locale}
+                label={t("pages.about.resolutionPrint.button")}
+              />
+            </div>
+            <AboutResolutionContent t={t} />
+          </div>
         </div>
 
         <AboutLeadershipTables members={leadershipMembers} t={t} />
