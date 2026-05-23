@@ -277,7 +277,35 @@
       "title": "Receipt verification",
       "subtitle": "On this page, donation information can be verified by receipt number.",
       "receiptNoLabel": "Receipt number",
-      "pendingBody": "When online verification is available, donor name, date, amount, and receipt links will appear here."
+      "inputPlaceholder": "e.g. HF-1A2B3C4D5E6",
+      "inputHint": "Enter the full receipt number to verify. For suggestions, type at least 4 characters (e.g. HF-1A2B).",
+      "searchButton": "Verify",
+      "searching": "Searching…",
+      "searchError": "Could not search right now. Please try again.",
+      "filterPayment": "Filter by payment method",
+      "resultsTitle": "Matching receipts",
+      "noResults": "No published receipt matches this number or filter.",
+      "notFoundTitle": "Receipt not found",
+      "notConfigured": "Live verification is unavailable — Supabase anon key and migration required (see supabase/README.md).",
+      "rateLimited": "Too many attempts. Please try again in a minute.",
+      "donorName": "Donor name",
+      "donorFathersName": "Father's name",
+      "amount": "Amount",
+      "paymentMethod": "Payment method",
+      "receivedAt": "Date received",
+      "printReceipt": "Print receipt / PDF",
+      "backToSearch": "Search again",
+      "verifiedNote": "This donation is verified from published records.",
+      "pendingBody": "When online verification is available, donor name, date, amount, and receipt links will appear here.",
+      "payment": {
+        "all": "All",
+        "cash": "Cash",
+        "bank": "Bank transfer",
+        "bkash": "bKash",
+        "nagad": "Nagad",
+        "rocket": "Rocket",
+        "other": "Other"
+      }
     }
   },
   "charts": {

@@ -212,6 +212,35 @@ export type Database = {
         Relationships: [];
       };
     };
+    Functions: {
+      transparency_sums: {
+        Args: Record<string, never>;
+        Returns: {
+          total_donations: string;
+          total_expenses: string;
+        }[];
+      };
+      ensure_donation_receipt: {
+        Args: { p_donation_id: string };
+        Returns: string;
+      };
+      public_receipt_lookup_exact: {
+        Args: { p_receipt_no: string };
+        Returns: Json;
+      };
+      public_receipt_search_prefix: {
+        Args: {
+          p_prefix: string;
+          p_payment_method?: string | null;
+          p_limit?: number;
+        };
+        Returns: Json;
+      };
+      generate_receipt_no: {
+        Args: { p_donation_id: string };
+        Returns: string;
+      };
+    };
     Views: {
       transparency_ledger: {
         Row: {
@@ -224,14 +253,17 @@ export type Database = {
         };
         Relationships: [];
       };
-    };
-    Functions: {
-      transparency_sums: {
-        Args: Record<string, never>;
-        Returns: {
-          total_donations: string;
-          total_expenses: string;
-        }[];
+      public_receipt_verification: {
+        Row: {
+          receipt_no: string;
+          donation_id: string;
+          amount_bdt: string;
+          payment_method: string;
+          received_at: string;
+          donor_name: string;
+          donor_fathers_name: string | null;
+        };
+        Relationships: [];
       };
     };
     Enums: Record<string, never>;

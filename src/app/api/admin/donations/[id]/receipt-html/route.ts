@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { siteConfig } from "@/config/site";
 import { requireAdminApi } from "@/lib/admin/auth";
+import { ensureDonationReceipt } from "@/lib/receipt/ensure-donation-receipt";
 import { buildDonationReceiptHtmlDocument } from "@/lib/receipt/donation-receipt-html";
 import { publicAssetPathIfExists } from "@/lib/receipt/receipt-public-asset";
 import { createServiceSupabase } from "@/lib/supabase/service";
@@ -52,21 +53,13 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     return NextResponse.json({ error: "Donation not found." }, { status: 404 });
   }
 
-  const { data: receipt } = await supabase
-    .from("receipts")
-    .select("receipt_no")
-    .eq("donation_id", donationId)
-    .maybeSingle();
-
   const donors = donation.donors as DonorRel | DonorRel[] | null;
   const donorOne = Array.isArray(donors) ? donors[0] : donors;
   const donorName = donorOne?.full_name?.trim() || "—";
   const donorFathersName = donorOne?.fathers_name?.trim() || null;
   const donorPhone = donorOne?.phone?.trim() || null;
 
-  const receiptNo =
-    receipt?.receipt_no?.trim() ||
-    `HF-${donationId.replace(/-/g, "").slice(0, 12).toUpperCase()}`;
+  const receiptNo = await ensureDonationReceipt(supabase, donationId);
 
   const origin = new URL(request.url).origin;
   const html = buildDonationReceiptHtmlDocument(origin, {

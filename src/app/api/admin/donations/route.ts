@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin/auth";
 import { writeAuditLog } from "@/lib/admin/audit";
 import { invalidatePublicFinanceCache } from "@/lib/cache/invalidate-public";
+import { ensureDonationReceipt } from "@/lib/receipt/ensure-donation-receipt";
 import { createServiceSupabase } from "@/lib/supabase/service";
 import { donationCreateBodySchema } from "@/lib/validation/admin";
 
@@ -112,6 +113,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
+  let receiptNo: string | undefined;
+  try {
+    receiptNo = await ensureDonationReceipt(supabase, donation.id);
+  } catch {
+    receiptNo = undefined;
+  }
+
   await writeAuditLog(supabase, {
     action: "donation.create",
     resource_type: "donation",
@@ -119,10 +127,11 @@ export async function POST(request: Request) {
     diff: {
       amount_bdt: donation.amount_bdt,
       payment_method: donation.payment_method,
+      receipt_no: receiptNo,
     },
   });
 
   invalidatePublicFinanceCache();
 
-  return NextResponse.json({ donation }, { status: 201 });
+  return NextResponse.json({ donation, receipt_no: receiptNo }, { status: 201 });
 }

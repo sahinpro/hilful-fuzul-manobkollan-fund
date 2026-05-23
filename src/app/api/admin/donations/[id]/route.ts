@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireAdminApi } from "@/lib/admin/auth";
 import { writeAuditLog } from "@/lib/admin/audit";
 import { invalidatePublicFinanceCache } from "@/lib/cache/invalidate-public";
+import { ensureDonationReceipt } from "@/lib/receipt/ensure-donation-receipt";
 import { createServiceSupabase } from "@/lib/supabase/service";
 import { donationUpdateBodySchema } from "@/lib/validation/admin";
 import type { Database, Json } from "@/types/database";
@@ -85,16 +86,23 @@ export async function PATCH(
     return NextResponse.json({ error: "Donation not found." }, { status: 404 });
   }
 
+  let receiptNo: string | undefined;
+  try {
+    receiptNo = await ensureDonationReceipt(supabase, donation.id);
+  } catch {
+    receiptNo = undefined;
+  }
+
   await writeAuditLog(supabase, {
     action: "donation.update",
     resource_type: "donation",
     resource_id: donation.id,
-    diff: patch as unknown as Json,
+    diff: { ...(patch as object), receipt_no: receiptNo } as unknown as Json,
   });
 
   invalidatePublicFinanceCache();
 
-  return NextResponse.json({ donation });
+  return NextResponse.json({ donation, receipt_no: receiptNo });
 }
 
 export async function DELETE(
