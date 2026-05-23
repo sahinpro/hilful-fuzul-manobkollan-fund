@@ -6,9 +6,8 @@ import { HomeHowItWorks } from "@/components/home/home-how-it-works";
 import { HomeHero } from "@/components/home-hero";
 import { HomePageMotion } from "@/components/home-page-motion";
 import { PressableLink } from "@/components/motion/pressable-link";
-import { RevealGroup } from "@/components/motion/reveal";
 import { HomeStats } from "@/components/home/home-stats";
-import { PublicStatsSkeleton } from "@/components/public/public-finance-skeletons";
+import { RevealGroup } from "@/components/motion/reveal";
 import { mainNavItems } from "@/config/site";
 import { getSiteTranslator } from "@/lib/i18n/site-server";
 import {
@@ -17,7 +16,6 @@ import {
   Megaphone,
   ScrollText,
 } from "lucide-react";
-import { Suspense } from "react";
 
 const quickLinkDefs = [
   { navKey: "transparency" as const, messageKey: "transparency" as const, Icon: ScrollText },
@@ -44,11 +42,7 @@ export default async function HomePage() {
         imageAlt={t("home.hero.imageAlt")}
       />
 
-      <RevealGroup className="contents" staggerMs={80} delayChildrenMs={50}>
-        <Suspense fallback={<PublicStatsSkeleton />}>
-          <HomeStats />
-        </Suspense>
-      </RevealGroup>
+      <HomeStats />
 
       <HomeCommitmentSection locale={locale} t={t} />
       <HomeHowItWorks t={t} />

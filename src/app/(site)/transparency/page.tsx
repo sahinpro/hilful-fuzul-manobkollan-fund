@@ -1,10 +1,8 @@
-import { RevealGroup } from "@/components/motion/reveal";
 import { PageSection } from "@/components/page-section";
 import { PageShell } from "@/components/page-shell";
 import {
   PublicChartsSkeleton,
   PublicLedgerSkeleton,
-  PublicStatsSkeleton,
 } from "@/components/public/public-finance-skeletons";
 import { TransparencyCharts } from "@/components/transparency/transparency-charts";
 import { TransparencyLedger } from "@/components/transparency/transparency-ledger";
@@ -22,11 +20,7 @@ export default async function TransparencyPage() {
       title={t("pages.transparency.title")}
       subtitle={t("pages.transparency.subtitle")}
     >
-      <RevealGroup className="contents" staggerMs={65} delayChildrenMs={35}>
-        <Suspense fallback={<PublicStatsSkeleton />}>
-          <TransparencyStats />
-        </Suspense>
-      </RevealGroup>
+      <TransparencyStats />
 
       <PageSection>
         <Suspense fallback={<PublicChartsSkeleton />}>
