@@ -60,12 +60,18 @@
       "donationsTitle": "Total donations",
       "donationsNoteLive": "Calculated from published donations.",
       "donationsNotePending": "Published totals will appear here when available.",
+      "donationsNoteNoEnv": "Live totals are not connected in this environment.",
+      "donationsNoteError": "Could not load totals — please try again shortly.",
       "expensesTitle": "Total expenses",
       "expensesNoteLive": "Calculated from published expenses.",
       "expensesNotePending": "Published totals will appear here when available.",
+      "expensesNoteNoEnv": "Live totals are not connected in this environment.",
+      "expensesNoteError": "Could not load totals — please try again shortly.",
       "balanceTitle": "Current fund",
       "balanceNoteLive": "Donations minus published expenses.",
-      "balanceNotePending": "Published totals will appear here when available."
+      "balanceNotePending": "Published totals will appear here when available.",
+      "balanceNoteNoEnv": "Live totals are not connected in this environment.",
+      "balanceNoteError": "Could not load totals — please try again shortly."
     },
     "bannerAlt": "Green nature — symbol of sustainable development and welfare",
     "commitmentTitle": "Our commitment",
@@ -275,7 +281,7 @@
         "donationsTitle": "Total donations",
         "expensesTitle": "Total expenses",
         "balanceTitle": "Fund balance",
-        "expensesCardNote": "Category split in the chart (sample / live later).",
+        "expensesCardNote": "See the category breakdown chart below.",
         "balanceCardNote": "Ledger-based balance (published entries)."
       },
       "statsNote": {
@@ -345,10 +351,20 @@
     }
   },
   "charts": {
-    "expenseByCategoryTitle": "Expense targets by category (%)",
+    "expenseByCategoryTitle": "Expense breakdown by category (%)",
     "expenseByCategoryNote": "Sample chart — real figures will appear when live accounting is connected.",
+    "expenseNote": {
+      "live": "Share of published expenses by category (live).",
+      "empty": "No published expenses yet — publish at least one expense to show the chart.",
+      "error": "Could not load the expense breakdown.",
+      "noEnv": "Database connection required for live charts."
+    },
     "committeeTitle": "Committee layout",
-    "committeeNote": "Advisory vs executive (sample)",
+    "committeeNote": {
+      "live": "Advisory and executive members (live roster).",
+      "empty": "No committee members in the roster yet.",
+      "noEnv": "Database connection required for live charts."
+    },
     "expense": {
       "service": "Service",
       "education": "Education",

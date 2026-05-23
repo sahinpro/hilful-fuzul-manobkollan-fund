@@ -13,4 +13,5 @@ export function invalidatePublicFinanceCache(): void {
 export function invalidateLeadershipCache(): void {
   revalidateTag(PUBLIC_CACHE_TAGS.leadership, PUBLIC_CACHE_PROFILES.leadership);
   revalidatePath("/about");
+  revalidatePath("/transparency");
 }

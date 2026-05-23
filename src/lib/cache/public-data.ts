@@ -1,6 +1,10 @@
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { PUBLIC_CACHE_TAGS } from "@/lib/cache/tags";
+import {
+  aggregateExpenseByCategory,
+  type ExpenseCategoryBreakdown,
+} from "@/lib/finance/public-charts";
 import type { TransparencyTotals, LedgerRow } from "@/lib/finance/transparency";
 import type { LeadershipMember } from "@/lib/site/leadership";
 import { createPublicReadSupabase, isPublicReadSupabaseConfigured } from "@/lib/supabase/public-read";
@@ -61,6 +65,25 @@ async function loadTransparencyLedger(limit: number): Promise<LedgerRow[]> {
   return data ?? [];
 }
 
+async function loadPublishedExpenseByCategory(): Promise<ExpenseCategoryBreakdown | null> {
+  if (!isPublicReadSupabaseConfigured()) return null;
+
+  const supabase = createPublicReadSupabase();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from("expenses")
+    .select("category, amount_bdt")
+    .eq("is_published", true);
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return aggregateExpenseByCategory(data ?? []);
+}
+
 async function loadLeadershipMembers(): Promise<LeadershipMember[]> {
   if (!isPublicReadSupabaseConfigured()) return [];
 
@@ -99,6 +122,15 @@ const getTransparencyLedgerCached = unstable_cache(
   },
 );
 
+const getPublishedExpenseByCategoryCached = unstable_cache(
+  loadPublishedExpenseByCategory,
+  ["public", "expense-by-category"],
+  {
+    revalidate: TRANSPARENCY_REVALIDATE_SEC,
+    tags: [PUBLIC_CACHE_TAGS.transparencyTotals],
+  },
+);
+
 const getLeadershipMembersCached = unstable_cache(
   loadLeadershipMembers,
   ["public", "leadership-members"],
@@ -114,5 +146,7 @@ export const getCachedTransparencyTotals = cache(getTransparencyTotalsCached);
 export const getCachedTransparencyLedger = cache((limit = LEDGER_DEFAULT_LIMIT) =>
   getTransparencyLedgerCached(limit),
 );
+
+export const getCachedPublishedExpenseByCategory = cache(getPublishedExpenseByCategoryCached);
 
 export const getCachedLeadershipMembers = cache(getLeadershipMembersCached);
