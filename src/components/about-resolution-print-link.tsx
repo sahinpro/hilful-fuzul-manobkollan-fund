@@ -5,14 +5,16 @@ import { FileDown } from "lucide-react";
 export function AboutResolutionPrintLink(props: {
   locale: SiteLocale;
   label: string;
+  className?: string;
+  size?: "default" | "sm" | "lg";
 }) {
   const href = `/api/resolution/print?locale=${props.locale}`;
 
   return (
     <Button
       variant="outline"
-      size="sm"
-      className="gap-2"
+      size={props.size ?? "sm"}
+      className={props.className ?? "gap-2"}
       nativeButton={false}
       render={<a href={href} target="_blank" rel="noopener noreferrer" />}
     >

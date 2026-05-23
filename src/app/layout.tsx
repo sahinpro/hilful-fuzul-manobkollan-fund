@@ -3,8 +3,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeBoot } from "@/components/theme-boot";
 import { siteConfig, siteSeo } from "@/config/site";
-import { THEME_BOOT_SCRIPT } from "@/lib/theme/theme-boot-script";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 
@@ -81,12 +81,9 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" type="image/png" sizes="any" />
         <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="stylesheet" href="https://fonts.maateen.me/solaiman-lipi/font.css" />
-        <script
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }}
-        />
       </head>
       <body className="min-h-full font-sans">
+        <ThemeBoot />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <TooltipProvider delay={0}>
             {children}

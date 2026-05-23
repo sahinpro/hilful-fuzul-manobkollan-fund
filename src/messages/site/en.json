@@ -72,7 +72,41 @@
     "commitmentBody": "Hilful Fuzul Manobkallyan Organisation stands with the poor and needy of Taleratal.",
     "commitment": {
       "intro": "We keep every donation and expense open to the public. The executive committee oversees the fund; donors can verify via the transparency page and receipts.",
-      "imagePlaceholder": "Photo coming soon",
+      "badge": "Our pledge",
+      "imageAlt": "Volunteers standing with the community — symbol of humanitarian service",
+      "imageCredit": "Unsplash",
+      "journey": {
+        "title": "Volunteer journey",
+        "subtitle": "The Hilful Fuzul path — from service to transparency",
+        "stepLabel": "Step {{n}}",
+        "slides": {
+          "serve": {
+            "title": "Service in the field",
+            "caption": "Volunteers stand beside the poor and needy of Taleratal.",
+            "alt": "Volunteers supporting the community"
+          },
+          "support": {
+            "title": "Hands that help",
+            "caption": "Donations and compassion reach those who need them most.",
+            "alt": "Helping hands — charity and welfare"
+          },
+          "community": {
+            "title": "Community together",
+            "caption": "Villagers and youth working side by side for public welfare.",
+            "alt": "Community members together"
+          },
+          "education": {
+            "title": "Faith & education",
+            "caption": "Religious and Quranic education for elderly villagers.",
+            "alt": "Education and religious programmes"
+          },
+          "transparency": {
+            "title": "Open accounts",
+            "caption": "Every donation and expense published — trust in action.",
+            "alt": "Transparency and open finance"
+          }
+        }
+      },
       "pillars": {
         "transparency": {
           "title": "Full transparency",
@@ -121,6 +155,8 @@
       "subtitle": "Formed on 24 April 2026 at Taleratal Jame Mosque; the committee manages the fund.",
       "formed": "Established: 24 April 2026, Taleratal Jame Mosque",
       "viewAbout": "Full details — About us",
+      "viewAboutShort": "About us",
+      "actionsLabel": "Learn more",
       "executivesTitle": "Executive committee"
     },
     "activitiesSnapshot": {
