@@ -8,6 +8,12 @@ import { THEME_BOOT_SCRIPT } from "@/lib/theme/theme-boot-script";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+};
+
 export const metadata: Metadata = {
   metadataBase: siteUrl ? new URL(siteUrl) : undefined,
   title: {

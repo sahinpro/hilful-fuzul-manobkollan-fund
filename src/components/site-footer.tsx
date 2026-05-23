@@ -10,7 +10,7 @@ export function SiteFooter() {
   const { t } = useSiteI18n();
 
   return (
-    <footer className="border-t border-border bg-card">
+    <footer className="border-t border-border bg-card pb-[calc(4.75rem+env(safe-area-inset-bottom))] lg:pb-0">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
         <div className="flex flex-col items-start gap-4">
           <Link

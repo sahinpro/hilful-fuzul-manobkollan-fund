@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant motion-safe (@media (prefers-reduced-motion: no-preference));
 
 :root {
   --background: oklch(0.99 0.01 145);
@@ -87,14 +88,156 @@
   --font-sans: "Solaiman Lipi", "SolaimanLipi", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Solaiman Lipi", "SolaimanLipi", ui-serif, Georgia, serif;
   --font-mono: "Solaiman Lipi", "SolaimanLipi", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 180ms;
+  --duration-normal: 320ms;
+  --duration-slow: 520ms;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer utilities {
+  .ease-spring {
+    transition-timing-function: var(--ease-spring);
+  }
+
+  .pb-safe {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+
+  .pt-safe {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+  }
+
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 14px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes reveal-up {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 22px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes hero-enter {
+    from {
+      opacity: 0;
+      transform: scale(1.03);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes sheet-item {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 10px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .animate-page-enter {
+    animation: page-enter var(--duration-slow) var(--ease-spring) both;
+  }
+
+  .animate-reveal-up {
+    animation: reveal-up var(--duration-slow) var(--ease-spring) both;
+  }
+
+  .animate-hero-enter {
+    animation: hero-enter 0.75s var(--ease-out-expo) both;
+  }
+
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+
+  .reveal-stagger-active > * {
+    animation: reveal-up var(--duration-slow) var(--ease-spring) both;
+    animation-delay: calc(var(--reveal-index, 0) * var(--reveal-stagger, 70ms));
+  }
+
+  .reveal-stagger-active > *:nth-child(1) {
+    --reveal-index: 0;
+  }
+  .reveal-stagger-active > *:nth-child(2) {
+    --reveal-index: 1;
+  }
+  .reveal-stagger-active > *:nth-child(3) {
+    --reveal-index: 2;
+  }
+  .reveal-stagger-active > *:nth-child(4) {
+    --reveal-index: 3;
+  }
+  .reveal-stagger-active > *:nth-child(5) {
+    --reveal-index: 4;
+  }
+  .reveal-stagger-active > *:nth-child(6) {
+    --reveal-index: 5;
+  }
+
+  .sheet-nav-item {
+    animation: sheet-item 0.4s var(--ease-spring) both;
+    animation-delay: calc(var(--sheet-index, 0) * 45ms + 80ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .motion-safe\:animate-page-enter,
+    .motion-safe\:animate-reveal-up,
+    .animate-page-enter,
+    .animate-reveal-up,
+    .animate-hero-enter,
+    .reveal-stagger-active > *,
+    .sheet-nav-item {
+      animation: none !important;
+    }
+
+    .motion-safe\:opacity-0,
+    .motion-safe\:translate-y-5,
+    .reveal-stagger > * {
+      opacity: 1 !important;
+      transform: none !important;
+    }
   }
 }

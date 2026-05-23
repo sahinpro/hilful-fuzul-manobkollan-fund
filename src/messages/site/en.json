@@ -5,7 +5,15 @@
     "en": "English"
   },
   "mobile": {
-    "openMenu": "Open menu"
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menuTitle": "Browse",
+    "tabBarAria": "Main navigation",
+    "tabHome": "Home",
+    "tabAbout": "About",
+    "tabTransparency": "Finance",
+    "tabActivities": "Activities",
+    "tabMenu": "More"
   },
   "nav": {
     "home": "Home",

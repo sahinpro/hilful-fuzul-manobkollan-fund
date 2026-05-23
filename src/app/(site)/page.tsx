@@ -1,4 +1,6 @@
 import { HomeHero } from "@/components/home-hero";
+import { PressableLink } from "@/components/motion/pressable-link";
+import { Reveal, RevealGroup } from "@/components/motion/reveal";
 import { StatCard } from "@/components/stat-card";
 import { siteImages } from "@/config/images";
 import { mainNavItems } from "@/config/site";
@@ -15,7 +17,6 @@ import {
   ScrollText,
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
 const quickLinkDefs = [
   { navKey: "transparency" as const, messageKey: "transparency" as const, Icon: ScrollText },
@@ -59,7 +60,7 @@ export default async function HomePage() {
   ];
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-10 md:space-y-14 md:py-14">
+    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 md:space-y-14 md:py-14">
       <HomeHero
         badge={t("home.hero.badge")}
         title={t("home.hero.title")}
@@ -67,7 +68,7 @@ export default async function HomePage() {
         imageAlt={t("home.hero.imageAlt")}
       />
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <RevealGroup className="grid gap-4 md:grid-cols-3" staggerMs={80}>
         {stats.map((item) => (
           <StatCard
             key={item.title}
@@ -77,45 +78,47 @@ export default async function HomePage() {
             icon={item.icon}
           />
         ))}
-      </section>
+      </RevealGroup>
 
-      <section className="overflow-hidden rounded-2xl border border-border bg-card">
-        <div className="grid md:grid-cols-2">
-          <div className="relative aspect-4/3 min-h-[200px] w-full md:min-h-[280px]">
-            <Image
-              src={siteImages.bannerNature}
-              alt={t("home.bannerAlt")}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
+      <Reveal>
+        <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+          <div className="grid md:grid-cols-2">
+            <div className="relative aspect-4/3 min-h-[200px] w-full md:min-h-[280px]">
+              <Image
+                src={siteImages.bannerNature}
+                alt={t("home.bannerAlt")}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
+            <div className="flex flex-col justify-center p-6 md:p-10">
+              <h2 className="text-xl font-bold md:text-2xl">{t("home.commitmentTitle")}</h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+                {t("home.commitmentBody")}
+              </p>
+            </div>
           </div>
-          <div className="flex flex-col justify-center p-6 md:p-10">
-            <h2 className="text-xl font-bold md:text-2xl">{t("home.commitmentTitle")}</h2>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
-              {t("home.commitmentBody")}
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
+      </Reveal>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" staggerMs={60}>
         {quickLinkDefs.map(({ navKey, messageKey, Icon }) => (
-          <Link
+          <PressableLink
             key={navKey}
             href={hrefForNavKey(navKey)}
-            className="flex flex-col rounded-xl border border-border bg-card p-5 transition hover:border-primary"
+            className="flex flex-col rounded-2xl border border-border bg-card p-5 shadow-sm hover:border-primary/60 hover:shadow-md"
           >
-            <span className="mb-3 inline-flex w-fit rounded-lg bg-primary/10 p-2.5 text-primary">
+            <span className="mb-3 inline-flex w-fit rounded-xl bg-primary/10 p-2.5 text-primary">
               <Icon className="size-5 shrink-0" aria-hidden />
             </span>
             <h2 className="text-lg font-semibold">{t(`home.quick.${messageKey}.title`)}</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {t(`home.quick.${messageKey}.description`)}
             </p>
-          </Link>
+          </PressableLink>
         ))}
-      </section>
+      </RevealGroup>
     </div>
   );
 }

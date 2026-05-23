@@ -5,7 +5,15 @@
     "en": "ইংরেজি"
   },
   "mobile": {
-    "openMenu": "মেনু খুলুন"
+    "openMenu": "মেনু খুলুন",
+    "closeMenu": "মেনু বন্ধ করুন",
+    "menuTitle": "ব্রাউজ করুন",
+    "tabBarAria": "প্রধান নেভিগেশন",
+    "tabHome": "হোম",
+    "tabAbout": "সম্পর্কে",
+    "tabTransparency": "হিসাব",
+    "tabActivities": "কার্যক্রম",
+    "tabMenu": "আরও"
   },
   "nav": {
     "home": "হোম",
