@@ -80,7 +80,9 @@ function banglaNumberedList(items: string[]): string {
   return `<ul class="styled-list bn-numbered">${body}</ul>`;
 }
 
-function decisionsHtml(decisions: ResolutionDocumentContent["decisions"]): string {
+function decisionsHtml(
+  decisions: ResolutionDocumentContent["decisions"],
+): string {
   return decisions
     .map(
       (d) => `<div class="decision-item">
@@ -301,7 +303,7 @@ export function buildCommitteeResolutionHtmlDocument(
       padding: 18px 20px 12px;
       border-bottom: 2px solid ${ACCENT.primary};
       text-align: center;
-      font-size: 1.2rem;
+      font-size: 2rem;
       font-weight: 800;
       color: #0f172a;
     }

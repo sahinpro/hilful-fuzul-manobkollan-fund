@@ -1,9 +1,6 @@
 import { AboutResolutionPrintLink } from "@/components/about-resolution-print-link";
 import { HomeVolunteerJourney } from "@/components/home/home-volunteer-journey";
-import {
-  volunteerJourneyImages,
-  volunteerJourneySlideIds,
-} from "@/config/images";
+import { volunteerJourneyImage } from "@/config/images";
 import type { SiteLocale } from "@/lib/i18n/site-locale";
 import type { createSiteTranslator } from "@/lib/i18n/site-translate";
 import { cn } from "@/lib/utils";
@@ -23,26 +20,16 @@ type HomeCommitmentSectionProps = {
 };
 
 export function HomeCommitmentSection({ locale, t }: HomeCommitmentSectionProps) {
-  const journeySlides = volunteerJourneySlideIds.map((id) => ({
-    id,
-    imageSrc: volunteerJourneyImages[id],
-    title: t(`home.commitment.journey.slides.${id}.title`),
-    caption: t(`home.commitment.journey.slides.${id}.caption`),
-    alt: t(`home.commitment.journey.slides.${id}.alt`),
-  }));
-
   return (
     <section className="ios-card overflow-hidden rounded-2xl border border-border/80 bg-card shadow-md ring-1 ring-primary/10">
       <div className="grid lg:grid-cols-2">
         <HomeVolunteerJourney
-          slides={journeySlides}
+          imageSrc={volunteerJourneyImage}
+          title={t("home.commitment.journey.slides.serve.title")}
+          caption={t("home.commitment.journey.slides.serve.caption")}
+          alt={t("home.commitment.journey.slides.serve.alt")}
           sectionTitle={t("home.commitment.journey.title")}
           sectionSubtitle={t("home.commitment.journey.subtitle")}
-          orgLabel={t("site.shortName")}
-          logoAlt={t("site.logoAlt")}
-          stepLabels={volunteerJourneySlideIds.map((_, index) =>
-            t("home.commitment.journey.stepLabel", { n: String(index + 1) }),
-          )}
         />
 
         {/* Content */}

@@ -24,7 +24,10 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
           dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }}
         />
       </head>
-      <body className="flex min-h-screen flex-col items-center justify-center bg-[oklch(0.99_0.01_145)] px-4 font-sans text-[oklch(0.2_0.02_145)] antialiased dark:bg-[oklch(0.16_0.02_145)] dark:text-[oklch(0.95_0.01_145)]">
+      <body
+        suppressHydrationWarning
+        className="flex min-h-screen flex-col items-center justify-center bg-[oklch(0.99_0.01_145)] px-4 font-sans text-[oklch(0.2_0.02_145)] antialiased dark:bg-[oklch(0.16_0.02_145)] dark:text-[oklch(0.95_0.01_145)]"
+      >
         <div className="w-full max-w-md rounded-2xl border border-[oklch(0.88_0.02_145)] bg-white p-8 text-center shadow-sm dark:border-[oklch(0.32_0.03_145)] dark:bg-[oklch(0.2_0.025_145)]">
           <p className="text-xs font-semibold uppercase tracking-widest text-[oklch(0.45_0.12_150)]">
             Error

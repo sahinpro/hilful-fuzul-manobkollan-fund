@@ -82,7 +82,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="stylesheet" href="https://fonts.maateen.me/solaiman-lipi/font.css" />
       </head>
-      <body className="min-h-full font-sans">
+      <body suppressHydrationWarning className="min-h-full font-sans">
         <ThemeBoot />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <TooltipProvider delay={0}>
