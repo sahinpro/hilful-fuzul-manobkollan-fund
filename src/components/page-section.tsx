@@ -4,9 +4,14 @@ import type { ReactNode } from "react";
 type PageSectionProps = {
   children: ReactNode;
   className?: string;
+  id?: string;
 };
 
 /** Logical block inside PageShell — each section staggers in via PageContentMotion. */
-export function PageSection({ children, className }: PageSectionProps) {
-  return <div className={cn(className)}>{children}</div>;
+export function PageSection({ children, className, id }: PageSectionProps) {
+  return (
+    <div id={id} className={cn(className)}>
+      {children}
+    </div>
+  );
 }

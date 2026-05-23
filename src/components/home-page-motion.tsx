@@ -9,7 +9,7 @@ type HomePageMotionProps = {
 };
 
 /**
- * Orchestrates the home page section timeline: hero → stats → commitment → quick links.
+ * Orchestrates the home page section timeline: hero → stats → trust sections → quick links.
  */
 export function HomePageMotion({ children }: HomePageMotionProps) {
   const reduceMotion = useReducedMotion();

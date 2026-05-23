@@ -1,8 +1,8 @@
 {
   "language": {
     "label": "Language",
-    "bn": "Bangla",
-    "en": "English"
+    "bn": "বাং",
+    "en": "EN"
   },
   "mobile": {
     "openMenu": "Open menu",
@@ -69,7 +69,91 @@
     },
     "bannerAlt": "Green nature — symbol of sustainable development and welfare",
     "commitmentTitle": "Our commitment",
-    "commitmentBody": "Hilful Fuzul Manobkallyan Organisation stands with the poor and needy of Taleratal. Donations and expenses are published on the transparency page; digital receipts are available for manual donations.",
+    "commitmentBody": "Hilful Fuzul Manobkallyan Organisation stands with the poor and needy of Taleratal.",
+    "commitment": {
+      "intro": "We keep every donation and expense open to the public. The executive committee oversees the fund; donors can verify via the transparency page and receipts.",
+      "imagePlaceholder": "Photo coming soon",
+      "pillars": {
+        "transparency": {
+          "title": "Full transparency",
+          "description": "Published donations and expenses appear in the public ledger."
+        },
+        "committee": {
+          "title": "Committee oversight",
+          "description": "Chair, secretary, and cashier manage accounts together."
+        },
+        "receipts": {
+          "title": "Digital receipts",
+          "description": "Verify manual donations by receipt number."
+        },
+        "local": {
+          "title": "Local welfare",
+          "description": "Direct service to the poor and needy of Taleratal village."
+        }
+      },
+      "ctaTransparency": "View transparency",
+      "ctaResolution": "Resolution (PDF)"
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "subtitle": "From donation to published accounts — accountability at every step.",
+      "steps": {
+        "donate": {
+          "title": "1. Donate",
+          "description": "Donors contribute in cash or online to the fund."
+        },
+        "record": {
+          "title": "2. Record",
+          "description": "The cashier logs each donation in a separate register."
+        },
+        "approve": {
+          "title": "3. Approve",
+          "description": "The committee reviews and approves expenses and programmes."
+        },
+        "publish": {
+          "title": "4. Publish",
+          "description": "Accounts are published on the transparency page; verify with receipts."
+        }
+      }
+    },
+    "governance": {
+      "title": "Governance & legal basis",
+      "subtitle": "Formed on 24 April 2026 at Taleratal Jame Mosque; the committee manages the fund.",
+      "formed": "Established: 24 April 2026, Taleratal Jame Mosque",
+      "viewAbout": "Full details — About us",
+      "executivesTitle": "Executive committee"
+    },
+    "activitiesSnapshot": {
+      "title": "Programme areas",
+      "subtitle": "Religious education, financial aid, healthcare, and community development — see the activities page.",
+      "viewAll": "View all activities"
+    },
+    "faq": {
+      "title": "FAQ",
+      "subtitle": "Common questions about donations, accounts, and the fund.",
+      "items": {
+        "whereMoney": {
+          "q": "Where does my donation go?",
+          "a": "Donations are deposited into the fund and spent only for public welfare in Taleratal — aid, education, healthcare, and community development."
+        },
+        "seeAccounts": {
+          "q": "Where can I see the accounts?",
+          "a": "The transparency page shows published donations and expenses. The home page also shows total donations, expenses, and current balance."
+        },
+        "receipt": {
+          "q": "How do I get a receipt?",
+          "a": "For manual donations, use the receipt number on the receipt verification page. Online verification will be linked here when active."
+        },
+        "oversight": {
+          "q": "Who oversees the fund?",
+          "a": "The executive committee (chair, secretary, cashier) and advisory council provide oversight. Accounts are presented at monthly meetings."
+        },
+        "annualReport": {
+          "q": "When is the annual report available?",
+          "a": "A yearly income–expense summary will be published on the annual report page. Download links will appear after publication."
+        }
+      }
+    },
     "quick": {
       "transparency": {
         "title": "Transparency",

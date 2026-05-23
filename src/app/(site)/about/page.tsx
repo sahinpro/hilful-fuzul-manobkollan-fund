@@ -40,7 +40,7 @@ export default async function AboutPage() {
         </div>
       </PageSection>
 
-      <PageSection>
+      <PageSection id="leadership" className="scroll-mt-28">
         <AboutLeadershipTables members={leadershipMembers} t={t} />
       </PageSection>
     </PageShell>

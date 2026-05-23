@@ -3,22 +3,20 @@ import {
   solaimanLipiInlineFontFaceCss,
   solaimanLipiPrintHeadMarkup,
 } from "@/lib/fonts/solaiman-lipi-print";
-import type { ResolutionDocumentContent } from "@/lib/resolution/resolution-document";
+import {
+  EXECUTIVE_TABLE_EXTRA_EMPTY_ROWS,
+  type ResolutionDocumentContent,
+  type ResolutionExecutiveRow,
+} from "@/lib/resolution/resolution-document";
 
 export type CommitteeResolutionHtmlInput = ResolutionDocumentContent & {
   origin: string;
   lang: string;
   logoPath: string;
-  orgName: string;
-  orgLocation: string;
   printLabel: string;
   closeLabel: string;
   printHint: string;
   documentFooter: string;
-  cornerArtLeftSrc: string;
-  cornerArtLeftAlt: string;
-  cornerArtRightSrc: string;
-  cornerArtRightAlt: string;
 };
 
 const ACCENT = {
@@ -93,21 +91,81 @@ function decisionsHtml(decisions: ResolutionDocumentContent["decisions"]): strin
     .join("");
 }
 
-function advisorGrid(names: string[]): string {
-  const cells = names
-    .map((name) => `<div class="advisor-cell">${e(name)}</div>`)
+function advisorTable(input: CommitteeResolutionHtmlInput): string {
+  const rows = input.advisorRows
+    .map(
+      (row) => `<tr>
+        <td class="num">${e(row.sl)}</td>
+        <td>${e(row.name)}</td>
+        <td>${e(row.fathersName)}</td>
+      </tr>`,
+    )
     .join("");
-  return `<div class="advisor-grid">${cells}</div>`;
+
+  return `<table class="data advisor-table">
+    <thead>
+      <tr>
+        <th scope="col">${e(input.tableSl)}</th>
+        <th scope="col">${e(input.tableName)}</th>
+        <th scope="col">${e(input.tableFathersName)}</th>
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+const BN_EXEC_SL = [
+  "০১",
+  "০২",
+  "০৩",
+  "০৪",
+  "০৫",
+  "০৬",
+  "০৭",
+  "০৮",
+  "০৯",
+  "১০",
+  "১১",
+  "১২",
+  "১৩",
+  "১৪",
+  "১৫",
+  "১৬",
+  "১৭",
+  "১৮",
+] as const;
+
+function slForExecutiveRow(index: number, lang: string): string {
+  if (lang === "bn") return BN_EXEC_SL[index] ?? String(index + 1);
+  return String(index + 1).padStart(2, "0");
+}
+
+function executiveRowsForPrint(
+  rows: ResolutionExecutiveRow[],
+  lang: string,
+): ResolutionExecutiveRow[] {
+  const padded = [...rows];
+  const start = padded.length;
+  for (let i = 0; i < EXECUTIVE_TABLE_EXTRA_EMPTY_ROWS; i++) {
+    padded.push({
+      sl: slForExecutiveRow(start + i, lang),
+      name: "",
+      fathersName: "",
+      designation: "",
+    });
+  }
+  return padded;
 }
 
 function executiveTable(input: CommitteeResolutionHtmlInput): string {
-  const rows = input.executiveRows
+  const rows = executiveRowsForPrint(input.executiveRows, input.lang)
     .map(
       (row) => `<tr>
         <td class="num">${e(row.sl)}</td>
         <td>${e(row.name)}</td>
         <td>${e(row.fathersName)}</td>
         <td>${e(row.designation)}</td>
+        <td class="signature" aria-label="${e(input.tableSignature)}"></td>
       </tr>`,
     )
     .join("");
@@ -119,6 +177,7 @@ function executiveTable(input: CommitteeResolutionHtmlInput): string {
         <th scope="col">${e(input.tableName)}</th>
         <th scope="col">${e(input.tableFathersName)}</th>
         <th scope="col">${e(input.tableDesignation)}</th>
+        <th scope="col">${e(input.tableSignature)}</th>
       </tr>
     </thead>
     <tbody>${rows}</tbody>
@@ -135,7 +194,7 @@ export function buildCommitteeResolutionHtmlDocument(
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${e(input.documentTitle)} — ${e(input.orgName)}</title>
+  <title>${e(input.documentSubtitle)}</title>
   ${solaimanLipiPrintHeadMarkup()}
   <style>
     ${solaimanLipiInlineFontFaceCss()}
@@ -237,51 +296,10 @@ export function buildCommitteeResolutionHtmlDocument(
       position: relative;
       z-index: 1;
     }
-    .sheet-header {
-      position: relative;
-      padding: 0 12px 14px;
-      border-bottom: 3px solid ${ACCENT.primary};
-      background: linear-gradient(180deg, #fafcfd 0%, #fff 100%);
-    }
-    .header-ornaments { position: relative; min-height: 158px; }
-    .header-ornament {
-      position: absolute;
-      top: 0;
-      width: 150px;
-      max-height: 158px;
-      object-fit: contain;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
-    .header-ornament-left { left: 0; transform: scaleX(-1); }
-    .header-ornament-right { right: 0; }
-    .brand {
-      position: relative;
-      z-index: 1;
-      margin: 0 auto;
-      padding: 6px 100px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 8px;
-    }
-    .brand-logo img { width: 76px; height: 76px; object-fit: contain; }
-    .brand h1 {
-      margin: 0;
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: ${ACCENT.primaryDark};
-      line-height: 1.3;
-    }
-    .brand .location {
-      margin: 2px 0 0;
-      font-size: 0.9rem;
-      color: #64748b;
-    }
     .doc-title {
       margin: 0;
-      padding: 12px 20px 0;
+      padding: 18px 20px 12px;
+      border-bottom: 2px solid ${ACCENT.primary};
       text-align: center;
       font-size: 1.2rem;
       font-weight: 800;
@@ -364,19 +382,6 @@ export function buildCommitteeResolutionHtmlDocument(
       padding-left: 0;
       text-align: justify;
     }
-    .advisor-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px 14px;
-      font-size: 0.86rem;
-    }
-    .advisor-cell {
-      padding: 6px 8px;
-      border: 1px solid #c5d4e0;
-      border-radius: 4px;
-      line-height: 1.4;
-      background: rgba(255, 255, 255, 0.72);
-    }
     table.data {
       width: 100%;
       border-collapse: collapse;
@@ -405,25 +410,9 @@ export function buildCommitteeResolutionHtmlDocument(
       width: 3rem;
       text-align: center;
     }
-    .signature-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      margin-top: 22px;
-      padding-top: 14px;
-      border-top: 2px solid ${ACCENT.primary};
-      page-break-inside: avoid;
-    }
-    .signature-slot {
-      text-align: center;
-      font-size: 0.84rem;
-      font-weight: 600;
-      color: #334155;
-    }
-    .signature-slot .line {
-      margin-top: 42px;
-      border-top: 1px solid #94a3b8;
-      padding-top: 6px;
+    table.data td.signature {
+      width: 5.5rem;
+      min-height: 2.75rem;
     }
     .sheet-footer {
       padding: 12px 20px 16px;
@@ -450,10 +439,6 @@ export function buildCommitteeResolutionHtmlDocument(
         box-shadow: none;
         overflow: visible !important;
       }
-      .sheet-header {
-        page-break-after: avoid;
-        break-after: avoid-page;
-      }
       .doc-title {
         page-break-after: avoid;
         break-after: avoid-page;
@@ -461,10 +446,6 @@ export function buildCommitteeResolutionHtmlDocument(
       .section h2 {
         page-break-after: avoid;
         break-after: avoid-page;
-      }
-      .header-ornament {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
       }
       table.data thead th {
         background: ${ACCENT.header} !important;
@@ -486,10 +467,6 @@ export function buildCommitteeResolutionHtmlDocument(
         break-inside: auto;
       }
       .decision-item {
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
-      .signature-row {
         page-break-inside: avoid;
         break-inside: avoid;
       }
@@ -515,19 +492,6 @@ export function buildCommitteeResolutionHtmlDocument(
     </div>
   </div>
   <article class="sheet">
-    <header class="sheet-header">
-      <div class="header-ornaments">
-        <img class="header-ornament header-ornament-left" src="${e(input.cornerArtLeftSrc)}" alt="${e(input.cornerArtLeftAlt)}" width="118" height="118" decoding="async" />
-        <div class="brand">
-          <div class="brand-logo"><img src="${e(logoUrl)}" alt="" width="76" height="76" decoding="async" /></div>
-          <div>
-            <h1>${e(input.orgName)}</h1>
-            <p class="location">${e(input.orgLocation)}</p>
-          </div>
-        </div>
-        <img class="header-ornament header-ornament-right" src="${e(input.cornerArtRightSrc)}" alt="${e(input.cornerArtRightAlt)}" width="118" height="118" decoding="async" />
-      </div>
-    </header>
     <div class="sheet-body">
       <div class="sheet-watermark" aria-hidden="true">
         <img src="${e(logoUrl)}" alt="" width="400" height="400" decoding="async" />
@@ -568,17 +532,12 @@ export function buildCommitteeResolutionHtmlDocument(
 
       <section class="section">
         <h2>${e(input.advisorsTitle)}</h2>
-        ${advisorGrid(input.advisorNames)}
+        ${advisorTable(input)}
       </section>
 
       <section class="section">
         <h2>${e(input.executivesTitle)}</h2>
         ${executiveTable(input)}
-        <div class="signature-row">
-          <div class="signature-slot"><div class="line">${e(input.signatureChair)}</div></div>
-          <div class="signature-slot"><div class="line">${e(input.signatureSecretary)}</div></div>
-          <div class="signature-slot"><div class="line">${e(input.signatureCashier)}</div></div>
-        </div>
       </section>
     </div>
     <footer class="sheet-footer">${e(input.documentFooter)}</footer>

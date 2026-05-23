@@ -88,6 +88,7 @@ export const homePageTimeline: Variants = {
   },
 };
 
+/** Desktop route transition — blur is costly on mobile GPUs. */
 export const pageSlideVariants: Variants = {
   initial: { opacity: 0, x: 14, filter: "blur(4px)" },
   animate: {
@@ -101,6 +102,19 @@ export const pageSlideVariants: Variants = {
     x: -10,
     filter: "blur(2px)",
     transition: { duration: 0.22, ease: [0.4, 0, 1, 1] },
+  },
+};
+
+/** Mobile: opacity only — instant feel, no filter animations. */
+export const pageFadeVariants: Variants = {
+  initial: { opacity: 0 },
+  animate: {
+    opacity: 1,
+    transition: { duration: 0.12, ease: [0.22, 1, 0.36, 1] },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.08, ease: [0.4, 0, 1, 1] },
   },
 };
 

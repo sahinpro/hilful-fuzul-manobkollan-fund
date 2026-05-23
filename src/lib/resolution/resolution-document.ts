@@ -6,12 +6,21 @@ export type ResolutionDecisionItem = {
   body: string;
 };
 
+export type ResolutionAdvisorRow = {
+  sl: string;
+  name: string;
+  fathersName: string;
+};
+
 export type ResolutionExecutiveRow = {
   sl: string;
   name: string;
   fathersName: string;
   designation: string;
 };
+
+/** Blank rows at the end of the executive committee table for future appointments. */
+export const EXECUTIVE_TABLE_EXTRA_EMPTY_ROWS = 6;
 
 export type ResolutionDocumentContent = {
   documentTitle: string;
@@ -30,30 +39,28 @@ export type ResolutionDocumentContent = {
   policiesTitle: string;
   policies: string[];
   advisorsTitle: string;
-  advisorNames: string[];
+  advisorRows: ResolutionAdvisorRow[];
   executivesTitle: string;
   executiveRows: ResolutionExecutiveRow[];
   tableSl: string;
   tableName: string;
   tableFathersName: string;
   tableDesignation: string;
-  signatureChair: string;
-  signatureSecretary: string;
-  signatureCashier: string;
+  tableSignature: string;
 };
 
 const BN: ResolutionDocumentContent = {
   documentTitle: "কমিটি রেজ্যুলেশন",
-  documentSubtitle: "সভার কার্যবিবরণী ও রেজ্যুলেশন",
+  documentSubtitle: "রেজ্যুলেশন",
   formationDate: "তারিখ: ২৪ এপ্রিল জুম্মাবার, ২০২৬ খ্রি.",
   formationVenue: "স্থান: তালেরতল জামে মসজিদ",
   formationChair: "সভাপতি: মাওলানা মো: আ: কাদির (ইমাম ও খতিব অত্র মসজিদ)",
   proposalTitle: "১. প্রস্তাবনা",
   proposalBody:
-    "অদ্যকার সভায় তালেরতল গ্রামের গণ্যমান্য ব্যক্তিবর্গের উপস্থিতিতে সামাজিক কল্যাণ ও ধর্মীয় মূল্যবোধ প্রসারের লক্ষ্যে একটি স্থায়ী সংগঠন ও তহবিল গঠনের প্রস্তাব সর্বসম্মতিক্রমে গৃহীত হয়। উপস্থিত সকলে একমত হন যে, ‘হিলফুল ফুজুল মানবকল্যাণ তহবিল’ একটি অরাজনৈতিক ও অলাভজনক সেবামূলক প্রতিষ্ঠান হিসেবে তালেরতল গ্রামের উন্নয়ন ও আর্তমানবতার সেবায় কাজ করবে।",
+    "অদ্যকার সভায় তালেরতল গ্রামের গণ্যমান্য ব্যক্তিবর্গের উপস্থিতিতে সামাজিক কল্যাণ ও ধর্মীয় মূল্যবোধ প্রসারের লক্ষ্যে একটি স্থায়ী সংগঠন ও তহবিল গঠনের প্রস্তাব সর্বসম্মতিক্রমে গৃহীত হয়। উপস্থিত সকলে একমত হন যে, ‘হিলফুল ফুজুল মানবকল্যাণ সংগঠন ও তহবিল’ একটি অরাজনৈতিক ও অলাভজনক সেবামূলক প্রতিষ্ঠান হিসেবে তালেরতল গ্রামের উন্নয়ন ও আর্তমানবতার সেবায় কাজ করবে।",
   agendaTitle: "২. আলোচ্য বিষয়সমূহ",
   agendaItems: [
-    "'হিলফুল ফুজুল মানবকল্যাণ তহবিল' গঠন এবং এর কমিটি প্রণয়ন।",
+    "'হিলফুল ফুজুল মানবকল্যাণ সংগঠন ও তহবিল' গঠন এবং এর কমিটি প্রণয়ন।",
     "সংগঠনের লক্ষ্য, উদ্দেশ্য ও নীতিমালা নির্ধারণ।",
     "সংগঠনের তহবিল সংগ্রহ ও পরিচালনা পদ্ধতি।",
   ],
@@ -61,7 +68,7 @@ const BN: ResolutionDocumentContent = {
   decisions: [
     {
       label: "২ নং প্রস্তাব (সভাপতি নির্বাচন):",
-      body: "জনাব মো: মোহাম্মদ আলী সাহেব প্রস্তাব করেন যে, **মো: শামসুদ্দিন** সাহেবকে অত্র তহবিলের সভাপতি পদে মনোনীত করা হোক। উপস্থিত সকলে সমস্বরে তা সমর্থন করেন এবং তিনি সভাপতি হিসেবে নির্বাচিত হন।",
+      body: "জনাব মো: মোহাম্মদ আলী সাহেব প্রস্তাব করেন যে, **মো: শামসুদ্দিন** সাহেবকে অত্র সংগঠন ও তহবিলের সভাপতি পদে মনোনীত করা হোক। উপস্থিত সকলে সমস্বরে তা সমর্থন করেন এবং তিনি সভাপতি হিসেবে নির্বাচিত হন।",
     },
     {
       label: "৩ নং প্রস্তাব (সেক্রেটারি নির্বাচন):",
@@ -77,9 +84,8 @@ const BN: ResolutionDocumentContent = {
     "**ধর্মীয় সংস্কার ও আদর্শ সমাজ গঠন:** দ্বীনি অনুষ্ঠানের মাধ্যমে মানুষকে মসজিদমুখী করা এবং ইসলামের সুমহান আদর্শের আলোকে তালেরতল গ্রামকে একটি আদর্শ ও মডেল সমাজ হিসেবে গড়ে তোলা।",
     "**দারিদ্র্য বিমোচন ও কুসংস্কার দূরীকরণ:** সমাজ থেকে দারিদ্র্য ও সকল প্রকার অন্ধ কুসংস্কার পুরোপুরি দূর করার লক্ষ্যে টেকসই পরিকল্পনা গ্রহণ করা এবং সাধারণ মানুষের আত্মসামাজিক উন্নয়নে কাজ করা।",
     "**সামাজিক প্রতিরোধ ও ন্যায়বিচার:** তালেরতল গ্রামবাসীদের প্রত্যক্ষ সহযোগিতায় সমাজ থেকে সকল প্রকার অন্যায়, অবিচার ও জুলুমের বিরুদ্ধে চাক্ষুষ প্রতিরোধ গড়ে তোলা এবং সামাজিক অসংগতি ও অনৈতিক কর্মকাণ্ড নির্মূলে কঠোর ভূমিকা পালন করা।",
-    "**আর্তমানবতার সেবা:** অসহায় পরিবারের পাশে দাঁড়ানো, বিবাহে সহায়তা এবং অসহায় ও মুমূর্ষু রোগীদের চিকিৎসায় তহবিল থেকে সর্বোচ্চ সহযোগিতা প্রদান করা।",
+    "**আর্তমানবতার সেবা:** অসহায় পরিবারের পাশে দাঁড়ানো, বিবাহে সহায়তা এবং অসহায় ও মুমূর্ষু রোগীদের চিকিৎসায় সংগঠন ও তহবিল থেকে সর্বোচ্চ সহযোগিতা প্রদান করা।",
     "**শিক্ষা প্রসার:** গ্রামের বয়স্ক ব্যক্তিদের জন্য দ্বীনি ও কোরআন শিক্ষার ব্যবস্থা করা।",
-    "**আর্থিক স্বচ্ছতা:** দান সংগ্রহ ও ব্যয়ের প্রতিটি হিসাব যথাযথভাবে পৃথক রেজিস্টার খাতায় ক্যাশিয়ার কর্তৃক সংরক্ষিত থাকবে এবং মাসিক সভায় তা পেশ করা হবে।",
   ],
   policiesTitle: "৫. বিশেষ নীতিমালা",
   policies: [
@@ -87,21 +93,22 @@ const BN: ResolutionDocumentContent = {
     "উপস্থিত তালেরতল গ্রামবাসী ও দাতা সদস্যগণ সকলেই এই সংগঠনের সাধারণ সদস্য হিসেবে গণ্য হবেন।",
   ],
   advisorsTitle: "৬. উপদেষ্টা মণ্ডলী",
-  advisorNames: [
-    "জনাব মো: মইজ উদ্দিন",
-    "জনাব মোঃ মোহাম্মদ আলী",
-    "জনাব মোঃ অলি মেম্বার",
-    "জনাব মোঃ শহিদুল ইসলাম",
-    "জনাব মোঃ জামাল উদ্দিন",
-    "জনাব মোঃ নিজাম উদ্দীন",
-    "জনাব মোঃ শাহজাহান",
-    "জনাব মোঃ আব্দুল মান্নান",
-    "জনাব মোঃ নুরুল ইসলাম",
-    "জনাব মোঃ আরমান আলী",
-    "জনাব মোঃ দ্বীন ইসলাম",
-    "জনাব মোঃ সুরত আলী",
-    "জনাব মোঃ আমিরুল ইসলাম",
-    "জনাব মোঃ আব্দুল আলী",
+  advisorRows: [
+    { sl: "০১", name: "জনাব মো: মইজ উদ্দিন", fathersName: "—" },
+    { sl: "০২", name: "জনাব মোঃ মোহাম্মদ আলী", fathersName: "—" },
+    { sl: "০৩", name: "জনাব মোঃ অলি মেম্বার", fathersName: "—" },
+    { sl: "০৪", name: "জনাব মোঃ শহিদুল ইসলাম", fathersName: "—" },
+    { sl: "০৫", name: "জনাব মোঃ জামাল উদ্দিন", fathersName: "—" },
+    { sl: "০৬", name: "জনাব মোঃ নিজাম উদ্দীন", fathersName: "—" },
+    { sl: "০৭", name: "জনাব মোঃ শাহজাহান", fathersName: "—" },
+    { sl: "০৮", name: "জনাব মোঃ আব্দুল মান্নান", fathersName: "—" },
+    { sl: "০৯", name: "জনাব মোঃ নুরুল ইসলাম", fathersName: "—" },
+    { sl: "১০", name: "জনাব মোঃ আরমান আলী", fathersName: "—" },
+    { sl: "১১", name: "জনাব মোঃ আমির হোসেন", fathersName: "—" },
+    { sl: "১২", name: "জনাব মোঃ দ্বীন ইসলাম", fathersName: "—" },
+    { sl: "১৩", name: "জনাব মোঃ সুরত আলী", fathersName: "—" },
+    { sl: "১৪", name: "জনাব মোঃ আমিরুল ইসলাম", fathersName: "—" },
+    { sl: "১৫", name: "জনাব মোঃ আব্দুল আলী", fathersName: "—" },
   ],
   executivesTitle: "৭. কার্যনির্বাহী কমিটি",
   executiveRows: [
@@ -128,9 +135,7 @@ const BN: ResolutionDocumentContent = {
   tableName: "নাম",
   tableFathersName: "পিতার নাম",
   tableDesignation: "পদবী",
-  signatureChair: "সভাপতির স্বাক্ষর",
-  signatureSecretary: "সেক্রেটারির স্বাক্ষর",
-  signatureCashier: "ক্যাশিয়ারের স্বাক্ষর",
+  tableSignature: "স্বাক্ষর",
 };
 
 const EN: ResolutionDocumentContent = {
@@ -182,7 +187,10 @@ const EN: ResolutionDocumentContent = {
     "Residents of Taleratal and donor members present are general members of the organisation.",
   ],
   advisorsTitle: "6. Advisory council",
-  advisorNames: BN.advisorNames.map((name) => name.replace(/^জনাব\s+/, "Mr. ")),
+  advisorRows: BN.advisorRows.map((row) => ({
+    ...row,
+    name: row.name.replace(/^জনাব\s+/, "Mr. "),
+  })),
   executivesTitle: "7. Executive committee",
   executiveRows: [
     {
@@ -208,9 +216,7 @@ const EN: ResolutionDocumentContent = {
   tableName: "Name",
   tableFathersName: "Father's name",
   tableDesignation: "Role",
-  signatureChair: "Chair’s signature",
-  signatureSecretary: "Secretary’s signature",
-  signatureCashier: "Cashier’s signature",
+  tableSignature: "Signature",
 };
 
 const BN_SL = [
@@ -229,22 +235,25 @@ const BN_SL = [
   "১৩",
   "১৪",
   "১৫",
+  "১৬",
+  "১৭",
+  "১৮",
 ];
 
-function formatAdvisorLabel(
-  name: string,
-  locale: SiteLocale,
-  index: number,
-): string {
-  const sl =
-    locale === "bn" ? (BN_SL[index] ?? String(index + 1)) : String(index + 1);
+function slForIndex(index: number, locale: SiteLocale): string {
+  if (locale === "bn") return BN_SL[index] ?? String(index + 1);
+  return String(index + 1).padStart(2, "0");
+}
+
+function formatAdvisorName(name: string, locale: SiteLocale): string {
+  const trimmed = name.trim();
   if (locale === "bn") {
-    const trimmed = name.trim();
-    if (/^জনাব/.test(trimmed)) return `${sl}. ${trimmed}`;
-    return `${sl}. জনাব ${trimmed}`;
+    if (/^জনাব/.test(trimmed)) return trimmed;
+    return `জনাব ${trimmed}`;
   }
-  const trimmed = name.replace(/^জনাব\s+/, "").trim();
-  return `${sl}. Mr. ${trimmed}`;
+  const plain = trimmed.replace(/^জনাব\s+/, "").trim();
+  if (/^Mr\.?\s/i.test(plain)) return plain;
+  return `Mr. ${plain}`;
 }
 
 function executiveRowsFromDb(
@@ -253,27 +262,25 @@ function executiveRowsFromDb(
   locale: SiteLocale,
 ): ResolutionExecutiveRow[] {
   if (members.length === 0) return fallback;
-  const slFmt = (i: number) =>
-    locale === "bn"
-      ? (["০১", "০২", "০৩", "০৪", "০৫"][i] ?? String(i + 1))
-      : String(i + 1).padStart(2, "0");
   return members.map((m, i) => ({
-    sl: slFmt(i),
+    sl: slForIndex(i, locale),
     name: m.full_name,
     fathersName: m.fathers_name?.trim() || "—",
     designation: m.designation?.trim() || "—",
   }));
 }
 
-function advisorNamesFromDb(
+function advisorRowsFromDb(
   members: LeadershipMember[],
-  fallback: string[],
+  fallback: ResolutionAdvisorRow[],
   locale: SiteLocale,
-): string[] {
-  if (members.length === 0) {
-    return fallback.map((name, i) => formatAdvisorLabel(name, locale, i));
-  }
-  return members.map((m, i) => formatAdvisorLabel(m.full_name, locale, i));
+): ResolutionAdvisorRow[] {
+  if (members.length === 0) return fallback;
+  return members.map((m, i) => ({
+    sl: slForIndex(i, locale),
+    name: formatAdvisorName(m.full_name, locale),
+    fathersName: m.fathers_name?.trim() || "—",
+  }));
 }
 
 export function getResolutionDocument(
@@ -285,6 +292,6 @@ export function getResolutionDocument(
   return {
     ...base,
     executiveRows: executiveRowsFromDb(executives, base.executiveRows, locale),
-    advisorNames: advisorNamesFromDb(advisors, base.advisorNames, locale),
+    advisorRows: advisorRowsFromDb(advisors, base.advisorRows, locale),
   };
 }

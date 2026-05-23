@@ -1,9 +1,13 @@
+import { HomeActivitiesSnapshot } from "@/components/home/home-activities-snapshot";
+import { HomeCommitmentSection } from "@/components/home/home-commitment-section";
+import { HomeFaqSection } from "@/components/home/home-faq-section";
+import { HomeGovernanceSection } from "@/components/home/home-governance-section";
+import { HomeHowItWorks } from "@/components/home/home-how-it-works";
 import { HomeHero } from "@/components/home-hero";
 import { HomePageMotion } from "@/components/home-page-motion";
 import { PressableLink } from "@/components/motion/pressable-link";
 import { RevealGroup } from "@/components/motion/reveal";
 import { StatCard } from "@/components/stat-card";
-import { siteImages } from "@/config/images";
 import { mainNavItems } from "@/config/site";
 import { fetchTransparencyTotals } from "@/lib/finance/transparency";
 import { formatPublicBdt } from "@/lib/i18n/format-digits";
@@ -17,7 +21,6 @@ import {
   Scale,
   ScrollText,
 } from "lucide-react";
-import Image from "next/image";
 
 const quickLinkDefs = [
   { navKey: "transparency" as const, messageKey: "transparency" as const, Icon: ScrollText },
@@ -81,25 +84,11 @@ export default async function HomePage() {
         ))}
       </RevealGroup>
 
-      <section className="ios-card overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-        <div className="grid md:grid-cols-2">
-          <div className="relative aspect-4/3 min-h-[200px] w-full md:min-h-[280px]">
-            <Image
-              src={siteImages.bannerNature}
-              alt={t("home.bannerAlt")}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </div>
-          <div className="flex flex-col justify-center p-6 md:p-10">
-            <h2 className="text-xl font-bold md:text-2xl">{t("home.commitmentTitle")}</h2>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
-              {t("home.commitmentBody")}
-            </p>
-          </div>
-        </div>
-      </section>
+      <HomeCommitmentSection locale={locale} t={t} />
+      <HomeHowItWorks t={t} />
+      <HomeGovernanceSection locale={locale} t={t} />
+      <HomeActivitiesSnapshot t={t} />
+      <HomeFaqSection t={t} />
 
       <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" staggerMs={65} delayChildrenMs={30}>
         {quickLinkDefs.map(({ navKey, messageKey, Icon }) => (

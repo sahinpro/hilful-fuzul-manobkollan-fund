@@ -4,8 +4,8 @@
     "dashboardTitle": "ফাইন্যান্স ড্যাশবোর্ড"
   },
   "language": {
-    "en": "ইংরেজি",
-    "bn": "বাংলা"
+    "en": "EN",
+    "bn": "বাং"
   },
   "theme": {
     "chooseAria": "রঙের থিম বেছে নিন",
@@ -62,11 +62,11 @@
   "kpi": {
     "loadError": "KPI লোড করা যায়নি।",
     "totalDonations": "মোট দান",
-    "totalDonationsLead": "তহবিলে প্রবাহ",
+    "totalDonationsLead": "সংগঠন ও তহবিলে প্রবাহ",
     "totalDonationsHint": "সব দান সারির যোগফল (BDT)।",
     "badgeInflow": "প্রবেশ",
     "totalExpenses": "মোট ব্যয়",
-    "totalExpensesLead": "তহবিল থেকে প্রস্থান",
+    "totalExpensesLead": "সংগঠন ও তহবিল থেকে প্রস্থান",
     "totalExpensesHint": "সব ব্যয় সারির যোগফল (BDT)।",
     "badgeOutflow": "প্রস্থান",
     "donors": "দাতা প্রোফাইল",
@@ -81,7 +81,7 @@
     "approxFootnote": "সারি সীমা ছুঁলে মোট আনুমানিক হতে পারে।"
   },
   "chart": {
-    "title": "তহবিল কার্যকলাপ",
+    "title": "সংগঠন ও তহবিল কার্যকলাপ",
     "description": "প্রতিদিনের দান ও ব্যয় মোট (BDT, UTC দিন)।",
     "descriptionShort": "দৈনিক মোট (BDT)",
     "donations": "দান",
@@ -181,13 +181,13 @@
     "print": "প্রিন্ট / PDF সংরক্ষণ",
     "close": "বন্ধ",
     "total": "মোট",
-    "sheetSubtitle": "আর্থিক প্রতিবেদন — হিলফুল ফুজুল মানবকল্যাণ তহবিল",
+    "sheetSubtitle": "আর্থিক প্রতিবেদন — হিলফুল ফুজুল মানবকল্যাণ সংগঠন ও তহবিল",
     "donationsSheetTitle": "Donation Report ",
     "expensesSheetTitle": "ব্যয় রেজিস্টার",
     "recordCount": "{{count}} টি রেকর্ড",
     "orgLocation": "তালেরতল, পলাশ, বিশম্ভরপুর, সুনামগঞ্জ",
     "generatedLabel": "প্রস্তুতির সময়",
-    "documentFooter": "এই নথিটি হিলফুল ফুজুল মানবকল্যাণ তহবিলের অফিসিয়াল আর্থিক রেকর্ড।"
+    "documentFooter": "এই নথিটি হিলফুল ফুজুল মানবকল্যাণ সংগঠন ও তহবিলের অফিসিয়াল আর্থিক রেকর্ড।"
   },
   "session": {
     "title": "লগইন সেশন",

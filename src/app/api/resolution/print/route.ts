@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { resolveExportCornerArtUrls } from "@/config/export-sheet-art";
 import { siteConfig } from "@/config/site";
 import type { SiteLocale } from "@/lib/i18n/site-locale";
 import { createSiteTranslator } from "@/lib/i18n/site-translate";
@@ -20,28 +19,17 @@ export async function GET(request: Request) {
   const executives = members.filter((m) => m.category === "executive");
   const advisors = members.filter((m) => m.category === "advisor");
   const origin = url.origin;
-  const cornerArt = resolveExportCornerArtUrls(origin);
   const doc = getResolutionDocument(PRINT_LOCALE, executives, advisors);
-
-  const orgLocation = t("site.location");
-  const resolvedLocation =
-    orgLocation === "site.location" ? siteConfig.location : orgLocation;
 
   const html = buildCommitteeResolutionHtmlDocument({
     ...doc,
     origin,
     lang: "bn",
     logoPath: siteConfig.logoSrc,
-    orgName: t("site.fullName"),
-    orgLocation: resolvedLocation,
     printLabel: t("pages.about.resolutionPrint.print"),
     closeLabel: t("pages.about.resolutionPrint.close"),
     printHint: t("pages.about.resolutionPrint.hint"),
     documentFooter: t("pages.about.resolutionPrint.footer"),
-    cornerArtLeftSrc: cornerArt.left,
-    cornerArtLeftAlt: "ইসলামিক শোভা — বাম",
-    cornerArtRightSrc: cornerArt.right,
-    cornerArtRightAlt: "ইসলামিক শোভা — ডান",
   });
 
   return new NextResponse(html, {

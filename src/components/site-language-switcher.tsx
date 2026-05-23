@@ -25,7 +25,7 @@ export function SiteLanguageSwitcher() {
             type="button"
             variant={locale === code ? "default" : "ghost"}
             size="sm"
-            className="min-w-16 px-2.5 text-xs sm:min-w-20 sm:px-3 sm:text-sm"
+            className="min-w-8 px-2 text-xs sm:min-w-12 sm:px-3 sm:text-sm"
             onClick={() => select(code)}
           >
             {t(labelKey)}
