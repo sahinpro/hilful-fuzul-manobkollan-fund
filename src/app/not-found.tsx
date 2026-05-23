@@ -1,17 +1,13 @@
-import type { ReactNode } from "react";
-import { cookies } from "next/headers";
 import { MobileTabBar } from "@/components/mobile-tab-bar";
+import { SiteErrorView } from "@/components/site-error-view";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { SiteI18nProvider } from "@/components/site-i18n-provider";
-import { SitePageTransition } from "@/components/site-page-transition";
+import { cookies } from "next/headers";
 import { SITE_LOCALE_COOKIE, parseSiteLocaleCookie } from "@/lib/i18n/site-locale";
 
-/**
- * Public marketing + transparency routes share one shell (header, footer, width rhythm).
- * Admin lives outside this group so it can use its own dashboard layout.
- */
-export default async function SiteLayout({ children }: { children: ReactNode }) {
+/** Global 404 — uses the same public chrome as marketing pages. */
+export default async function RootNotFound() {
   const cookieStore = await cookies();
   const cookieLocale = parseSiteLocaleCookie(cookieStore.get(SITE_LOCALE_COOKIE)?.value);
 
@@ -20,7 +16,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <div className="ios-app-shell flex min-h-screen flex-col bg-background">
         <SiteHeader />
         <main className="ios-main flex-1 pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-0">
-          <SitePageTransition>{children}</SitePageTransition>
+          <SiteErrorView variant="notFound" />
         </main>
         <SiteFooter />
         <MobileTabBar />
