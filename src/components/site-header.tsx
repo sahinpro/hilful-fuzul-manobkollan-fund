@@ -1,15 +1,20 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 import { PublicNav } from "@/components/public-nav";
-import { SiteLanguageSwitcher } from "@/components/site-language-switcher";
 import { useSiteI18n } from "@/components/site-i18n-provider";
+import { SiteLanguageSwitcher } from "@/components/site-language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { iosSpringSoft } from "@/lib/motion/presets";
 import { cn } from "@/lib/utils";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export function SiteHeader() {
   const { t } = useSiteI18n();
@@ -41,7 +46,10 @@ export function SiteHeader() {
       style={reduceMotion ? undefined : { boxShadow }}
     >
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-4 md:h-16">
-        <motion.div whileTap={reduceMotion ? undefined : { scale: 0.97 }} transition={iosSpringSoft}>
+        <motion.div
+          whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+          transition={iosSpringSoft}
+        >
           <Link
             href="/"
             className="flex min-w-0 items-center gap-2.5 rounded-xl py-1 pr-2 text-foreground hover:opacity-90"
@@ -57,7 +65,7 @@ export function SiteHeader() {
               unoptimized
             />
             <span className="truncate text-base font-semibold tracking-tight md:text-lg">
-              {t("site.shortName")}
+              {t("site.fullName")}
             </span>
           </Link>
         </motion.div>
