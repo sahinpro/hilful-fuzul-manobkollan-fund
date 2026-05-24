@@ -318,13 +318,15 @@
     },
     "donate": {
       "title": "অনলাইন দান",
-      "subtitle": "bKash বা Nagad দিয়ে দান করুন। পেমেন্টের পর TrxID জমা দিন; ট্রেজারার যাচাই করে রসিদ দেবেন।",
+      "subtitle": "bKash, Nagad বা Rocket দিয়ে দান করুন। পেমেন্টের পর TrxID জমা দিন; ট্রেজারার যাচাই করে রসিদ দেবেন।",
       "claimTitle": "TrxID দিয়ে দাবি",
       "claimSubtitle": "আগে Send Money করেছেন কিন্তু ফর্ম পূরণ করেননি? এখানে TrxID ও নাম জমা দিন।",
       "notConfigured": "অনলাইন দান এখনও সক্রিয় নয়। অনুগ্রহ করে সরাসরি যোগাযোগ করুন।",
       "payNote": "Personal / Cash In নয় — Send Money (প্রেরক) ব্যবহার করুন।",
       "payTitle": "পেমেন্ট নির্দেশনা",
       "paySteps": "১) নিচের নম্বরে Send Money করুন  ২) অ্যাপ থেকে TrxID কপি করুন  ৩) ফর্ম জমা দিন",
+      "formTitle": "দানের তথ্য",
+      "formSubtitle": "পেমেন্ট করার পর নিচের ফর্ম পূরণ করুন।",
       "submit": "জমা দিন — যাচাইের অপেক্ষা",
       "submitting": "জমা হচ্ছে…",
       "claimLinkLead": "আগে টাকা পাঠিয়েছেন?",
@@ -336,11 +338,65 @@
         "amount": "পরিমাণ (৳)",
         "method": "পেমেন্ট মাধ্যম",
         "trxId": "TrxID (লেনদেন নম্বর)",
-        "trxHint": "bKash/Nagad অ্যাপের SMS বা ইতিহাস থেকে TrxID কপি করুন।"
+        "trxHint": "bKash, Nagad বা Rocket অ্যাপের SMS বা ইতিহাস থেকে TrxID কপি করুন।"
+      },
+      "help": {
+        "title": "কিভাবে দান করবেন",
+        "intro": "নিচের ধাপগুলো অনুসরণ করুন। একই মোবাইল নম্বরে bKash, Nagad ও Rocket-এ Send Money করা যাবে।",
+        "sameNumber": "একই নম্বর — bKash, Nagad ও Rocket (Send Money)।",
+        "tipsTitle": "গুরুত্বপূর্ণ",
+        "tips": {
+          "sendMoney": "Cash In নয় — অবশ্যই Send Money (প্রেরক) ব্যবহার করুন।",
+          "trxMatch": "ফর্মের TrxID ও পরিমাণ অবশ্যই অ্যাপ/SMS-এর সাথে মিলতে হবে।",
+          "privacy": "স্বচ্ছতা পেইজে শুধু পরিমাণ দেখা যাবে; আপনার নাম প্রকাশিত হবে না।"
+        },
+        "transparencyLead": "প্রকাশিত দান-ব্যয় দেখতে",
+        "transparencyLink": "স্বচ্ছতা পেইজ",
+        "steps": {
+          "send": {
+            "title": "Send Money করুন",
+            "body": "উপরের নম্বরে bKash, Nagad বা Rocket অ্যাপ থেকে নির্ধারিত পরিমাণ পাঠান।"
+          },
+          "copy": {
+            "title": "TrxID সংরক্ষণ করুন",
+            "body": "পেমেন্ট সফল হলে SMS বা অ্যাপের ইতিহাস থেকে লেনদেন নম্বর (TrxID) কপি করুন।"
+          },
+          "fill": {
+            "title": "ফর্ম পূরণ করুন",
+            "body": "ডান পাশের ফর্মে নাম, পরিমাণ, মাধ্যম ও TrxID লিখে জমা দিন।"
+          },
+          "verify": {
+            "title": "যাচাই ও রসিদ",
+            "body": "ট্রেজারার SMS যাচাই করে নিশ্চিত করলে স্ট্যাটাস পেইজে রসিদ প্রিন্ট করতে পারবেন।"
+          }
+        },
+        "claim": {
+          "title": "TrxID দিয়ে দাবি",
+          "intro": "আগে টাকা পাঠিয়ে ফেলেছেন? একই ধাপ — শুধু ডান পাশের ফর্মে TrxID ও নাম জমা দিন।",
+          "steps": {
+            "send": {
+              "title": "ইতিমধ্যে পেমেন্ট?",
+              "body": "নিচের নম্বরে Send Money করে থাকলে পরের ধাপে যান।"
+            },
+            "copy": {
+              "title": "TrxID খুঁজুন",
+              "body": "অ্যাপ বা SMS থেকে লেনদেন নম্বর কপি করুন।"
+            },
+            "fill": {
+              "title": "দাবি ফর্ম",
+              "body": "ডান পাশে নাম, পরিমাণ, মাধ্যম ও TrxID দিয়ে জমা দিন।"
+            },
+            "verify": {
+              "title": "যাচাই",
+              "body": "ট্রেজারার মিলিয়ে নিশ্চিত করলে রসিদ পাবেন।"
+            }
+          }
+        }
       },
       "method": {
         "bkash": "bKash",
-        "nagad": "Nagad"
+        "nagad": "Nagad",
+        "rocket": "Rocket"
       },
       "errors": {
         "amount": "সঠিক পরিমাণ লিখুন।",
@@ -350,6 +406,8 @@
       "claim": {
         "payTitle": "ইতিমধ্যে পেমেন্ট করেছেন?",
         "paySteps": "TrxID ও নাম লিখে জমা দিন। ট্রেজারার bKash/Nagad SMS দেখে এক ক্লিকে নিশ্চিত করবেন।",
+        "formTitle": "দাবির তথ্য",
+        "formSubtitle": "পেমেন্টের TrxID ও আপনার নাম জমা দিন।",
         "submit": "দাবি জমা দিন"
       },
       "status": {

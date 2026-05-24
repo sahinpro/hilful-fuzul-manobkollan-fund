@@ -86,7 +86,9 @@ export function DonateStatusWorkspace({ accessToken, configured }: DonateStatusW
   if (!data) return null;
 
   const amountLabel = formatPublicBdt(Number(data.amountBdt), locale);
-  const methodLabel = t(`pages.donate.method.${data.paymentMethod as "bkash" | "nagad"}`);
+  const methodLabel = t(
+    `pages.donate.method.${data.paymentMethod as "bkash" | "nagad" | "rocket"}`,
+  );
 
   return (
     <div className="ios-card mx-auto max-w-lg space-y-6 rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8">

@@ -1,4 +1,4 @@
-import { DonateForm } from "@/components/donate/donate-form";
+import { DonateWorkspace } from "@/components/donate/donate-workspace";
 import { PageSection } from "@/components/page-section";
 import { PageShell } from "@/components/page-shell";
 import { isDonateFlowConfigured } from "@/lib/donate/config";
@@ -16,7 +16,7 @@ export default async function DonatePage() {
       subtitle={t("pages.donate.subtitle")}
     >
       <PageSection>
-        <DonateForm mode="donate" configured={configured} />
+        <DonateWorkspace mode="donate" configured={configured} />
       </PageSection>
     </PageShell>
   );

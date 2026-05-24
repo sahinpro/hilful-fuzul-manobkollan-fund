@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS public.donation_intents (
   donor_full_name text NOT NULL,
   donor_fathers_name text,
   amount_bdt numeric(14, 2) NOT NULL CHECK (amount_bdt > 0),
-  payment_method text NOT NULL CHECK (payment_method IN ('bkash', 'nagad')),
+  payment_method text NOT NULL CHECK (payment_method IN ('bkash', 'nagad', 'rocket')),
   trx_id text NOT NULL,
   status text NOT NULL DEFAULT 'pending'
     CHECK (status IN ('pending', 'confirmed', 'rejected', 'expired')),

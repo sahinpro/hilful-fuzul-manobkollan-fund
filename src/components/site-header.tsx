@@ -4,6 +4,7 @@ import { PublicNav } from "@/components/public-nav";
 import { useSiteI18n } from "@/components/site-i18n-provider";
 import { SiteLanguageSwitcher } from "@/components/site-language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
 import { iosSpringSoft } from "@/lib/motion/presets";
 import { cn } from "@/lib/utils";
 import {
@@ -12,6 +13,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
+import { HandCoins } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -75,6 +77,14 @@ export function SiteHeader() {
         <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">
           <SiteLanguageSwitcher />
           <ThemeToggle />
+          <Button
+            size="sm"
+            className="h-10 gap-1.5 px-3 text-sm font-semibold shadow-sm"
+            render={<Link href="/donate" />}
+          >
+            <HandCoins className="size-4" aria-hidden />
+            <span className="max-[380px]:sr-only">{t("nav.donate")}</span>
+          </Button>
         </div>
       </div>
     </motion.header>

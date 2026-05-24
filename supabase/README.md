@@ -25,6 +25,7 @@ After applying, redeploy the Next.js app. New donations automatically get receip
 ## Semi-auto online donations (`20260525120000_donation_intents_semi_auto.sql`)
 
 1. Run `migrations/20260525120000_donation_intents_semi_auto.sql` in the SQL Editor (or `supabase db push`).
+2. If the table was created before Rocket support, also run `migrations/20260525130000_donation_intents_add_rocket.sql`.
 2. Set environment variables on the Next.js host:
    - `NEXT_PUBLIC_MFS_DONATION_NUMBER` — bKash/Nagad Send Money number (optional; falls back to site contact phone).
    - Existing `SUPABASE_SERVICE_ROLE_KEY` — required for `/api/donate/*` and admin confirm routes.

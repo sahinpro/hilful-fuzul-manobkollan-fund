@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { isValidTrxId, normalizeTrxId } from "@/lib/donate/normalize-trx";
 
-export const DONATE_PAYMENT_METHODS = ["bkash", "nagad"] as const;
+export const DONATE_PAYMENT_METHODS = ["bkash", "nagad", "rocket"] as const;
 export type DonatePaymentMethod = (typeof DONATE_PAYMENT_METHODS)[number];
 
 export const donateIntentBodySchema = z.object({

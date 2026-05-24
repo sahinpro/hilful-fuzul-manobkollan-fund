@@ -318,13 +318,15 @@
     },
     "donate": {
       "title": "Donate online",
-      "subtitle": "Donate via bKash or Nagad. Submit your TrxID after payment; the treasurer will verify and issue a receipt.",
+      "subtitle": "Donate via bKash, Nagad, or Rocket. Submit your TrxID after payment; the treasurer will verify and issue a receipt.",
       "claimTitle": "Claim with TrxID",
       "claimSubtitle": "Already sent money but did not fill the form? Submit your TrxID and name here.",
       "notConfigured": "Online donation is not active yet. Please contact us directly.",
       "payNote": "Use Send Money (not Cash In).",
       "payTitle": "Payment instructions",
       "paySteps": "1) Send Money to the number below  2) Copy TrxID from the app  3) Submit this form",
+      "formTitle": "Donation details",
+      "formSubtitle": "Complete this form after you have sent payment.",
       "submit": "Submit for verification",
       "submitting": "Submitting…",
       "claimLinkLead": "Already paid?",
@@ -336,11 +338,65 @@
         "amount": "Amount (BDT)",
         "method": "Payment method",
         "trxId": "TrxID (transaction id)",
-        "trxHint": "Copy TrxID from bKash/Nagad SMS or history."
+        "trxHint": "Copy TrxID from bKash, Nagad, or Rocket SMS or history."
+      },
+      "help": {
+        "title": "How to donate",
+        "intro": "Follow these steps. The same mobile number accepts bKash, Nagad, and Rocket via Send Money.",
+        "sameNumber": "Same number for bKash, Nagad, and Rocket (Send Money).",
+        "tipsTitle": "Important",
+        "tips": {
+          "sendMoney": "Use Send Money — not Cash In.",
+          "trxMatch": "TrxID and amount on the form must match your app/SMS.",
+          "privacy": "Only the amount appears on the public transparency page — not your name."
+        },
+        "transparencyLead": "View published donations and expenses on the",
+        "transparencyLink": "transparency page",
+        "steps": {
+          "send": {
+            "title": "Send Money",
+            "body": "Send the chosen amount from bKash, Nagad, or Rocket to the number shown."
+          },
+          "copy": {
+            "title": "Save your TrxID",
+            "body": "After payment, copy the transaction id from SMS or app history."
+          },
+          "fill": {
+            "title": "Fill the form",
+            "body": "Enter your name, amount, method, and TrxID in the form on the right."
+          },
+          "verify": {
+            "title": "Verification & receipt",
+            "body": "After the treasurer confirms, print your receipt from the status page."
+          }
+        },
+        "claim": {
+          "title": "Claim with TrxID",
+          "intro": "Already paid? Follow the same steps — submit TrxID and name in the form on the right.",
+          "steps": {
+            "send": {
+              "title": "Already paid?",
+              "body": "If you used Send Money to the number below, continue to the next step."
+            },
+            "copy": {
+              "title": "Find TrxID",
+              "body": "Copy the transaction id from your app or SMS."
+            },
+            "fill": {
+              "title": "Claim form",
+              "body": "Submit name, amount, method, and TrxID on the right."
+            },
+            "verify": {
+              "title": "Verification",
+              "body": "Once matched, your receipt will be available to print."
+            }
+          }
+        }
       },
       "method": {
         "bkash": "bKash",
-        "nagad": "Nagad"
+        "nagad": "Nagad",
+        "rocket": "Rocket"
       },
       "errors": {
         "amount": "Enter a valid amount.",
@@ -350,6 +406,8 @@
       "claim": {
         "payTitle": "Already paid?",
         "paySteps": "Enter TrxID and name. The treasurer will match your bKash/Nagad SMS and confirm.",
+        "formTitle": "Claim details",
+        "formSubtitle": "Submit your TrxID and name after payment.",
         "submit": "Submit claim"
       },
       "status": {

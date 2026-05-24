@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSiteI18n } from "@/components/site-i18n-provider";
-import { getMfsDonationNumber } from "@/lib/donate/config";
 import type { DonatePaymentMethod } from "@/lib/validation/donate";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,7 +15,6 @@ type DonateFormProps = {
 export function DonateForm({ mode, configured }: DonateFormProps) {
   const { t } = useSiteI18n();
   const router = useRouter();
-  const mfsNumber = getMfsDonationNumber();
 
   const [donorName, setDonorName] = useState("");
   const [fathersName, setFathersName] = useState("");
@@ -91,22 +89,18 @@ export function DonateForm({ mode, configured }: DonateFormProps) {
   return (
     <form
       onSubmit={(e) => void onSubmit(e)}
-      className="ios-card mx-auto max-w-lg space-y-6 rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8"
+      className="ios-card space-y-5 rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8"
     >
+      <div>
+        <h2 className="text-lg font-bold">{t(`${prefix}.formTitle`)}</h2>
+        <p className="mt-1 text-sm text-muted-foreground">{t(`${prefix}.formSubtitle`)}</p>
+      </div>
+
       {!configured ? (
         <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-950 dark:text-amber-100">
           {t("pages.donate.notConfigured")}
         </p>
       ) : null}
-
-      <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
-        <p className="text-sm font-semibold text-primary">{t(`${prefix}.payTitle`)}</p>
-        <p className="mt-2 text-sm text-muted-foreground">{t(`${prefix}.paySteps`)}</p>
-        {mfsNumber ? (
-          <p className="mt-3 text-lg font-bold tracking-wide">{mfsNumber}</p>
-        ) : null}
-        <p className="mt-2 text-xs text-muted-foreground">{t("pages.donate.payNote")}</p>
-      </div>
 
       <div className="space-y-4">
         <div>
@@ -150,7 +144,7 @@ export function DonateForm({ mode, configured }: DonateFormProps) {
         <fieldset>
           <legend className="text-sm font-medium">{t("pages.donate.fields.method")}</legend>
           <div className="mt-2 flex flex-wrap gap-2">
-            {(["bkash", "nagad"] as const).map((key) => (
+            {(["bkash", "nagad", "rocket"] as const).map((key) => (
               <button
                 key={key}
                 type="button"
