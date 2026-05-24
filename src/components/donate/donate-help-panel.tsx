@@ -2,7 +2,6 @@
 
 import { useSiteI18n } from "@/components/site-i18n-provider";
 import { siteConfig } from "@/config/site";
-import { getMfsDonationNumber } from "@/lib/donate/config";
 import {
   CheckCircle2,
   ClipboardList,
@@ -21,7 +20,6 @@ const STEP_ICONS = [Wallet, Smartphone, ClipboardList, CheckCircle2] as const;
 
 export function DonateHelpPanel({ mode }: DonateHelpPanelProps) {
   const { t } = useSiteI18n();
-  const mfsNumber = getMfsDonationNumber();
   const prefix =
     mode === "claim" ? "pages.donate.help.claim" : "pages.donate.help";
 
@@ -57,27 +55,6 @@ export function DonateHelpPanel({ mode }: DonateHelpPanelProps) {
           );
         })}
       </ol>
-
-      <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
-        <p className="text-sm font-semibold text-primary">
-          {t("pages.donate.payTitle")}
-        </p>
-        {mfsNumber ? (
-          <p className="mt-2 text-2xl font-bold tracking-wide text-foreground">
-            {mfsNumber}
-          </p>
-        ) : (
-          <p className="mt-2 text-sm text-muted-foreground">
-            {t("pages.donate.notConfigured")}
-          </p>
-        )}
-        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-          {t("pages.donate.payNote")}
-        </p>
-        <p className="mt-3 text-xs text-muted-foreground">
-          {t("pages.donate.help.sameNumber")}
-        </p>
-      </div>
 
       <div className="flex flex-wrap items-center gap-3">
         <Image

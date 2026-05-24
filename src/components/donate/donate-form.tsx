@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSiteI18n } from "@/components/site-i18n-provider";
+import { getMfsDonationNumber } from "@/lib/donate/config";
 import type { DonatePaymentMethod } from "@/lib/validation/donate";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,6 +16,7 @@ type DonateFormProps = {
 export function DonateForm({ mode, configured }: DonateFormProps) {
   const { t } = useSiteI18n();
   const router = useRouter();
+  const mfsNumber = getMfsDonationNumber();
 
   const [donorName, setDonorName] = useState("");
   const [fathersName, setFathersName] = useState("");
@@ -91,6 +93,27 @@ export function DonateForm({ mode, configured }: DonateFormProps) {
       onSubmit={(e) => void onSubmit(e)}
       className="ios-card space-y-5 rounded-2xl border border-border bg-card p-6 shadow-sm md:p-8"
     >
+      <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
+        <p className="text-sm font-semibold text-primary">
+          {t("pages.donate.payTitle")}
+        </p>
+        {mfsNumber ? (
+          <p className="mt-2 text-2xl font-bold tracking-wide text-foreground">
+            {mfsNumber}
+          </p>
+        ) : (
+          <p className="mt-2 text-sm text-muted-foreground">
+            {t("pages.donate.notConfigured")}
+          </p>
+        )}
+        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+          {t("pages.donate.payNote")}
+        </p>
+        <p className="mt-3 text-xs text-muted-foreground">
+          {t("pages.donate.help.sameNumber")}
+        </p>
+      </div>
+
       <div>
         <h2 className="text-lg font-bold">{t(`${prefix}.formTitle`)}</h2>
         <p className="mt-1 text-sm text-muted-foreground">{t(`${prefix}.formSubtitle`)}</p>
