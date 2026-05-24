@@ -48,7 +48,7 @@ export async function GET(request: Request, context: RouteContext) {
     referenceNote: null,
     receivedAtIso: record.receivedAt,
     orgName: siteBn.name,
-    orgTagline: `${siteBn.location} · ${siteBn.contact.addressLines.join(", ")}`,
+    orgTagline: siteBn.location,
     orgNameEn: siteEn.name,
     contactPhones: `${siteBn.contact.phoneLabel}: ${siteConfig.contact.phone}`,
     chairmanSignatureSrc:

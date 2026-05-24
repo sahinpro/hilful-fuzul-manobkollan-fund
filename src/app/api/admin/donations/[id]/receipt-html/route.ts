@@ -75,7 +75,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     referenceNote: donation.reference_note,
     receivedAtIso: donation.received_at,
     orgName: siteBn.name,
-    orgTagline: `${siteBn.location} · ${siteBn.contact.addressLines.join(", ")}`,
+    orgTagline: siteBn.location,
     orgNameEn: siteEn.name,
     contactPhones: `${siteBn.contact.phoneLabel}: ${siteConfig.contact.phone}`,
     chairmanSignatureSrc:
