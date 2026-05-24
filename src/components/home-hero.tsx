@@ -38,13 +38,13 @@ export function HomeHero({ badge, title, tagline, imageAlt }: HomeHeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12, ...iosSpringSoft }}
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary md:text-sm">
+          <p className="text-sm font-semibold uppercase tracking-widest text-primary md:text-sm">
             {badge}
           </p>
-          <h1 className="mt-2 max-w-3xl text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
+          <h1 className="mt-2 max-w-3xl text-4xl font-bold leading-tight md:text-5xl">
             {title}
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
+          <p className="mt-3 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
             {tagline}
           </p>
         </motion.div>
