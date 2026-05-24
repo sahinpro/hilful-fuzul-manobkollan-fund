@@ -19,7 +19,7 @@ export function PublicNav() {
             key={item.href}
             href={item.href}
             className={cn(
-              "rounded-lg px-2.5 py-2 text-sm font-medium transition-[background-color,color,transform] duration-200 ease-spring motion-safe:active:scale-[0.98]",
+              "cursor-pointer rounded-lg px-2.5 py-2 text-sm font-medium transition-[background-color,color,transform] duration-200 ease-spring motion-safe:active:scale-[0.98]",
               isActive
                 ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",

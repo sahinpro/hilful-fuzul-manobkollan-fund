@@ -26,11 +26,11 @@ function Calendar({ className, classNames, showOutsideDays = true, components, .
         caption_label: cn("text-sm font-medium", classNames?.caption_label),
         nav: cn("absolute inset-x-0 top-0 flex w-full items-center justify-between px-0.5", classNames?.nav),
         button_previous: cn(
-          "inline-flex size-7 items-center justify-center rounded-md border border-border bg-background text-sm transition hover:bg-muted",
+          "inline-flex size-7 cursor-pointer items-center justify-center rounded-md border border-border bg-background text-sm transition hover:bg-muted",
           classNames?.button_previous,
         ),
         button_next: cn(
-          "inline-flex size-7 items-center justify-center rounded-md border border-border bg-background text-sm transition hover:bg-muted",
+          "inline-flex size-7 cursor-pointer items-center justify-center rounded-md border border-border bg-background text-sm transition hover:bg-muted",
           classNames?.button_next,
         ),
         month_grid: cn("mt-2 w-full border-collapse", classNames?.month_grid),
@@ -42,7 +42,7 @@ function Calendar({ className, classNames, showOutsideDays = true, components, .
           classNames?.day,
         ),
         day_button: cn(
-          "inline-flex size-8 items-center justify-center rounded-md font-normal transition hover:bg-muted aria-selected:bg-primary aria-selected:text-primary-foreground aria-selected:hover:bg-primary aria-selected:hover:text-primary-foreground",
+          "inline-flex size-8 cursor-pointer items-center justify-center rounded-md font-normal transition hover:bg-muted aria-selected:bg-primary aria-selected:text-primary-foreground aria-selected:hover:bg-primary aria-selected:hover:text-primary-foreground",
           classNames?.day_button,
         ),
         selected: cn("rounded-md", classNames?.selected),

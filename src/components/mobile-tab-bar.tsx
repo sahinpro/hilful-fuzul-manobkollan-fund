@@ -68,7 +68,7 @@ export function MobileTabBar() {
                 href={href}
                 prefetch
                 className={cn(
-                  "relative touch-manipulation flex flex-col items-center justify-center gap-0.5 rounded-2xl px-1 text-[0.625rem] font-medium transition-colors duration-150",
+                  "relative touch-manipulation flex cursor-pointer flex-col items-center justify-center gap-0.5 rounded-2xl px-1 text-[0.625rem] font-medium transition-colors duration-150",
                   active ? "text-primary" : "text-muted-foreground",
                 )}
               >
@@ -114,7 +114,7 @@ export function MobileTabBar() {
             type="button"
             onClick={() => setMenuOpen(true)}
             className={cn(
-              "relative touch-manipulation flex flex-col items-center justify-center gap-0.5 rounded-2xl px-1 text-[0.625rem] font-medium transition-colors duration-150",
+              "relative touch-manipulation flex cursor-pointer flex-col items-center justify-center gap-0.5 rounded-2xl px-1 text-[0.625rem] font-medium transition-colors duration-150",
               menuActive ? "text-primary" : "text-muted-foreground",
             )}
             aria-label={t("mobile.openMenu")}

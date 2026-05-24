@@ -20,7 +20,7 @@ export function PressableLink({ className, ...props }: PressableLinkProps) {
     >
       <Link
         className={cn(
-          "ios-card touch-manipulation flex h-full flex-col transition-[box-shadow,border-color] duration-200",
+          "ios-card touch-manipulation flex h-full cursor-pointer flex-col transition-[box-shadow,border-color] duration-200",
           className,
         )}
         {...props}

@@ -102,7 +102,7 @@ export function ThemeToggle() {
         <>
           <button
             type="button"
-            className="fixed inset-0 z-40 cursor-default"
+            className="fixed inset-0 z-40 cursor-pointer"
             aria-label={L.closeMenu()}
             onClick={() => setOpen(false)}
           />
