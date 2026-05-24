@@ -19,6 +19,7 @@
   "nav": {
     "overview": "Overview",
     "donations": "Donations",
+    "donationIntents": "Pending verify",
     "expenses": "Expenses",
     "records": "Records",
     "advisors": "Advisors",
@@ -318,5 +319,25 @@
     "cancel": "Cancel",
     "loadFailed": "Load failed",
     "saveFailed": "Save failed"
+  },
+  "donationIntents": {
+    "title": "Online donations — pending verification",
+    "subtitle": "Requests from the website. Match TrxID and amount against bKash/Nagad SMS, then confirm.",
+    "refresh": "Refresh",
+    "loading": "Loading…",
+    "empty": "No pending requests.",
+    "loadFailed": "Load failed",
+    "confirmFailed": "Could not confirm",
+    "rejectFailed": "Could not reject",
+    "confirm": "Confirm",
+    "confirming": "Confirming…",
+    "reject": "Reject",
+    "colDonor": "Donor",
+    "colFathers": "Father's name",
+    "colAmount": "Amount",
+    "colMethod": "Method",
+    "colTrx": "TrxID",
+    "colSubmitted": "Submitted",
+    "colActions": "Actions"
   }
 }

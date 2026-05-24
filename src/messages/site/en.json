@@ -22,7 +22,8 @@
     "transparency": "Transparency",
     "annualReport": "Annual report",
     "notices": "Notices",
-    "admin": "Admin"
+    "admin": "Admin",
+    "donate": "Donate"
   },
   "site": {
     "shortName": "Hilful Fuzul",
@@ -314,6 +315,64 @@
       "subtitle": "Yearly income–expense, programme outcomes, and document downloads will be available here.",
       "cardTitle": "2026 report",
       "cardBody": "After publication, a summary, download links, and visual analysis will appear here."
+    },
+    "donate": {
+      "title": "Donate online",
+      "subtitle": "Donate via bKash or Nagad. Submit your TrxID after payment; the treasurer will verify and issue a receipt.",
+      "claimTitle": "Claim with TrxID",
+      "claimSubtitle": "Already sent money but did not fill the form? Submit your TrxID and name here.",
+      "notConfigured": "Online donation is not active yet. Please contact us directly.",
+      "payNote": "Use Send Money (not Cash In).",
+      "payTitle": "Payment instructions",
+      "paySteps": "1) Send Money to the number below  2) Copy TrxID from the app  3) Submit this form",
+      "submit": "Submit for verification",
+      "submitting": "Submitting…",
+      "claimLinkLead": "Already paid?",
+      "claimLink": "Claim with TrxID",
+      "backToDonate": "Back to donate",
+      "fields": {
+        "name": "Your name",
+        "fathersName": "Father's name (optional)",
+        "amount": "Amount (BDT)",
+        "method": "Payment method",
+        "trxId": "TrxID (transaction id)",
+        "trxHint": "Copy TrxID from bKash/Nagad SMS or history."
+      },
+      "method": {
+        "bkash": "bKash",
+        "nagad": "Nagad"
+      },
+      "errors": {
+        "amount": "Enter a valid amount.",
+        "submit": "Could not submit. Check your details and try again.",
+        "network": "Network error. Please try again."
+      },
+      "claim": {
+        "payTitle": "Already paid?",
+        "paySteps": "Enter TrxID and name. The treasurer will match your bKash/Nagad SMS and confirm.",
+        "submit": "Submit claim"
+      },
+      "status": {
+        "title": {
+          "pending": "Verification in progress",
+          "confirmed": "Donation confirmed",
+          "rejected": "Request rejected",
+          "expired": "Request expired"
+        },
+        "body": {
+          "pending": "The treasurer is matching your TrxID and amount. This usually takes a few minutes.",
+          "confirmed": "Thank you. You can print or save your receipt below.",
+          "rejected": "Details did not match. Try again with the correct TrxID or contact us.",
+          "expired": "Not verified within 24 hours. Please submit again."
+        },
+        "loading": "Loading status…",
+        "loadError": "Could not load status.",
+        "polling": "Refreshing automatically…",
+        "amount": "Amount",
+        "method": "Method",
+        "receiptNo": "Receipt no.",
+        "printReceipt": "Print receipt / PDF"
+      }
     },
     "receipt": {
       "title": "Receipt verification",

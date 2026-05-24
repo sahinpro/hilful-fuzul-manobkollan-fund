@@ -139,6 +139,7 @@ export const siteConfig = {
     receiverPublicPath: null as string | null,
   },
   footerQuickLinks: [
+    { href: "/donate", key: "donate" },
     ...mainNavItems,
     { href: "/admin", key: "admin" },
   ] satisfies NavItem[],

@@ -8,6 +8,8 @@ export type DonationReceiptHtmlInput = {
   donorPhone: string | null;
   amountBdt: string;
   paymentMethod: string;
+  /** MFS transaction id when recorded from semi-auto flow. */
+  trxId?: string | null;
   referenceNote: string | null;
   receivedAtIso: string;
   orgName: string;
@@ -144,7 +146,11 @@ export function buildDonationReceiptHtmlDocument(
     input.donorFathersName?.trim() && input.donorFathersName.trim().length > 0
       ? input.donorFathersName.trim()
       : null;
-  const purpose = input.referenceNote?.trim() || `দান (${input.paymentMethod})`;
+  const trxLine = input.trxId?.trim() ? `TrxID: ${input.trxId.trim()}` : null;
+  const purpose =
+    input.referenceNote?.trim() ||
+    trxLine ||
+    `দান (${input.paymentMethod})`;
   const purposeShort =
     purpose.length > 100 ? `${purpose.slice(0, 97)}…` : purpose;
 

@@ -22,6 +22,7 @@ import {
   Award,
   Briefcase,
   CircleDollarSign,
+  ClipboardCheck,
   LayoutDashboard,
   Receipt,
   Search,
@@ -34,6 +35,7 @@ import { useState, type ComponentProps } from "react";
 
 const NAV_LINKS = [
   { href: "/admin/overview", key: "nav.overview", Icon: LayoutDashboard },
+  { href: "/admin/donation-intents", key: "nav.donationIntents", Icon: ClipboardCheck },
   { href: "/admin/donations", key: "nav.donations", Icon: CircleDollarSign },
   { href: "/admin/expenses", key: "nav.expenses", Icon: Receipt },
   { href: "/admin/records", key: "nav.records", Icon: Table2 },

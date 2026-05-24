@@ -39,6 +39,65 @@ export type Database = {
         };
         Relationships: [];
       };
+      donation_intents: {
+        Row: {
+          id: string;
+          donor_full_name: string;
+          donor_fathers_name: string | null;
+          amount_bdt: string;
+          payment_method: string;
+          trx_id: string;
+          status: string;
+          source: string;
+          access_token: string;
+          donation_id: string | null;
+          created_at: string;
+          updated_at: string;
+          confirmed_at: string | null;
+          expires_at: string;
+        };
+        Insert: {
+          id?: string;
+          donor_full_name: string;
+          donor_fathers_name?: string | null;
+          amount_bdt: string | number;
+          payment_method: string;
+          trx_id: string;
+          status?: string;
+          source?: string;
+          access_token: string;
+          donation_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          confirmed_at?: string | null;
+          expires_at?: string;
+        };
+        Update: {
+          id?: string;
+          donor_full_name?: string;
+          donor_fathers_name?: string | null;
+          amount_bdt?: string | number;
+          payment_method?: string;
+          trx_id?: string;
+          status?: string;
+          source?: string;
+          access_token?: string;
+          donation_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          confirmed_at?: string | null;
+          expires_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "donation_intents_donation_id_fkey";
+            columns: ["donation_id"];
+            isOneToOne: false;
+            referencedRelation: "donations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       donations: {
         Row: {
           id: string;
@@ -46,6 +105,8 @@ export type Database = {
           amount_bdt: string;
           payment_method: string;
           reference_note: string | null;
+          trx_id: string | null;
+          intent_id: string | null;
           received_at: string;
           is_published: boolean;
           created_at: string;
@@ -57,6 +118,8 @@ export type Database = {
           amount_bdt: string;
           payment_method?: string;
           reference_note?: string | null;
+          trx_id?: string | null;
+          intent_id?: string | null;
           received_at?: string;
           is_published?: boolean;
           created_at?: string;
@@ -68,6 +131,8 @@ export type Database = {
           amount_bdt?: string;
           payment_method?: string;
           reference_note?: string | null;
+          trx_id?: string | null;
+          intent_id?: string | null;
           received_at?: string;
           is_published?: boolean;
           created_at?: string;
@@ -79,6 +144,13 @@ export type Database = {
             columns: ["donor_id"];
             isOneToOne: false;
             referencedRelation: "donors";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "donations_intent_id_fkey";
+            columns: ["intent_id"];
+            isOneToOne: false;
+            referencedRelation: "donation_intents";
             referencedColumns: ["id"];
           },
         ];

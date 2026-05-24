@@ -40,10 +40,27 @@ export function HomeHowItWorks({ t }: HomeHowItWorksProps) {
               <span className="mb-3 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <Icon className="size-5" aria-hidden />
               </span>
-              <h3 className="font-semibold">{t(`home.howItWorks.steps.${key}.title`)}</h3>
+              <h3 className="font-semibold">
+                {key === "donate" ? (
+                  <Link href="/donate" className="hover:text-primary hover:underline">
+                    {t(`home.howItWorks.steps.${key}.title`)}
+                  </Link>
+                ) : (
+                  t(`home.howItWorks.steps.${key}.title`)
+                )}
+              </h3>
               <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                 {t(`home.howItWorks.steps.${key}.description`)}
               </p>
+              {key === "donate" ? (
+                <Link
+                  href="/donate"
+                  className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                >
+                  {t("nav.donate")}
+                  <ArrowRight className="size-3.5" aria-hidden />
+                </Link>
+              ) : null}
               {index < stepKeys.length - 1 ? (
                 <ArrowRight
                   className="absolute -right-3 top-1/2 hidden size-5 -translate-y-1/2 text-muted-foreground/50 lg:block"

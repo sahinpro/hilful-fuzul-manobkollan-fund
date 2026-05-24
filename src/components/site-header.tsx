@@ -65,7 +65,7 @@ export function SiteHeader() {
               unoptimized
             />
             <span className="truncate text-base font-semibold tracking-tight md:text-lg">
-              {t("site.fullName")}
+              {t("site.shortName")}
             </span>
           </Link>
         </motion.div>

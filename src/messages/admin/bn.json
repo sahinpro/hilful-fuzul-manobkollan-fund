@@ -19,6 +19,7 @@
   "nav": {
     "overview": "সারসংক্ষেপ",
     "donations": "দান",
+    "donationIntents": "যাচাই অপেক্ষা",
     "expenses": "ব্যয়",
     "records": "রেকর্ড",
     "advisors": "উপদেষ্টা",
@@ -324,5 +325,25 @@
     "cancel": "বাতিল",
     "loadFailed": "লোড ব্যর্থ",
     "saveFailed": "সংরক্ষণ ব্যর্থ"
+  },
+  "donationIntents": {
+    "title": "অনলাইন দান — যাচাইের অপেক্ষা",
+    "subtitle": "ওয়েবসাইট থেকে জমা দেওয়া অনুরোধ। bKash/Nagad SMS-এ TrxID ও পরিমাণ মিলিয়ে নিশ্চিত করুন।",
+    "refresh": "রিফ্রেশ",
+    "loading": "লোড হচ্ছে…",
+    "empty": "কোনো অপেক্ষমান অনুরোধ নেই।",
+    "loadFailed": "লোড ব্যর্থ",
+    "confirmFailed": "নিশ্চিত করা যায়নি",
+    "rejectFailed": "প্রত্যাখ্যান করা যায়নি",
+    "confirm": "নিশ্চিত করুন",
+    "confirming": "নিশ্চিত হচ্ছে…",
+    "reject": "প্রত্যাখ্যান",
+    "colDonor": "দাতা",
+    "colFathers": "পিতার নাম",
+    "colAmount": "পরিমাণ",
+    "colMethod": "মাধ্যম",
+    "colTrx": "TrxID",
+    "colSubmitted": "জমার সময়",
+    "colActions": "কার্যক্রম"
   }
 }
