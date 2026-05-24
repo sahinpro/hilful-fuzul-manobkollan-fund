@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { mainNavItems, siteConfig } from "@/config/site";
+import { getSiteLocaleText, mainNavItems } from "@/config/site";
 import { SiteLanguageSwitcher } from "@/components/site-language-switcher";
 import { useSiteI18n } from "@/components/site-i18n-provider";
 import {
@@ -22,7 +22,8 @@ type MobileNavMenuProps = {
 
 export function MobileNavMenu({ open, onOpenChange }: MobileNavMenuProps) {
   const pathname = usePathname();
-  const { t } = useSiteI18n();
+  const { locale, t } = useSiteI18n();
+  const siteText = getSiteLocaleText(locale);
 
   const allLinks = [
     { href: "/", key: "home" as const },
@@ -38,7 +39,7 @@ export function MobileNavMenu({ open, onOpenChange }: MobileNavMenuProps) {
           <DrawerTitle className="text-lg font-semibold tracking-tight">
             {t("mobile.menuTitle")}
           </DrawerTitle>
-          <DrawerDescription className="text-sm">{siteConfig.shortName}</DrawerDescription>
+          <DrawerDescription className="text-sm">{siteText.shortName}</DrawerDescription>
         </DrawerHeader>
 
         <div className="overflow-y-auto overscroll-contain px-4 pb-safe pt-2">

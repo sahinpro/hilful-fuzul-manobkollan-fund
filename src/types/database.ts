@@ -236,6 +236,14 @@ export type Database = {
         };
         Returns: Json;
       };
+      public_receipt_search_donor_name: {
+        Args: {
+          p_donor_name: string;
+          p_payment_method?: string | null;
+          p_limit?: number;
+        };
+        Returns: Json;
+      };
       generate_receipt_no: {
         Args: { p_donation_id: string };
         Returns: string;

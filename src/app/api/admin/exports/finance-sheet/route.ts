@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { resolveExportCornerArtUrls } from "@/config/export-sheet-art";
-import { siteConfig } from "@/config/site";
+import { getSiteLocaleText, siteConfig } from "@/config/site";
 import { requireAdminApi } from "@/lib/admin/auth";
 import {
   donationRowsForExport,
@@ -17,7 +17,6 @@ import {
 import { adminDateLocaleTag } from "@/lib/i18n/admin-locale";
 import { createAdminTranslator } from "@/lib/i18n/admin-translate";
 import { formatPublicBdt } from "@/lib/i18n/format-digits";
-import siteBn from "@/messages/site/bn.json";
 import { createServiceSupabase } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
@@ -66,8 +65,9 @@ export async function GET(request: Request) {
 
   const origin = url.origin;
   const cornerArt = resolveExportCornerArtUrls(origin);
-  const orgName = siteBn.site.fullName;
-  const orgShortName = siteBn.site.shortName;
+  const siteBn = getSiteLocaleText("bn");
+  const orgName = siteBn.name;
+  const orgShortName = siteBn.shortName;
   const orgLocation = t("export.orgLocation");
 
   const baseDoc = {

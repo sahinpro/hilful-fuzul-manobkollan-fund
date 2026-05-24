@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { siteConfig } from "@/config/site";
+import { getSiteLocaleText, siteConfig } from "@/config/site";
 import { requireAdminApi } from "@/lib/admin/auth";
 import { ensureDonationReceipt } from "@/lib/receipt/ensure-donation-receipt";
 import { buildDonationReceiptHtmlDocument } from "@/lib/receipt/donation-receipt-html";
@@ -61,6 +61,8 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
 
   const receiptNo = await ensureDonationReceipt(supabase, donationId);
 
+  const siteBn = getSiteLocaleText("bn");
+  const siteEn = getSiteLocaleText("en");
   const origin = new URL(request.url).origin;
   const html = buildDonationReceiptHtmlDocument(origin, {
     receiptNo,
@@ -71,10 +73,10 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     paymentMethod: donation.payment_method,
     referenceNote: donation.reference_note,
     receivedAtIso: donation.received_at,
-    orgName: siteConfig.name,
-    orgTagline: `${siteConfig.location} · ${siteConfig.contact.addressLines.join(", ")}`,
-    orgNameEn: "Hilful Fuzul Manobkallyan Fund",
-    contactPhones: `${siteConfig.contact.phoneLabel}: ${siteConfig.contact.phone}`,
+    orgName: siteBn.name,
+    orgTagline: `${siteBn.location} · ${siteBn.contact.addressLines.join(", ")}`,
+    orgNameEn: siteEn.name,
+    contactPhones: `${siteBn.contact.phoneLabel}: ${siteConfig.contact.phone}`,
     chairmanSignatureSrc:
       siteConfig.receiptSignatures.chairmanPublicPath ??
       publicAssetPathIfExists("signatures/chairman.png"),

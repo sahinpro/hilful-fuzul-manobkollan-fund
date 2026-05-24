@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+import { getSiteLocaleText, siteConfig } from "@/config/site";
 import { buildDonationReceiptHtmlDocument } from "@/lib/receipt/donation-receipt-html";
 import { lookupPublicReceipt } from "@/lib/receipt/public-receipt-lookup";
 import { publicAssetPathIfExists } from "@/lib/receipt/receipt-public-asset";
@@ -35,6 +35,8 @@ export async function GET(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Receipt not found." }, { status: 404 });
   }
 
+  const siteBn = getSiteLocaleText("bn");
+  const siteEn = getSiteLocaleText("en");
   const origin = new URL(request.url).origin;
   const html = buildDonationReceiptHtmlDocument(origin, {
     receiptNo: record.receiptNo,
@@ -45,10 +47,10 @@ export async function GET(request: Request, context: RouteContext) {
     paymentMethod: record.paymentMethod,
     referenceNote: null,
     receivedAtIso: record.receivedAt,
-    orgName: siteConfig.name,
-    orgTagline: `${siteConfig.location} · ${siteConfig.contact.addressLines.join(", ")}`,
-    orgNameEn: "Hilful Fuzul Manobkallyan Fund",
-    contactPhones: `${siteConfig.contact.phoneLabel}: ${siteConfig.contact.phone}`,
+    orgName: siteBn.name,
+    orgTagline: `${siteBn.location} · ${siteBn.contact.addressLines.join(", ")}`,
+    orgNameEn: siteEn.name,
+    contactPhones: `${siteBn.contact.phoneLabel}: ${siteConfig.contact.phone}`,
     chairmanSignatureSrc:
       siteConfig.receiptSignatures.chairmanPublicPath ??
       publicAssetPathIfExists("signatures/chairman.png"),

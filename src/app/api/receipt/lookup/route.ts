@@ -1,11 +1,12 @@
+import { resolveReceiptSearchKind } from "@/lib/receipt/donor-name-search";
 import {
   isReceiptExactQueryValid,
-  isReceiptPrefixSearchValid,
   normalizeReceiptQuery,
 } from "@/lib/receipt/receipt-number";
 import {
   lookupPublicReceipt,
   searchPublicReceipts,
+  searchPublicReceiptsByDonorName,
 } from "@/lib/receipt/public-receipt-lookup";
 import {
   clientIpFromRequest,
@@ -55,17 +56,26 @@ export async function GET(request: Request) {
     }
 
     const query = q ?? "";
-    if (!isReceiptPrefixSearchValid(query)) {
-      return NextResponse.json({ results: [] });
+    const kind = resolveReceiptSearchKind(query);
+    if (!kind) {
+      return NextResponse.json({ results: [], searchKind: null });
     }
 
-    const results = await searchPublicReceipts({
-      query: normalizeReceiptQuery(query),
-      paymentMethod: payment === "all" ? undefined : payment,
-      limit: 20,
-    });
+    const paymentMethod = payment === "all" ? undefined : payment;
+    const results =
+      kind === "receipt"
+        ? await searchPublicReceipts({
+            query: normalizeReceiptQuery(query),
+            paymentMethod,
+            limit: 20,
+          })
+        : await searchPublicReceiptsByDonorName({
+            query,
+            paymentMethod,
+            limit: 20,
+          });
 
-    return NextResponse.json({ results });
+    return NextResponse.json({ results, searchKind: kind });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Lookup failed.";
     return NextResponse.json({ error: message }, { status: 503 });

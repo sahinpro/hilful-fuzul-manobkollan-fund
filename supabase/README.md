@@ -4,7 +4,7 @@
 
 1. Open [Supabase Dashboard](https://supabase.com/dashboard) → your project → **SQL Editor**.
 2. Paste and run `migrations/20260523120000_public_receipt_system.sql`.
-3. Confirm functions exist: `ensure_donation_receipt`, `public_receipt_lookup_exact`, `public_receipt_search_prefix`.
+3. Confirm functions exist: `ensure_donation_receipt`, `public_receipt_lookup_exact`, `public_receipt_search_prefix`, `public_receipt_search_donor_name`.
 
 Or with Supabase CLI:
 

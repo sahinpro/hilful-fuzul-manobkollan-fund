@@ -1,4 +1,8 @@
 import {
+  isDonorNameSearchValid,
+  normalizeDonorNameQuery,
+} from "@/lib/receipt/donor-name-search";
+import {
   isReceiptExactQueryValid,
   isReceiptPrefixSearchValid,
   normalizeReceiptQuery,
@@ -103,6 +107,44 @@ export async function searchPublicReceipts(
 
   const { data, error } = await supabase.rpc("public_receipt_search_prefix", {
     p_prefix: q,
+    p_payment_method: payment,
+    p_limit: limit,
+  });
+
+  if (error) {
+    if (rpcUnavailable(error)) return [];
+    throw new Error(error.message);
+  }
+
+  if (typeof data === "string") {
+    try {
+      return parseRecordList(JSON.parse(data));
+    } catch {
+      return [];
+    }
+  }
+
+  return parseRecordList(data);
+}
+
+/** Donor name search via `public_receipt_search_donor_name` (min 3 chars, published only). */
+export async function searchPublicReceiptsByDonorName(
+  params: SearchPublicReceiptsParams & { query: string },
+): Promise<PublicReceiptRecord[]> {
+  const q = normalizeDonorNameQuery(params.query);
+  if (!isDonorNameSearchValid(q)) return [];
+
+  const supabase = createPublicReceiptSupabase();
+  if (!supabase) return [];
+
+  const limit = Math.min(30, Math.max(1, params.limit ?? 15));
+  const payment =
+    params.paymentMethod && params.paymentMethod !== "all"
+      ? params.paymentMethod
+      : null;
+
+  const { data, error } = await supabase.rpc("public_receipt_search_donor_name", {
+    p_donor_name: q,
     p_payment_method: payment,
     p_limit: limit,
   });

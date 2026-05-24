@@ -4,8 +4,12 @@ import { useSiteI18n } from "@/components/site-i18n-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  isDonorNameSearchValid,
+  looksLikeReceiptQuery,
+  resolveReceiptSearchKind,
+} from "@/lib/receipt/donor-name-search";
+import {
   isReceiptExactQueryValid,
-  isReceiptPrefixSearchValid,
   normalizeReceiptQuery,
 } from "@/lib/receipt/receipt-number";
 import type { PublicReceiptRecord } from "@/lib/receipt/public-receipt-lookup";
@@ -41,7 +45,7 @@ export function ReceiptVerifyWorkspace({
   const { t } = useSiteI18n();
   const router = useRouter();
   const formId = useId();
-  const inputId = `${formId}-receipt-no`;
+  const inputId = `${formId}-search`;
 
   const [query, setQuery] = useState(initialQuery);
   const [payment, setPayment] = useState<PaymentFilter>(
@@ -53,10 +57,18 @@ export function ReceiptVerifyWorkspace({
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
 
+  const searchKind = resolveReceiptSearchKind(query);
+  const showSearchUi = configured && Boolean(searchKind);
+  const visibleResults = showSearchUi ? results : [];
+  const visibleSearchError = showSearchUi ? searchError : null;
+  const showSearching = searching && showSearchUi;
+  const canSubmit =
+    isReceiptExactQueryValid(query) ||
+    (isDonorNameSearchValid(query) && !looksLikeReceiptQuery(query));
+
   const runSearch = useCallback(
     async (q: string, pay: PaymentFilter) => {
-      const normalized = normalizeReceiptQuery(q);
-      if (!isReceiptPrefixSearchValid(normalized)) {
+      if (!resolveReceiptSearchKind(q)) {
         setResults([]);
         setSearchError(null);
         return;
@@ -66,7 +78,7 @@ export function ReceiptVerifyWorkspace({
       setSearchError(null);
       try {
         const params = new URLSearchParams({
-          q: normalized,
+          q: q.trim(),
           payment: pay,
         });
         const res = await fetch(`/api/receipt/lookup?${params.toString()}`);
@@ -101,27 +113,28 @@ export function ReceiptVerifyWorkspace({
   }
 
   useEffect(() => {
-    if (!configured) return;
-    const normalized = normalizeReceiptQuery(query);
-    if (!isReceiptPrefixSearchValid(normalized)) {
-      setResults([]);
-      return;
-    }
+    if (!showSearchUi) return;
 
     const timer = window.setTimeout(() => {
       void runSearch(query, payment);
     }, 350);
 
     return () => window.clearTimeout(timer);
-  }, [query, payment, configured, runSearch]);
+  }, [query, payment, showSearchUi, runSearch]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const normalized = normalizeReceiptQuery(query);
-    if (!normalized) return;
-    router.push(
-      `/receipt/${encodeURIComponent(normalized)}?payment=${encodeURIComponent(payment)}`,
-    );
+    if (!canSubmit) return;
+
+    if (isReceiptExactQueryValid(query) && looksLikeReceiptQuery(query)) {
+      const normalized = normalizeReceiptQuery(query);
+      router.push(
+        `/receipt/${encodeURIComponent(normalized)}?payment=${encodeURIComponent(payment)}`,
+      );
+      return;
+    }
+
+    void runSearch(query, payment);
   }
 
   return (
@@ -138,12 +151,12 @@ export function ReceiptVerifyWorkspace({
       >
         <div>
           <label htmlFor={inputId} className="text-sm font-medium">
-            {t("pages.receipt.receiptNoLabel")}
+            {t("pages.receipt.searchLabel")}
           </label>
           <div className="mt-2 flex flex-col gap-2 sm:flex-row">
             <Input
               id={inputId}
-              name="receiptNo"
+              name="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t("pages.receipt.inputPlaceholder")}
@@ -154,8 +167,8 @@ export function ReceiptVerifyWorkspace({
             <Button
               type="submit"
               size="lg"
-              className="h-11 min-h-11 gap-2 sm:min-w-[8.5rem]"
-              disabled={!configured || !isReceiptExactQueryValid(query)}
+              className="h-11 min-h-11 gap-2 sm:min-w-34"
+              disabled={!configured || !canSubmit}
             >
               <Search className="size-4" aria-hidden />
               {t("pages.receipt.searchButton")}
@@ -186,26 +199,26 @@ export function ReceiptVerifyWorkspace({
         </div>
       </form>
 
-      {searching ? (
+      {showSearching ? (
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="size-4 animate-spin" aria-hidden />
           {t("pages.receipt.searching")}
         </p>
       ) : null}
 
-      {searchError ? (
+      {visibleSearchError ? (
         <p className="text-sm text-destructive" role="alert">
-          {searchError}
+          {visibleSearchError}
         </p>
       ) : null}
 
-      {results.length > 0 ? (
+      {visibleResults.length > 0 ? (
         <div className="ios-card overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
           <p className="border-b border-border/80 bg-muted/25 px-4 py-2.5 text-sm font-medium">
-            {t("pages.receipt.resultsTitle")} ({results.length})
+            {t("pages.receipt.resultsTitle")} ({visibleResults.length})
           </p>
           <ul className="divide-y divide-border/70">
-            {results.map((row) => (
+            {visibleResults.map((row) => (
               <li key={row.receiptNo}>
                 <Link
                   href={`/receipt/${encodeURIComponent(row.receiptNo)}`}
@@ -226,11 +239,7 @@ export function ReceiptVerifyWorkspace({
         </div>
       ) : null}
 
-      {!searching &&
-      configured &&
-      isReceiptPrefixSearchValid(query) &&
-      results.length === 0 &&
-      !searchError ? (
+      {!showSearching && showSearchUi && visibleResults.length === 0 && !visibleSearchError ? (
         <p className="text-sm text-muted-foreground">{t("pages.receipt.noResults")}</p>
       ) : null}
     </div>

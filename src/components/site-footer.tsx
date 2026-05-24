@@ -1,13 +1,14 @@
 "use client";
 
-import { siteConfig } from "@/config/site";
+import { getSiteLocaleText, siteConfig } from "@/config/site";
 import { useSiteI18n } from "@/components/site-i18n-provider";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export function SiteFooter() {
-  const { t } = useSiteI18n();
+  const { locale, t } = useSiteI18n();
+  const siteText = getSiteLocaleText(locale);
 
   return (
     <footer className="border-t border-border bg-card pb-[calc(4.75rem+env(safe-area-inset-bottom))] lg:pb-0">
@@ -27,7 +28,7 @@ export function SiteFooter() {
             />
             <div className="text-left">
               <h3 className="text-lg font-semibold leading-snug">{t("site.fullName")}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{siteConfig.location}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{siteText.location}</p>
             </div>
           </Link>
         </div>
@@ -73,7 +74,7 @@ export function SiteFooter() {
               <MapPin className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
               <span>
                 <span className="font-medium text-foreground">{t("footer.addressLabel")}: </span>
-                {siteConfig.contact.addressLines}
+                {siteText.contact.addressLines}
               </span>
             </li>
           </ul>
@@ -86,7 +87,7 @@ export function SiteFooter() {
             <div className="mt-3">
               <Image
                 src={siteConfig.paymentBanner.src}
-                alt={siteConfig.paymentBanner.alt}
+                alt={siteText.paymentBannerAlt}
                 width={siteConfig.paymentBanner.width}
                 height={siteConfig.paymentBanner.height}
                 className="h-auto w-full max-w-sm object-contain object-left"

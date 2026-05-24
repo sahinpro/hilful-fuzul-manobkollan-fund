@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { siteConfig } from "@/config/site";
+import { getSiteLocaleText, siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import {
   Award,
@@ -49,7 +49,8 @@ const navButtonClassName =
 
 export function AdminAppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
-  const { t } = useAdminI18n();
+  const { locale, t } = useAdminI18n();
+  const siteText = getSiteLocaleText(locale);
   const [logoFailed, setLogoFailed] = useState(false);
 
   return (
@@ -59,7 +60,7 @@ export function AdminAppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               size="default"
-              tooltip={siteConfig.shortName}
+              tooltip={siteText.shortName}
               className={cn(
                 "h-10 min-h-10 gap-3 px-2 py-2 transition-colors hover:bg-sidebar-accent/90",
                 "data-[slot=sidebar-menu-button]:px-2!",
@@ -88,7 +89,7 @@ export function AdminAppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                   {t("brand.shortTitle")}
                 </span>
                 <span className="truncate text-xs text-sidebar-foreground/70">
-                  {siteConfig.shortName}
+                  {siteText.shortName}
                 </span>
               </div>
             </SidebarMenuButton>
