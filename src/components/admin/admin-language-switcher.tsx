@@ -25,7 +25,7 @@ export function AdminLanguageSwitcher() {
             type="button"
             variant={locale === code ? "default" : "ghost"}
             size="lg"
-            className="min-w-22 px-4 text-sm"
+            className="min-w-[42px] px-4 text-sm"
             onClick={() => select(code)}
           >
             {t(labelKey)}
