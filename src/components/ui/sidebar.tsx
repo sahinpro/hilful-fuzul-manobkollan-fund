@@ -502,12 +502,16 @@ function SidebarMenuButton({
   variant = "default",
   size = "default",
   tooltip,
+  closeOnClick = true,
   className,
+  onClick,
   ...props
 }: useRender.ComponentProps<"button"> &
   React.ComponentProps<"button"> & {
     isActive?: boolean;
     tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+    /** Close the mobile drawer after click (disable for popover/dropdown triggers). */
+    closeOnClick?: boolean;
   } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const { isMobile, state, setOpenMobile } = useSidebar();
   const comp = useRender({
@@ -515,8 +519,9 @@ function SidebarMenuButton({
     props: mergeProps<"button">(
       {
         className: cn(sidebarMenuButtonVariants({ variant, size }), className),
-        onClick: () => {
-          if (isMobile) {
+        onClick: (event: React.MouseEvent<HTMLButtonElement>) => {
+          onClick?.(event);
+          if (isMobile && closeOnClick) {
             setOpenMobile(false);
           }
         },
