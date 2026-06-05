@@ -9,7 +9,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Home, LayoutGrid, Menu, ScrollText, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const tabItems = [
   {
@@ -52,6 +52,10 @@ export function MobileTabBar() {
     pathname.startsWith("/notices") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/receipt");
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   return (
     <>

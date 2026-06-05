@@ -33,7 +33,7 @@ function initials(email: string): string {
 export function AdminSidebarProfile() {
   const { t } = useAdminI18n();
   const router = useRouter();
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
   const [email, setEmail] = useState<string | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
 
@@ -48,6 +48,7 @@ export function AdminSidebarProfile() {
   async function handleLogout() {
     if (!isSupabaseConfigured()) return;
     setLoggingOut(true);
+    if (isMobile) setOpenMobile(false);
     const supabase = createBrowserSupabase();
     await supabase.auth.signOut();
     router.replace("/admin/login");
@@ -103,7 +104,10 @@ export function AdminSidebarProfile() {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="cursor-pointer gap-2 rounded-lg"
-              onClick={() => router.push("/")}
+              onClick={() => {
+                if (isMobile) setOpenMobile(false);
+                router.push("/");
+              }}
             >
               <House className="size-4 shrink-0" aria-hidden />
               {t("nav.backToSite")}

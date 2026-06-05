@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useEffect, type CSSProperties } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getSiteLocaleText, mainNavItems } from "@/config/site";
@@ -30,6 +30,10 @@ export function MobileNavMenu({ open, onOpenChange }: MobileNavMenuProps) {
     ...mainNavItems,
     { href: "/admin", key: "admin" as const },
   ];
+
+  useEffect(() => {
+    onOpenChange(false);
+  }, [pathname, onOpenChange]);
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>

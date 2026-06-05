@@ -15,6 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { getSiteLocaleText, siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -31,7 +32,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, type ComponentProps } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 
 const NAV_LINKS = [
   { href: "/admin/overview", key: "nav.overview", Icon: LayoutDashboard },
@@ -51,9 +52,16 @@ const navButtonClassName =
 
 export function AdminAppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const { isMobile, setOpenMobile } = useSidebar();
   const { locale, t } = useAdminI18n();
   const siteText = getSiteLocaleText(locale);
   const [logoFailed, setLogoFailed] = useState(false);
+
+  useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [pathname, isMobile, setOpenMobile]);
 
   return (
     <Sidebar collapsible="icon" {...props}>

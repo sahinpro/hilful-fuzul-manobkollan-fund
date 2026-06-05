@@ -226,7 +226,7 @@ export function buildFinanceExportHtmlDocument(
       position: relative;
       z-index: 1;
       margin: 0 auto;
-      padding: 10px 124px 0;
+      padding: 10px 20px;
       max-width: 100%;
       display: flex;
       flex-direction: column;
