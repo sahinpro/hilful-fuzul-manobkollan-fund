@@ -26,6 +26,7 @@ export function SiteLanguageSwitcher() {
             variant={locale === code ? "default" : "ghost"}
             size="sm"
             className="min-w-8 px-2 text-xs sm:min-w-12 sm:px-3 sm:text-sm"
+            aria-pressed={locale === code}
             onClick={() => select(code)}
           >
             {t(labelKey)}

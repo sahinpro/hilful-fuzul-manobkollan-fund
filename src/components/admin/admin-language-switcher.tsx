@@ -26,6 +26,7 @@ export function AdminLanguageSwitcher() {
             variant={locale === code ? "default" : "ghost"}
             size="lg"
             className="min-w-[42px] px-4 text-sm"
+            aria-pressed={locale === code}
             onClick={() => select(code)}
           >
             {t(labelKey)}

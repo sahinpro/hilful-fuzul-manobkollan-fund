@@ -15,8 +15,6 @@ import {
   SITE_LOCALE_COOKIE,
   SITE_LOCALE_STORAGE_KEY,
   type SiteLocale,
-  browserDefaultSiteLocale,
-  isSiteLocale,
 } from "@/lib/i18n/site-locale";
 import { createSiteTranslator } from "@/lib/i18n/site-translate";
 
@@ -28,19 +26,18 @@ type SiteI18nContextValue = {
 
 const SiteI18nContext = createContext<SiteI18nContextValue | null>(null);
 
-function readStoredLocale(): SiteLocale | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const v = localStorage.getItem(SITE_LOCALE_STORAGE_KEY);
-    return isSiteLocale(v) ? v : null;
-  } catch {
-    return null;
-  }
-}
-
 function writeCookieLocale(locale: SiteLocale) {
   const maxAge = 60 * 60 * 24 * 400;
   document.cookie = `${SITE_LOCALE_COOKIE}=${locale};path=/;max-age=${maxAge};SameSite=Lax`;
+}
+
+function persistLocale(locale: SiteLocale) {
+  writeCookieLocale(locale);
+  try {
+    localStorage.setItem(SITE_LOCALE_STORAGE_KEY, locale);
+  } catch {
+    /* ignore quota / private mode */
+  }
 }
 
 export function SiteI18nProvider({
@@ -51,23 +48,12 @@ export function SiteI18nProvider({
   cookieLocale: SiteLocale | null;
 }) {
   const router = useRouter();
-  const [locale, setLocaleState] = useState<SiteLocale>(() => cookieLocale ?? DEFAULT_SITE_LOCALE);
+  const activeLocale = cookieLocale ?? DEFAULT_SITE_LOCALE;
+  const [locale, setLocaleState] = useState<SiteLocale>(activeLocale);
 
   useLayoutEffect(() => {
-    void Promise.resolve().then(() => {
-      const stored = readStoredLocale();
-      if (stored) {
-        setLocaleState(stored);
-        writeCookieLocale(stored);
-        return;
-      }
-      if (cookieLocale) {
-        setLocaleState(cookieLocale);
-        return;
-      }
-      setLocaleState(browserDefaultSiteLocale());
-    });
-  }, [cookieLocale]);
+    setLocaleState(activeLocale);
+  }, [activeLocale]);
 
   useLayoutEffect(() => {
     if (typeof document !== "undefined") {
@@ -77,16 +63,12 @@ export function SiteI18nProvider({
 
   const setLocale = useCallback(
     (next: SiteLocale) => {
+      if (next === locale) return;
       setLocaleState(next);
-      try {
-        localStorage.setItem(SITE_LOCALE_STORAGE_KEY, next);
-      } catch {
-        /* ignore */
-      }
-      writeCookieLocale(next);
+      persistLocale(next);
       router.refresh();
     },
-    [router],
+    [locale, router],
   );
 
   const t = useMemo(() => createSiteTranslator(locale), [locale]);

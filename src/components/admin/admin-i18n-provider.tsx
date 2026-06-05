@@ -15,8 +15,6 @@ import {
   ADMIN_LOCALE_STORAGE_KEY,
   DEFAULT_ADMIN_LOCALE,
   type AdminLocale,
-  browserDefaultAdminLocale,
-  isAdminLocale,
 } from "@/lib/i18n/admin-locale";
 import { createAdminTranslator } from "@/lib/i18n/admin-translate";
 
@@ -28,19 +26,18 @@ type AdminI18nContextValue = {
 
 const AdminI18nContext = createContext<AdminI18nContextValue | null>(null);
 
-function readStoredLocale(): AdminLocale | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const v = localStorage.getItem(ADMIN_LOCALE_STORAGE_KEY);
-    return isAdminLocale(v) ? v : null;
-  } catch {
-    return null;
-  }
-}
-
 function writeCookieLocale(locale: AdminLocale) {
   const maxAge = 60 * 60 * 24 * 400;
   document.cookie = `${ADMIN_LOCALE_COOKIE}=${locale};path=/;max-age=${maxAge};SameSite=Lax`;
+}
+
+function persistLocale(locale: AdminLocale) {
+  writeCookieLocale(locale);
+  try {
+    localStorage.setItem(ADMIN_LOCALE_STORAGE_KEY, locale);
+  } catch {
+    /* ignore quota / private mode */
+  }
 }
 
 export function AdminI18nProvider({
@@ -51,36 +48,21 @@ export function AdminI18nProvider({
   cookieLocale: AdminLocale | null;
 }) {
   const router = useRouter();
-  const [locale, setLocaleState] = useState<AdminLocale>(() => cookieLocale ?? DEFAULT_ADMIN_LOCALE);
+  const activeLocale = cookieLocale ?? DEFAULT_ADMIN_LOCALE;
+  const [locale, setLocaleState] = useState<AdminLocale>(activeLocale);
 
   useLayoutEffect(() => {
-    void Promise.resolve().then(() => {
-      const stored = readStoredLocale();
-      if (stored) {
-        setLocaleState(stored);
-        writeCookieLocale(stored);
-        return;
-      }
-      if (cookieLocale) {
-        setLocaleState(cookieLocale);
-        return;
-      }
-      setLocaleState(browserDefaultAdminLocale());
-    });
-  }, [cookieLocale]);
+    setLocaleState(activeLocale);
+  }, [activeLocale]);
 
   const setLocale = useCallback(
     (next: AdminLocale) => {
+      if (next === locale) return;
       setLocaleState(next);
-      try {
-        localStorage.setItem(ADMIN_LOCALE_STORAGE_KEY, next);
-      } catch {
-        /* ignore quota / private mode */
-      }
-      writeCookieLocale(next);
+      persistLocale(next);
       router.refresh();
     },
-    [router],
+    [locale, router],
   );
 
   const t = useMemo(() => createAdminTranslator(locale), [locale]);
