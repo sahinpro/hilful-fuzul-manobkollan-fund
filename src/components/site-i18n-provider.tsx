@@ -11,6 +11,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import {
+  DEFAULT_SITE_LOCALE,
   SITE_LOCALE_COOKIE,
   SITE_LOCALE_STORAGE_KEY,
   type SiteLocale,
@@ -50,7 +51,7 @@ export function SiteI18nProvider({
   cookieLocale: SiteLocale | null;
 }) {
   const router = useRouter();
-  const [locale, setLocaleState] = useState<SiteLocale>(() => cookieLocale ?? "en");
+  const [locale, setLocaleState] = useState<SiteLocale>(() => cookieLocale ?? DEFAULT_SITE_LOCALE);
 
   useLayoutEffect(() => {
     void Promise.resolve().then(() => {

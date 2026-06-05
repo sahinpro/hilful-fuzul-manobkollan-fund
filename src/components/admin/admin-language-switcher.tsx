@@ -16,8 +16,8 @@ export function AdminLanguageSwitcher() {
       <div className="flex rounded-lg border border-border bg-background p-0.5 shadow-xs">
         {(
           [
-            ["bn", "language.bn"],
             ["en", "language.en"],
+            ["bn", "language.bn"],
           ] as const
         ).map(([code, labelKey]) => (
           <Button

@@ -40,6 +40,23 @@
     "submitting": "Signing in…",
     "failed": "Login failed"
   },
+  "resetPassword": {
+    "pageTitle": "Reset password",
+    "pageSubtitle": "Choose a new password for your admin account.",
+    "cardTitle": "New password",
+    "cardDescription": "Enter and confirm your new password below.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "submit": "Update password",
+    "submitting": "Updating…",
+    "failed": "Could not update password",
+    "tooShort": "Password must be at least 8 characters.",
+    "mismatch": "Passwords do not match.",
+    "verifying": "Verifying reset link…",
+    "invalidTitle": "Link expired or invalid",
+    "invalidDescription": "Request a new password reset email from Supabase, then open the latest link.",
+    "backToLogin": "Back to login"
+  },
   "gates": {
     "supabaseTitle": "Admin panel",
     "supabaseSubtitle": "Login is disabled because Supabase environment variables are not set.",

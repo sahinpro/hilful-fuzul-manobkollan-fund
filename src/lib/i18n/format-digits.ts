@@ -46,7 +46,7 @@ export function formatAdminInteger(value: number, locale: AdminLocale): string {
  * Public monetary display: `৳` + formatted amount.
  * `bn` uses Bengali digits; `en` uses Western digits with en-GB grouping.
  */
-export function formatPublicBdt(amount: number, locale: PublicLocale = "en"): string {
+export function formatPublicBdt(amount: number, locale: PublicLocale = "bn"): string {
   const n = new Intl.NumberFormat(numberFormatTagForPublic(locale), {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,

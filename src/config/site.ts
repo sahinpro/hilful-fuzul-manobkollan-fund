@@ -1,4 +1,4 @@
-import type { SiteLocale } from "@/lib/i18n/site-locale";
+import { DEFAULT_SITE_LOCALE, type SiteLocale } from "@/lib/i18n/site-locale";
 
 export type NavItem = {
   href: string;
@@ -101,31 +101,31 @@ export function getSiteLocaleText(locale: SiteLocale): SiteLocaleText {
   return siteLocaleText[locale];
 }
 
-export function getSiteSeo(locale: SiteLocale = "en"): SiteSeoText {
+export function getSiteSeo(locale: SiteLocale = DEFAULT_SITE_LOCALE): SiteSeoText {
   return siteSeoByLocale[locale];
 }
 
-/** Default English SEO — used by root layout metadata. */
-export const siteSeo = siteSeoByLocale.en;
+/** Default Bangla SEO — used by root layout metadata. */
+export const siteSeo = siteSeoByLocale.bn;
 
 const sharedContact = {
   phone: "01791992313",
   email: "hilfulfuzulTalertal@gmail.com",
 } as const;
 
-/** Default English site text — used by server routes and legacy imports. */
+/** Default Bangla site text — used by server routes and legacy imports. */
 export const siteConfig = {
-  name: siteLocaleText.en.name,
-  shortName: siteLocaleText.en.shortName,
-  location: siteLocaleText.en.location,
+  name: siteLocaleText.bn.name,
+  shortName: siteLocaleText.bn.shortName,
+  location: siteLocaleText.bn.location,
   logoSrc: "/logo.png" as const,
   contact: {
     ...sharedContact,
-    ...siteLocaleText.en.contact,
+    ...siteLocaleText.bn.contact,
   },
   paymentBanner: {
     src: "/Group%201903.png" as const,
-    alt: siteLocaleText.en.paymentBannerAlt,
+    alt: siteLocaleText.bn.paymentBannerAlt,
     width: 720,
     height: 160,
   },

@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "bn_BD",
     siteName: siteConfig.name,
     title: siteSeo.title,
     description: siteSeo.description,
@@ -77,7 +77,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="bn"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
       className="h-full antialiased"

@@ -16,9 +16,9 @@ const sidebarShellStyle = {
 
 export function AdminChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isLogin = pathname === "/admin/login";
+  const isAuthPage = pathname === "/admin/login" || pathname === "/admin/reset-password";
 
-  if (isLogin) {
+  if (isAuthPage) {
     return (
       <div className="relative min-h-svh overflow-hidden bg-background text-foreground">
         <div

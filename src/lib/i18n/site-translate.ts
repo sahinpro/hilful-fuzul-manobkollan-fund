@@ -1,4 +1,4 @@
-import type { SiteLocale } from "@/lib/i18n/site-locale";
+import { DEFAULT_SITE_LOCALE, type SiteLocale } from "@/lib/i18n/site-locale";
 import siteBn from "@/messages/site/bn.json";
 import siteEn from "@/messages/site/en.json";
 
@@ -26,7 +26,7 @@ function interpolate(template: string, vars?: Record<string, string | number>): 
 }
 
 export function createSiteTranslator(locale: SiteLocale) {
-  const dict = dictionaries[locale] ?? dictionaries.en;
+  const dict = dictionaries[locale] ?? dictionaries[DEFAULT_SITE_LOCALE];
 
   function t(key: string, vars?: Record<string, string | number>): string {
     const raw = getNested(dict, key);

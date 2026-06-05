@@ -3,7 +3,11 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { isAdminUser } from "@/lib/admin/auth";
-import { ADMIN_LOCALE_COOKIE, parseAdminLocaleCookie } from "@/lib/i18n/admin-locale";
+import {
+  ADMIN_LOCALE_COOKIE,
+  DEFAULT_ADMIN_LOCALE,
+  parseAdminLocaleCookie,
+} from "@/lib/i18n/admin-locale";
 import { createAdminTranslator } from "@/lib/i18n/admin-translate";
 import { createServerSupabase, isSupabaseConfigured } from "@/lib/supabase/server";
 
@@ -11,7 +15,7 @@ import { createServerSupabase, isSupabaseConfigured } from "@/lib/supabase/serve
 export async function financeAdminGate(): Promise<ReactNode | null> {
   const cookieStore = await cookies();
   const locale =
-    parseAdminLocaleCookie(cookieStore.get(ADMIN_LOCALE_COOKIE)?.value) ?? "bn";
+    parseAdminLocaleCookie(cookieStore.get(ADMIN_LOCALE_COOKIE)?.value) ?? DEFAULT_ADMIN_LOCALE;
   const t = createAdminTranslator(locale);
 
   if (!isSupabaseConfigured()) {

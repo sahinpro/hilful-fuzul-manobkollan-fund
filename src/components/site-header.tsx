@@ -80,6 +80,7 @@ export function SiteHeader() {
           <Button
             size="sm"
             className="h-10 gap-1.5 px-3 text-sm font-semibold shadow-sm"
+            nativeButton={false}
             render={<Link href="/donate" />}
           >
             <HandCoins className="size-4" aria-hidden />

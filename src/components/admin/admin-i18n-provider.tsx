@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import {
   ADMIN_LOCALE_COOKIE,
   ADMIN_LOCALE_STORAGE_KEY,
+  DEFAULT_ADMIN_LOCALE,
   type AdminLocale,
   browserDefaultAdminLocale,
   isAdminLocale,
@@ -50,7 +51,7 @@ export function AdminI18nProvider({
   cookieLocale: AdminLocale | null;
 }) {
   const router = useRouter();
-  const [locale, setLocaleState] = useState<AdminLocale>(() => cookieLocale ?? "bn");
+  const [locale, setLocaleState] = useState<AdminLocale>(() => cookieLocale ?? DEFAULT_ADMIN_LOCALE);
 
   useLayoutEffect(() => {
     void Promise.resolve().then(() => {

@@ -1,4 +1,4 @@
-import type { AdminLocale } from "@/lib/i18n/admin-locale";
+import { DEFAULT_ADMIN_LOCALE, type AdminLocale } from "@/lib/i18n/admin-locale";
 import adminBn from "@/messages/admin/bn.json";
 import adminEn from "@/messages/admin/en.json";
 
@@ -26,7 +26,7 @@ function interpolate(template: string, vars?: Record<string, string | number>): 
 }
 
 export function createAdminTranslator(locale: AdminLocale) {
-  const dict = dictionaries[locale] ?? dictionaries.bn;
+  const dict = dictionaries[locale] ?? dictionaries[DEFAULT_ADMIN_LOCALE];
 
   function t(key: string, vars?: Record<string, string | number>): string {
     const raw = getNested(dict, key);

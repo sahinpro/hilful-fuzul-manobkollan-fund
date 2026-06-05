@@ -40,6 +40,23 @@
     "submitting": "লগইন হচ্ছে…",
     "failed": "লগইন ব্যর্থ"
   },
+  "resetPassword": {
+    "pageTitle": "পাসওয়ার্ড রিসেট",
+    "pageSubtitle": "অ্যাডমিন অ্যাকাউন্টের জন্য নতুন পাসওয়ার্ড সেট করুন।",
+    "cardTitle": "নতুন পাসওয়ার্ড",
+    "cardDescription": "নিচে নতুন পাসওয়ার্ড লিখুন এবং নিশ্চিত করুন।",
+    "newPassword": "নতুন পাসওয়ার্ড",
+    "confirmPassword": "পাসওয়ার্ড নিশ্চিত করুন",
+    "submit": "পাসওয়ার্ড আপডেট",
+    "submitting": "আপডেট হচ্ছে…",
+    "failed": "পাসওয়ার্ড আপডেট করা যায়নি",
+    "tooShort": "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।",
+    "mismatch": "পাসওয়ার্ড মিলছে না।",
+    "verifying": "রিসেট লিংক যাচাই হচ্ছে…",
+    "invalidTitle": "লিংক মেয়াদোত্তীর্ণ বা অবৈধ",
+    "invalidDescription": "Supabase থেকে নতুন পাসওয়ার্ড রিসেট ইমেইল পাঠান, তারপর সর্বশেষ লিংক খুলুন।",
+    "backToLogin": "লগইনে ফিরুন"
+  },
   "gates": {
     "supabaseTitle": "অ্যাডমিন প্যানেল",
     "supabaseSubtitle": "Supabase env সেট না থাকায় লগইন সক্রিয় হয়নি।",
