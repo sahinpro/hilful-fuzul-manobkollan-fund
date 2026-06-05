@@ -101,6 +101,7 @@ export function buildFinanceExportHtmlDocument(
     input.rows.length === 0
       ? `<tr class="empty-row"><td colspan="${colCount}">${e(input.emptyLabel)}</td></tr>`
       : input.rows
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           .map((cells, i) => {
             const cellsHtml = cells
               .map((cell, ci) => {

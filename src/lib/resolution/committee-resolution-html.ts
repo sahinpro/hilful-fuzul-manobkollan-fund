@@ -211,11 +211,15 @@ export function buildCommitteeResolutionHtmlDocument(
       font-family: ${SOLAIMAN_LIPI_FONT_FAMILY} !important;
       font-synthesis: none;
     }
+    html {
+      overflow-x: clip;
+    }
     body {
       margin: 0;
       min-height: 100vh;
       background: #dfe2e6;
       color: #1a1a1c;
+      overflow-x: clip;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
@@ -261,14 +265,14 @@ export function buildCommitteeResolutionHtmlDocument(
     }
     .sheet {
       position: relative;
-      width: 210mm;
+      width: 100%;
       max-width: 210mm;
       margin: 0 auto 32px;
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
       border: 1px solid #c5c9ce;
-      overflow: visible;
+      overflow: hidden;
     }
     .sheet-body {
       position: relative;
@@ -303,9 +307,11 @@ export function buildCommitteeResolutionHtmlDocument(
       padding: 18px 20px 12px;
       border-bottom: 2px solid ${ACCENT.primary};
       text-align: center;
-      font-size: 2rem;
+      font-size: clamp(1.35rem, 5vw, 2rem);
       font-weight: 800;
       color: #0f172a;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     .sheet-content {
       position: relative;
@@ -322,6 +328,8 @@ export function buildCommitteeResolutionHtmlDocument(
       border: 1px solid #b8dcc8;
       border-radius: 6px;
       list-style: none;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     .formation-meta li { margin: 0 0 4px; }
     .formation-meta li:last-child { margin-bottom: 0; }
@@ -338,6 +346,8 @@ export function buildCommitteeResolutionHtmlDocument(
       margin: 0;
       text-align: justify;
       color: #1e293b;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     .styled-list {
       margin: 0;
@@ -348,6 +358,8 @@ export function buildCommitteeResolutionHtmlDocument(
       margin-bottom: 6px;
       text-align: justify;
       padding-left: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     .styled-list li:last-child { margin-bottom: 0; }
     .bn-list-num {
@@ -383,6 +395,23 @@ export function buildCommitteeResolutionHtmlDocument(
       margin-bottom: 8px;
       padding-left: 0;
       text-align: justify;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+    .table-scroll {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll table.data {
+      min-width: 100%;
+    }
+    .table-scroll .exec-table {
+      min-width: 36rem;
+    }
+    .table-scroll .advisor-table {
+      min-width: 22rem;
     }
     table.data {
       width: 100%;
@@ -423,6 +452,51 @@ export function buildCommitteeResolutionHtmlDocument(
       color: #64748b;
       text-align: center;
       background: #fafbfc;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+    @media screen and (max-width: 767px) {
+      .screen-chrome {
+        padding: 12px 10px 0;
+      }
+      .print-hint {
+        font-size: 13px;
+        padding: 10px 12px;
+        text-align: left;
+      }
+      .toolbar button {
+        flex: 1 1 calc(50% - 6px);
+        min-width: 0;
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+      .sheet {
+        margin-bottom: 20px;
+        border-radius: 8px;
+        border-left: none;
+        border-right: none;
+      }
+      .doc-title {
+        padding: 14px 14px 10px;
+      }
+      .sheet-content {
+        padding: 12px 14px 14px;
+        font-size: 0.875rem;
+        line-height: 1.58;
+      }
+      .sheet-footer {
+        padding: 10px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+      }
+      .section h2 {
+        font-size: 0.95rem;
+      }
+      table.data {
+        font-size: 0.8rem;
+      }
+      table.data thead th,
+      table.data tbody td {
+        padding: 6px;
+      }
     }
     @media print {
       html, body {
@@ -475,6 +549,14 @@ export function buildCommitteeResolutionHtmlDocument(
       .sheet-footer {
         page-break-inside: avoid;
         break-inside: avoid;
+      }
+      .table-scroll {
+        overflow: visible;
+      }
+      .table-scroll table.data,
+      .table-scroll .exec-table,
+      .table-scroll .advisor-table {
+        min-width: 0;
       }
     }
   </style>
@@ -534,12 +616,12 @@ export function buildCommitteeResolutionHtmlDocument(
 
       <section class="section">
         <h2>${e(input.advisorsTitle)}</h2>
-        ${advisorTable(input)}
+        <div class="table-scroll">${advisorTable(input)}</div>
       </section>
 
       <section class="section">
         <h2>${e(input.executivesTitle)}</h2>
-        ${executiveTable(input)}
+        <div class="table-scroll">${executiveTable(input)}</div>
       </section>
     </div>
     <footer class="sheet-footer">${e(input.documentFooter)}</footer>
